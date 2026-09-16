@@ -83,6 +83,17 @@ TOP_K = 3  # strongest-synapse-weight visual inputs kept per population per side
 # Same transmitter -> sign policy as FlyMarket's sim/build_connectome.py
 # (itself mirroring DOOMFLY's doom/transmitters.py): +1 acetylcholine,
 # -1 GABA/glutamate/histamine, +1 (ambiguous default) otherwise.
+#
+# KNOWN LIMITATION, disclosed here rather than left for someone else to
+# find: mapping glutamate -> -1 (inhibitory) is a reasonable population-level
+# default in the insect CNS generally, but it is WRONG specifically for
+# motor neurons at the Drosophila neuromuscular junction, where glutamate is
+# the EXCITATORY transmitter. TTMn (this circuit's jump-motor neuron) is
+# glutamatergic in MaleCNS v1.0, so its recorded sign here is backwards for
+# what TTMn actually does biologically. This is harmless in the GF circuit
+# built by circuit/binarize.py -- TTMn is a leaf/output neuron with no
+# outgoing edges in this subgraph, so its sign is recorded but never read to
+# flip an edge weight -- see circuit/DERIVATION.md section 3.
 TRANSMITTER_POSITIVE = {"acetylcholine"}
 TRANSMITTER_NEGATIVE = {"gaba", "glutamate", "histamine"}
 

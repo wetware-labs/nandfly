@@ -1,26 +1,18 @@
 {
   "schema_version": 1,
-  "description": "A verbatim 2-NAND + 1-LATCH fragment of full.json: the final TTMn-to-jump output stage for the LEFT hemisphere. In full.json this is the pair of NAND inverters that convert the left TTMn threshold unit's single-bit firing decision (and the shared reset pin) into active-low set/reset pulses, feeding the 'jump_left' LATCH that holds the fly's jump-commanded state. It is a real sub-piece of the real circuit -- the gate ids, gate types, and wiring below are copied unchanged from full.json (see test_seed_fragment.py), just with the two upstream signals (the left TTMn firing decision and the reset pin) re-exposed as this fragment's own named input pins instead of being computed by the (here, omitted) upstream adder-tree/comparator logic.",
+  "description": "A verbatim 2-NAND + 1-LATCH fragment of full.json: the final TTMn-to-jump output stage for the LEFT hemisphere. In full.json this is the reset-dominant set/reset conditioning (one NAND computing NOT(reset_pin), and one NAND computing NAND(ttmn_fires, that NOT(reset)) -- see build_full_netlist()'s point-7 docstring) feeding the 'jump_left' LATCH that holds the fly's jump-commanded state. It is a real sub-piece of the real circuit -- the gate ids, gate types, and wiring below are copied unchanged from full.json (see test_seed_fragment.py), just with the two external signals this stage depends on (the left hemisphere's jump-firing decision, and the shared reset pin) re-exposed as this fragment's own named input pins instead of being computed by the (here, omitted) upstream adder-tree/comparator logic. This fragment IS the output stage; it carries no synaptic weights or thresholds of its own -- see circuit/SCHEMA.md for exactly how its pin names trace back to full.json.",
   "source": {
     "netlist": "full.json",
     "hemisphere": "L",
     "gate_ids": [
-      "g387",
-      "g388",
+      "g327",
+      "g328",
       "jump_left"
     ]
   },
   "gates": [
     {
-      "id": "g387",
-      "type": "NAND",
-      "inputs": [
-        "g386",
-        "g386"
-      ]
-    },
-    {
-      "id": "g388",
+      "id": "g327",
       "type": "NAND",
       "inputs": [
         "reset",
@@ -28,16 +20,24 @@
       ]
     },
     {
+      "id": "g328",
+      "type": "NAND",
+      "inputs": [
+        "g326",
+        "g327"
+      ]
+    },
+    {
       "id": "jump_left",
       "type": "LATCH",
       "inputs": [
-        "g387",
-        "g388"
+        "g328",
+        "g327"
       ]
     }
   ],
   "input_pins": [
-    "g386",
+    "g326",
     "reset"
   ],
   "output_pins": {

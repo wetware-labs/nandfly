@@ -145,8 +145,8 @@ def test_compare_ge_handles_different_widths():
         (1, 0, 1, 0),
         (1, 1, 0, 0),  # hold
         (1, 1, 1, 1),  # hold
-        (0, 0, 0, 1),  # documented both-asserted convention
-        (0, 0, 1, 1),
+        (0, 0, 0, 0),  # reset-dominant both-asserted convention
+        (0, 0, 1, 0),
     ],
 )
 def test_latch_truth_table(set_n, reset_n, prev, expected):

@@ -2,7 +2,10 @@
 (circuit/data/subgraph.json, circuit/netlists/full.json,
 circuit/netlists/seed.json) against circuit/SCHEMA.md, plus a determinism
 check that re-running the pipeline on the checked-in subgraph reproduces the
-checked-in netlists byte-for-byte."""
+checked-in netlists. Where we say "byte-for-byte" we mean it literally (raw
+file bytes, see test_regenerating_full_netlist_is_byte_for_byte_identical);
+elsewhere we compare parsed JSON (dict equality) and say "parsed-equal", to
+keep the two claims honestly distinct."""
 import json
 from pathlib import Path
 
@@ -85,7 +88,10 @@ def test_seed_netlist_matches_schema():
     assert "description" in seed and "source" in seed
 
 
-def test_seed_is_byte_identical_subset_of_full():
+def test_seed_is_parsed_equal_subset_of_full():
+    """Parsed-equal (dict equality after JSON parsing), not a raw-bytes
+    comparison -- see test_regenerating_full_netlist_is_byte_for_byte_identical
+    below for an actual byte-for-byte check."""
     full = _load(FULL_PATH)
     seed = _load(SEED_PATH)
     full_gates_by_id = {g["id"]: g for g in full["gates"]}
@@ -102,25 +108,38 @@ def test_subgraph_neurons_all_have_valid_roles_and_sides():
         assert n["sign"] in (1, -1)
 
 
-def test_regenerating_full_netlist_from_checked_in_subgraph_is_byte_identical():
-    """The strongest reproducibility check: re-running the binarizer on the
-    already-extracted (and checked-in) subgraph must reproduce the
-    checked-in full.json exactly -- no hidden nondeterminism (dict
-    ordering, randomness, wall-clock timestamps, etc)."""
+def _write_like_binarize_main(netlist, path):
+    """Byte-for-byte reproduce circuit/binarize.py main()'s own write path
+    (open in text mode + json.dump(..., indent=2)), including whatever
+    newline translation the platform's text-mode file writing applies --
+    otherwise this test would fail on Windows for a trivial \\n vs \\r\\n
+    reason unrelated to netlist-generation determinism."""
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(netlist, f, indent=2)
+
+
+def test_regenerating_full_netlist_is_byte_for_byte_identical(tmp_path):
+    """The strongest reproducibility check, and a LITERAL byte comparison
+    (not just parsed-dict equality): re-running the binarizer on the
+    already-extracted (and checked-in) subgraph, then writing it out with
+    the exact same code path circuit/binarize.py's main() uses, must
+    reproduce the checked-in full.json's raw file bytes exactly -- no
+    hidden nondeterminism (dict ordering, randomness, wall-clock
+    timestamps, etc)."""
     subgraph = _load(SUBGRAPH_PATH)
     regenerated = build_full_netlist(subgraph)
-    checked_in = _load(FULL_PATH)
-    assert regenerated == checked_in
+    tmp_file = tmp_path / "full.json"
+    _write_like_binarize_main(regenerated, tmp_file)
+    assert tmp_file.read_bytes() == FULL_PATH.read_bytes()
 
 
-def test_regenerating_seed_from_regenerated_full_is_byte_identical():
+def test_regenerating_seed_from_regenerated_full_is_byte_for_byte_identical(tmp_path):
     subgraph = _load(SUBGRAPH_PATH)
     regenerated_full = build_full_netlist(subgraph)
     regenerated_seed = extract_seed_fragment(regenerated_full)
-    checked_in_seed = _load(SEED_PATH)
-    assert regenerated_seed["gates"] == checked_in_seed["gates"]
-    assert regenerated_seed["input_pins"] == checked_in_seed["input_pins"]
-    assert regenerated_seed["output_pins"] == checked_in_seed["output_pins"]
+    tmp_file = tmp_path / "seed.json"
+    _write_like_binarize_main(regenerated_seed, tmp_file)
+    assert tmp_file.read_bytes() == SEED_PATH.read_bytes()
 
 
 def test_running_binarize_twice_is_deterministic():

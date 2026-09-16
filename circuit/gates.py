@@ -13,17 +13,18 @@ both depend on it):
     set_n=0, reset_n=1  -> Q := 1
     set_n=1, reset_n=0  -> Q := 0
     set_n=1, reset_n=1  -> Q := previous Q (hold)
-    set_n=0, reset_n=0  -> Q := 1 (defined convention for the otherwise
-                                    "invalid" both-asserted state of a real
-                                    cross-coupled NAND latch, since we do not
-                                    model the complementary Q-bar output;
-                                    circuit/binarize.py's own set/reset
-                                    conditioning is constructed so this case
-                                    never actually arises -- see
-                                    test_gates.py::test_latch_never_sees_both_asserted_in_practice
-                                    is NOT a general proof, just documentation
-                                    of intent -- and DERIVATION.md's
-                                    limitations section)
+    set_n=0, reset_n=0  -> Q := 0 (RESET-DOMINANT convention for the
+                                    otherwise "invalid" both-asserted state
+                                    of a real cross-coupled NAND latch, since
+                                    we do not model the complementary Q-bar
+                                    output: if reset is asserted, the latch
+                                    clears, even if set is asserted too).
+  This primitive-level convention is a documented fallback only.
+  circuit/binarize.py additionally makes the both-asserted state
+  STRUCTURALLY unreachable at its one call site (its `set_n` signal is
+  itself gated through NOT(reset), so `set_n` can never be 0 while
+  `reset_n` is 0 -- see build_full_netlist()'s reset-dominant conditioning
+  and test_binarize.py::test_latch_set_is_structurally_gated_by_reset).
   All other logic (NOT/AND/OR/XOR, adders, comparators) is compiled down to
   NAND gates only, using standard, generic digital-logic identities (none of
   this is specific to any GF netlist -- it is textbook Boolean algebra):
@@ -60,11 +61,16 @@ both depend on it):
   carrying into the next. Narrower operand is treated as zero-extended
   (missing high bits are the constant-0 pin).
 
-  Magnitude comparator GE(a_bits, b_bits) (is A >= B, MSB-first ripple from
-  the top bit down): per-bit `gt_i = AND(a_i, NOT b_i)`, `eq_i = XNOR(a_i,
-  b_i) = NOT(XOR(a_i, b_i))`, folded top-down as
-  `ge := gt_top OR (eq_top AND ge_of_lower_bits)`, seeded with ge = 1 (true)
-  below the lowest bit.
+  Magnitude comparator GE(a_bits, b_bits) (is A >= B): per-bit `gt_i =
+  AND(a_i, NOT b_i)`, `eq_i = XNOR(a_i, b_i) = NOT(XOR(a_i, b_i))`, folded
+  bit by bit as `ge := gt_i OR (eq_i AND ge_so_far)`, seeded with `ge = 1`
+  (true) below bit 0. The fold MUST run from the least significant bit up
+  to the most significant bit (i.e. iterate the LSB-first bit-vectors in
+  their natural order, do not reverse them), so that a decision made by a
+  more-significant bit is computed LAST and can never be overridden by a
+  less-significant one. (An earlier MSB-first version of this fold had
+  exactly that bug -- fixed, see test_compare_ge_matches_integer_comparison
+  in test_gates.py.)
 """
 from dataclasses import dataclass, field
 
@@ -272,8 +278,8 @@ def evaluate_netlist(netlist: dict, input_values: dict, prev_state: dict = None)
                 q = 0
             elif set_n == 1 and reset_n == 1:
                 q = prev_q
-            else:  # set_n == 0 and reset_n == 0 -- documented convention
-                q = 1
+            else:  # set_n == 0 and reset_n == 0 -- reset-dominant convention
+                q = 0
             values[gid] = q
             latch_state[gid] = q
         else:

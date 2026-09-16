@@ -58,7 +58,12 @@ neuron's outgoing edges.
       "max_possible_sum": int       // gf / jump_motor rows only
     }
   ],
-  "params": { "bit_width": int, "scale": int, "max_magnitude": int, "threshold_rule": str }
+  "params": {
+    "bit_width": int, "scale": int, "max_magnitude": int,
+    "threshold_rule_multi_input": str, "threshold_rule_single_input": str,
+    "visual_inputs_kept": int, "visual_inputs_available": int,
+    "visual_inputs_kept_fraction": str  // e.g. "12 of 311 available LC4/LPLC2 neurons (3.9%)"
+  }
 }
 ```
 
@@ -77,7 +82,15 @@ topological/evaluation order -- see `circuit/gates.py`):
   | 0 | 1 | 1 |
   | 1 | 0 | 0 |
   | 1 | 1 | hold (previous Q) |
-  | 0 | 0 | 1 (documented convention; see `circuit/gates.py`) |
+  | 0 | 0 | 0 (RESET-DOMINANT convention; see `circuit/gates.py`) |
+
+  This primitive-level convention is a documented fallback only.
+  `circuit/binarize.py` additionally makes the both-asserted state
+  STRUCTURALLY unreachable at its one call site: its `set_n` is computed as
+  `NAND(fires_signal, reset_n)` rather than a plain `NOT(fires_signal)`, so
+  `set_n` can never be 0 while `reset_n` is 0 (see
+  `circuit/binarize.py::build_full_netlist`'s reset-dominant conditioning
+  and `tests/test_binarize.py::test_latch_set_is_structurally_gated_by_reset`).
 
 ### Signals
 
@@ -140,6 +153,24 @@ full derivation) and instead adds:
   "source": { "netlist": "full.json", "hemisphere": "L"|"R", "gate_ids": [str, str, str] }
 }
 ```
-Its `gates` list is a byte-identical copy of exactly those 3 gate entries
-from `full.json` (2 `NAND` + 1 `LATCH`) -- see
-`tests/test_seed_fragment.py`.
+Its `gates` list is a verbatim copy (identical id/type/inputs; checked
+byte-for-byte against the committed files by `tests/test_netlist_schema.py`)
+of exactly those 3 gate entries from `full.json` (2 `NAND` + 1 `LATCH`) --
+see `tests/test_seed_fragment.py`.
+
+#### seed.json pin naming (provenance rationale)
+
+`seed.json`'s `input_pins` are named by REUSING the exact identifiers they
+have in `full.json`, so the fragment's provenance is traceable just by
+reading its pin names against `full.json`'s own gate/pin list, with no
+separate lookup table needed:
+- `reset` is literally `full.json`'s own `reset` input pin -- same name,
+  same meaning, since this fragment's `reset_n` gate consumes it directly.
+- The other input pin (the upstream jump-firing signal this fragment
+  depends on but does not itself compute) is named after the exact
+  `full.json` GATE id whose output it stands in for -- e.g. a name like
+  `g113` is not an arbitrary label, it is literally
+  `full.json`'s gate id for that hemisphere's GF/TTMn firing decision. A
+  reader can look that id up directly in `full.json`'s `gates` list (or in
+  `neuron_gate_map`) to see exactly which upstream computation this
+  fragment's input pin used to be wired to before extraction.

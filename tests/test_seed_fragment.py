@@ -1,5 +1,7 @@
 """Dedicated tests for the claim in circuit/DERIVATION.md section 7: seed.json
-is a verbatim (byte-identical) 2-NAND + 1-LATCH sub-piece of full.json, not a
+is a verbatim (parsed-equal -- same id/type/inputs; see
+tests/test_netlist_schema.py for an actual byte-for-byte check of the
+checked-in files) 2-NAND + 1-LATCH sub-piece of full.json, not a
 hand-written stand-in."""
 from circuit.binarize import build_full_netlist, extract_seed_fragment
 from tests.test_binarize import TINY_SUBGRAPH
