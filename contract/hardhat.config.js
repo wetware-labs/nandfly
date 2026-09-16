@@ -40,12 +40,10 @@ module.exports = {
     },
   },
   etherscan: {
-    // BscScan verification (Task 5). BSCSCAN_API_KEY is NOT set anywhere in
-    // this repo; `npx hardhat verify` is a no-op/error without it exported.
-    apiKey: {
-      bsc: process.env.BSCSCAN_API_KEY || "",
-      bscTestnet: process.env.BSCSCAN_API_KEY || "",
-    },
+    // BscScan verification (Task 5) via the Etherscan V2 API: one key for all
+    // chains. BSCSCAN_API_KEY is NOT committed; `npx hardhat verify` fails
+    // closed without it exported.
+    apiKey: process.env.BSCSCAN_API_KEY || "",
   },
   mocha: {
     timeout: 300000,
