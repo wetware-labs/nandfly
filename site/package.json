@@ -1,0 +1,6 @@
+{
+  "name": "nandfly-site",
+  "private": true,
+  "type": "module",
+  "description": "Static site, zero deps. This package.json exists only to mark site/js/*.js as ES modules for both the browser (<script type=\"module\">) and Node (tests/site-netlist-parity.test.mjs importing site/js/netlist.js)."
+}

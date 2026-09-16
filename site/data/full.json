@@ -1,0 +1,5463 @@
+{
+  "schema_version": 1,
+  "gates": [
+    {
+      "id": "g1",
+      "type": "NAND",
+      "inputs": [
+        "spike_17478",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g2",
+      "type": "NAND",
+      "inputs": [
+        "g1",
+        "g1"
+      ]
+    },
+    {
+      "id": "g3",
+      "type": "NAND",
+      "inputs": [
+        "spike_17478",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g4",
+      "type": "NAND",
+      "inputs": [
+        "g3",
+        "g3"
+      ]
+    },
+    {
+      "id": "g5",
+      "type": "NAND",
+      "inputs": [
+        "spike_17478",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g6",
+      "type": "NAND",
+      "inputs": [
+        "g5",
+        "g5"
+      ]
+    },
+    {
+      "id": "g7",
+      "type": "NAND",
+      "inputs": [
+        "spike_17478",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g8",
+      "type": "NAND",
+      "inputs": [
+        "g7",
+        "g7"
+      ]
+    },
+    {
+      "id": "g9",
+      "type": "NAND",
+      "inputs": [
+        "spike_17653",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g10",
+      "type": "NAND",
+      "inputs": [
+        "g9",
+        "g9"
+      ]
+    },
+    {
+      "id": "g11",
+      "type": "NAND",
+      "inputs": [
+        "spike_17653",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g12",
+      "type": "NAND",
+      "inputs": [
+        "g11",
+        "g11"
+      ]
+    },
+    {
+      "id": "g13",
+      "type": "NAND",
+      "inputs": [
+        "spike_17653",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g14",
+      "type": "NAND",
+      "inputs": [
+        "g13",
+        "g13"
+      ]
+    },
+    {
+      "id": "g15",
+      "type": "NAND",
+      "inputs": [
+        "spike_17653",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g16",
+      "type": "NAND",
+      "inputs": [
+        "g15",
+        "g15"
+      ]
+    },
+    {
+      "id": "g17",
+      "type": "NAND",
+      "inputs": [
+        "spike_518439",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g18",
+      "type": "NAND",
+      "inputs": [
+        "g17",
+        "g17"
+      ]
+    },
+    {
+      "id": "g19",
+      "type": "NAND",
+      "inputs": [
+        "spike_518439",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g20",
+      "type": "NAND",
+      "inputs": [
+        "g19",
+        "g19"
+      ]
+    },
+    {
+      "id": "g21",
+      "type": "NAND",
+      "inputs": [
+        "spike_518439",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g22",
+      "type": "NAND",
+      "inputs": [
+        "g21",
+        "g21"
+      ]
+    },
+    {
+      "id": "g23",
+      "type": "NAND",
+      "inputs": [
+        "spike_518439",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g24",
+      "type": "NAND",
+      "inputs": [
+        "g23",
+        "g23"
+      ]
+    },
+    {
+      "id": "g25",
+      "type": "NAND",
+      "inputs": [
+        "spike_31563",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g26",
+      "type": "NAND",
+      "inputs": [
+        "g25",
+        "g25"
+      ]
+    },
+    {
+      "id": "g27",
+      "type": "NAND",
+      "inputs": [
+        "spike_31563",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g28",
+      "type": "NAND",
+      "inputs": [
+        "g27",
+        "g27"
+      ]
+    },
+    {
+      "id": "g29",
+      "type": "NAND",
+      "inputs": [
+        "spike_31563",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g30",
+      "type": "NAND",
+      "inputs": [
+        "g29",
+        "g29"
+      ]
+    },
+    {
+      "id": "g31",
+      "type": "NAND",
+      "inputs": [
+        "spike_31563",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g32",
+      "type": "NAND",
+      "inputs": [
+        "g31",
+        "g31"
+      ]
+    },
+    {
+      "id": "g33",
+      "type": "NAND",
+      "inputs": [
+        "spike_22253",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g34",
+      "type": "NAND",
+      "inputs": [
+        "g33",
+        "g33"
+      ]
+    },
+    {
+      "id": "g35",
+      "type": "NAND",
+      "inputs": [
+        "spike_22253",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g36",
+      "type": "NAND",
+      "inputs": [
+        "g35",
+        "g35"
+      ]
+    },
+    {
+      "id": "g37",
+      "type": "NAND",
+      "inputs": [
+        "spike_22253",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g38",
+      "type": "NAND",
+      "inputs": [
+        "g37",
+        "g37"
+      ]
+    },
+    {
+      "id": "g39",
+      "type": "NAND",
+      "inputs": [
+        "spike_22253",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g40",
+      "type": "NAND",
+      "inputs": [
+        "g39",
+        "g39"
+      ]
+    },
+    {
+      "id": "g41",
+      "type": "NAND",
+      "inputs": [
+        "spike_19787",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g42",
+      "type": "NAND",
+      "inputs": [
+        "g41",
+        "g41"
+      ]
+    },
+    {
+      "id": "g43",
+      "type": "NAND",
+      "inputs": [
+        "spike_19787",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g44",
+      "type": "NAND",
+      "inputs": [
+        "g43",
+        "g43"
+      ]
+    },
+    {
+      "id": "g45",
+      "type": "NAND",
+      "inputs": [
+        "spike_19787",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g46",
+      "type": "NAND",
+      "inputs": [
+        "g45",
+        "g45"
+      ]
+    },
+    {
+      "id": "g47",
+      "type": "NAND",
+      "inputs": [
+        "spike_19787",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g48",
+      "type": "NAND",
+      "inputs": [
+        "g47",
+        "g47"
+      ]
+    },
+    {
+      "id": "g49",
+      "type": "NAND",
+      "inputs": [
+        "g2",
+        "g10"
+      ]
+    },
+    {
+      "id": "g50",
+      "type": "NAND",
+      "inputs": [
+        "g2",
+        "g49"
+      ]
+    },
+    {
+      "id": "g51",
+      "type": "NAND",
+      "inputs": [
+        "g10",
+        "g49"
+      ]
+    },
+    {
+      "id": "g52",
+      "type": "NAND",
+      "inputs": [
+        "g50",
+        "g51"
+      ]
+    },
+    {
+      "id": "g53",
+      "type": "NAND",
+      "inputs": [
+        "g49",
+        "g49"
+      ]
+    },
+    {
+      "id": "g54",
+      "type": "NAND",
+      "inputs": [
+        "g4",
+        "g12"
+      ]
+    },
+    {
+      "id": "g55",
+      "type": "NAND",
+      "inputs": [
+        "g4",
+        "g54"
+      ]
+    },
+    {
+      "id": "g56",
+      "type": "NAND",
+      "inputs": [
+        "g12",
+        "g54"
+      ]
+    },
+    {
+      "id": "g57",
+      "type": "NAND",
+      "inputs": [
+        "g55",
+        "g56"
+      ]
+    },
+    {
+      "id": "g58",
+      "type": "NAND",
+      "inputs": [
+        "g57",
+        "g53"
+      ]
+    },
+    {
+      "id": "g59",
+      "type": "NAND",
+      "inputs": [
+        "g57",
+        "g58"
+      ]
+    },
+    {
+      "id": "g60",
+      "type": "NAND",
+      "inputs": [
+        "g53",
+        "g58"
+      ]
+    },
+    {
+      "id": "g61",
+      "type": "NAND",
+      "inputs": [
+        "g59",
+        "g60"
+      ]
+    },
+    {
+      "id": "g62",
+      "type": "NAND",
+      "inputs": [
+        "g58",
+        "g54"
+      ]
+    },
+    {
+      "id": "g63",
+      "type": "NAND",
+      "inputs": [
+        "g6",
+        "g14"
+      ]
+    },
+    {
+      "id": "g64",
+      "type": "NAND",
+      "inputs": [
+        "g6",
+        "g63"
+      ]
+    },
+    {
+      "id": "g65",
+      "type": "NAND",
+      "inputs": [
+        "g14",
+        "g63"
+      ]
+    },
+    {
+      "id": "g66",
+      "type": "NAND",
+      "inputs": [
+        "g64",
+        "g65"
+      ]
+    },
+    {
+      "id": "g67",
+      "type": "NAND",
+      "inputs": [
+        "g66",
+        "g62"
+      ]
+    },
+    {
+      "id": "g68",
+      "type": "NAND",
+      "inputs": [
+        "g66",
+        "g67"
+      ]
+    },
+    {
+      "id": "g69",
+      "type": "NAND",
+      "inputs": [
+        "g62",
+        "g67"
+      ]
+    },
+    {
+      "id": "g70",
+      "type": "NAND",
+      "inputs": [
+        "g68",
+        "g69"
+      ]
+    },
+    {
+      "id": "g71",
+      "type": "NAND",
+      "inputs": [
+        "g67",
+        "g63"
+      ]
+    },
+    {
+      "id": "g72",
+      "type": "NAND",
+      "inputs": [
+        "g8",
+        "g16"
+      ]
+    },
+    {
+      "id": "g73",
+      "type": "NAND",
+      "inputs": [
+        "g8",
+        "g72"
+      ]
+    },
+    {
+      "id": "g74",
+      "type": "NAND",
+      "inputs": [
+        "g16",
+        "g72"
+      ]
+    },
+    {
+      "id": "g75",
+      "type": "NAND",
+      "inputs": [
+        "g73",
+        "g74"
+      ]
+    },
+    {
+      "id": "g76",
+      "type": "NAND",
+      "inputs": [
+        "g75",
+        "g71"
+      ]
+    },
+    {
+      "id": "g77",
+      "type": "NAND",
+      "inputs": [
+        "g75",
+        "g76"
+      ]
+    },
+    {
+      "id": "g78",
+      "type": "NAND",
+      "inputs": [
+        "g71",
+        "g76"
+      ]
+    },
+    {
+      "id": "g79",
+      "type": "NAND",
+      "inputs": [
+        "g77",
+        "g78"
+      ]
+    },
+    {
+      "id": "g80",
+      "type": "NAND",
+      "inputs": [
+        "g76",
+        "g72"
+      ]
+    },
+    {
+      "id": "g81",
+      "type": "NAND",
+      "inputs": [
+        "g18",
+        "g26"
+      ]
+    },
+    {
+      "id": "g82",
+      "type": "NAND",
+      "inputs": [
+        "g18",
+        "g81"
+      ]
+    },
+    {
+      "id": "g83",
+      "type": "NAND",
+      "inputs": [
+        "g26",
+        "g81"
+      ]
+    },
+    {
+      "id": "g84",
+      "type": "NAND",
+      "inputs": [
+        "g82",
+        "g83"
+      ]
+    },
+    {
+      "id": "g85",
+      "type": "NAND",
+      "inputs": [
+        "g81",
+        "g81"
+      ]
+    },
+    {
+      "id": "g86",
+      "type": "NAND",
+      "inputs": [
+        "g20",
+        "g28"
+      ]
+    },
+    {
+      "id": "g87",
+      "type": "NAND",
+      "inputs": [
+        "g20",
+        "g86"
+      ]
+    },
+    {
+      "id": "g88",
+      "type": "NAND",
+      "inputs": [
+        "g28",
+        "g86"
+      ]
+    },
+    {
+      "id": "g89",
+      "type": "NAND",
+      "inputs": [
+        "g87",
+        "g88"
+      ]
+    },
+    {
+      "id": "g90",
+      "type": "NAND",
+      "inputs": [
+        "g89",
+        "g85"
+      ]
+    },
+    {
+      "id": "g91",
+      "type": "NAND",
+      "inputs": [
+        "g89",
+        "g90"
+      ]
+    },
+    {
+      "id": "g92",
+      "type": "NAND",
+      "inputs": [
+        "g85",
+        "g90"
+      ]
+    },
+    {
+      "id": "g93",
+      "type": "NAND",
+      "inputs": [
+        "g91",
+        "g92"
+      ]
+    },
+    {
+      "id": "g94",
+      "type": "NAND",
+      "inputs": [
+        "g90",
+        "g86"
+      ]
+    },
+    {
+      "id": "g95",
+      "type": "NAND",
+      "inputs": [
+        "g22",
+        "g30"
+      ]
+    },
+    {
+      "id": "g96",
+      "type": "NAND",
+      "inputs": [
+        "g22",
+        "g95"
+      ]
+    },
+    {
+      "id": "g97",
+      "type": "NAND",
+      "inputs": [
+        "g30",
+        "g95"
+      ]
+    },
+    {
+      "id": "g98",
+      "type": "NAND",
+      "inputs": [
+        "g96",
+        "g97"
+      ]
+    },
+    {
+      "id": "g99",
+      "type": "NAND",
+      "inputs": [
+        "g98",
+        "g94"
+      ]
+    },
+    {
+      "id": "g100",
+      "type": "NAND",
+      "inputs": [
+        "g98",
+        "g99"
+      ]
+    },
+    {
+      "id": "g101",
+      "type": "NAND",
+      "inputs": [
+        "g94",
+        "g99"
+      ]
+    },
+    {
+      "id": "g102",
+      "type": "NAND",
+      "inputs": [
+        "g100",
+        "g101"
+      ]
+    },
+    {
+      "id": "g103",
+      "type": "NAND",
+      "inputs": [
+        "g99",
+        "g95"
+      ]
+    },
+    {
+      "id": "g104",
+      "type": "NAND",
+      "inputs": [
+        "g24",
+        "g32"
+      ]
+    },
+    {
+      "id": "g105",
+      "type": "NAND",
+      "inputs": [
+        "g24",
+        "g104"
+      ]
+    },
+    {
+      "id": "g106",
+      "type": "NAND",
+      "inputs": [
+        "g32",
+        "g104"
+      ]
+    },
+    {
+      "id": "g107",
+      "type": "NAND",
+      "inputs": [
+        "g105",
+        "g106"
+      ]
+    },
+    {
+      "id": "g108",
+      "type": "NAND",
+      "inputs": [
+        "g107",
+        "g103"
+      ]
+    },
+    {
+      "id": "g109",
+      "type": "NAND",
+      "inputs": [
+        "g107",
+        "g108"
+      ]
+    },
+    {
+      "id": "g110",
+      "type": "NAND",
+      "inputs": [
+        "g103",
+        "g108"
+      ]
+    },
+    {
+      "id": "g111",
+      "type": "NAND",
+      "inputs": [
+        "g109",
+        "g110"
+      ]
+    },
+    {
+      "id": "g112",
+      "type": "NAND",
+      "inputs": [
+        "g108",
+        "g104"
+      ]
+    },
+    {
+      "id": "g113",
+      "type": "NAND",
+      "inputs": [
+        "g34",
+        "g42"
+      ]
+    },
+    {
+      "id": "g114",
+      "type": "NAND",
+      "inputs": [
+        "g34",
+        "g113"
+      ]
+    },
+    {
+      "id": "g115",
+      "type": "NAND",
+      "inputs": [
+        "g42",
+        "g113"
+      ]
+    },
+    {
+      "id": "g116",
+      "type": "NAND",
+      "inputs": [
+        "g114",
+        "g115"
+      ]
+    },
+    {
+      "id": "g117",
+      "type": "NAND",
+      "inputs": [
+        "g113",
+        "g113"
+      ]
+    },
+    {
+      "id": "g118",
+      "type": "NAND",
+      "inputs": [
+        "g36",
+        "g44"
+      ]
+    },
+    {
+      "id": "g119",
+      "type": "NAND",
+      "inputs": [
+        "g36",
+        "g118"
+      ]
+    },
+    {
+      "id": "g120",
+      "type": "NAND",
+      "inputs": [
+        "g44",
+        "g118"
+      ]
+    },
+    {
+      "id": "g121",
+      "type": "NAND",
+      "inputs": [
+        "g119",
+        "g120"
+      ]
+    },
+    {
+      "id": "g122",
+      "type": "NAND",
+      "inputs": [
+        "g121",
+        "g117"
+      ]
+    },
+    {
+      "id": "g123",
+      "type": "NAND",
+      "inputs": [
+        "g121",
+        "g122"
+      ]
+    },
+    {
+      "id": "g124",
+      "type": "NAND",
+      "inputs": [
+        "g117",
+        "g122"
+      ]
+    },
+    {
+      "id": "g125",
+      "type": "NAND",
+      "inputs": [
+        "g123",
+        "g124"
+      ]
+    },
+    {
+      "id": "g126",
+      "type": "NAND",
+      "inputs": [
+        "g122",
+        "g118"
+      ]
+    },
+    {
+      "id": "g127",
+      "type": "NAND",
+      "inputs": [
+        "g38",
+        "g46"
+      ]
+    },
+    {
+      "id": "g128",
+      "type": "NAND",
+      "inputs": [
+        "g38",
+        "g127"
+      ]
+    },
+    {
+      "id": "g129",
+      "type": "NAND",
+      "inputs": [
+        "g46",
+        "g127"
+      ]
+    },
+    {
+      "id": "g130",
+      "type": "NAND",
+      "inputs": [
+        "g128",
+        "g129"
+      ]
+    },
+    {
+      "id": "g131",
+      "type": "NAND",
+      "inputs": [
+        "g130",
+        "g126"
+      ]
+    },
+    {
+      "id": "g132",
+      "type": "NAND",
+      "inputs": [
+        "g130",
+        "g131"
+      ]
+    },
+    {
+      "id": "g133",
+      "type": "NAND",
+      "inputs": [
+        "g126",
+        "g131"
+      ]
+    },
+    {
+      "id": "g134",
+      "type": "NAND",
+      "inputs": [
+        "g132",
+        "g133"
+      ]
+    },
+    {
+      "id": "g135",
+      "type": "NAND",
+      "inputs": [
+        "g131",
+        "g127"
+      ]
+    },
+    {
+      "id": "g136",
+      "type": "NAND",
+      "inputs": [
+        "g40",
+        "g48"
+      ]
+    },
+    {
+      "id": "g137",
+      "type": "NAND",
+      "inputs": [
+        "g40",
+        "g136"
+      ]
+    },
+    {
+      "id": "g138",
+      "type": "NAND",
+      "inputs": [
+        "g48",
+        "g136"
+      ]
+    },
+    {
+      "id": "g139",
+      "type": "NAND",
+      "inputs": [
+        "g137",
+        "g138"
+      ]
+    },
+    {
+      "id": "g140",
+      "type": "NAND",
+      "inputs": [
+        "g139",
+        "g135"
+      ]
+    },
+    {
+      "id": "g141",
+      "type": "NAND",
+      "inputs": [
+        "g139",
+        "g140"
+      ]
+    },
+    {
+      "id": "g142",
+      "type": "NAND",
+      "inputs": [
+        "g135",
+        "g140"
+      ]
+    },
+    {
+      "id": "g143",
+      "type": "NAND",
+      "inputs": [
+        "g141",
+        "g142"
+      ]
+    },
+    {
+      "id": "g144",
+      "type": "NAND",
+      "inputs": [
+        "g140",
+        "g136"
+      ]
+    },
+    {
+      "id": "g145",
+      "type": "NAND",
+      "inputs": [
+        "g52",
+        "g84"
+      ]
+    },
+    {
+      "id": "g146",
+      "type": "NAND",
+      "inputs": [
+        "g52",
+        "g145"
+      ]
+    },
+    {
+      "id": "g147",
+      "type": "NAND",
+      "inputs": [
+        "g84",
+        "g145"
+      ]
+    },
+    {
+      "id": "g148",
+      "type": "NAND",
+      "inputs": [
+        "g146",
+        "g147"
+      ]
+    },
+    {
+      "id": "g149",
+      "type": "NAND",
+      "inputs": [
+        "g145",
+        "g145"
+      ]
+    },
+    {
+      "id": "g150",
+      "type": "NAND",
+      "inputs": [
+        "g61",
+        "g93"
+      ]
+    },
+    {
+      "id": "g151",
+      "type": "NAND",
+      "inputs": [
+        "g61",
+        "g150"
+      ]
+    },
+    {
+      "id": "g152",
+      "type": "NAND",
+      "inputs": [
+        "g93",
+        "g150"
+      ]
+    },
+    {
+      "id": "g153",
+      "type": "NAND",
+      "inputs": [
+        "g151",
+        "g152"
+      ]
+    },
+    {
+      "id": "g154",
+      "type": "NAND",
+      "inputs": [
+        "g153",
+        "g149"
+      ]
+    },
+    {
+      "id": "g155",
+      "type": "NAND",
+      "inputs": [
+        "g153",
+        "g154"
+      ]
+    },
+    {
+      "id": "g156",
+      "type": "NAND",
+      "inputs": [
+        "g149",
+        "g154"
+      ]
+    },
+    {
+      "id": "g157",
+      "type": "NAND",
+      "inputs": [
+        "g155",
+        "g156"
+      ]
+    },
+    {
+      "id": "g158",
+      "type": "NAND",
+      "inputs": [
+        "g154",
+        "g150"
+      ]
+    },
+    {
+      "id": "g159",
+      "type": "NAND",
+      "inputs": [
+        "g70",
+        "g102"
+      ]
+    },
+    {
+      "id": "g160",
+      "type": "NAND",
+      "inputs": [
+        "g70",
+        "g159"
+      ]
+    },
+    {
+      "id": "g161",
+      "type": "NAND",
+      "inputs": [
+        "g102",
+        "g159"
+      ]
+    },
+    {
+      "id": "g162",
+      "type": "NAND",
+      "inputs": [
+        "g160",
+        "g161"
+      ]
+    },
+    {
+      "id": "g163",
+      "type": "NAND",
+      "inputs": [
+        "g162",
+        "g158"
+      ]
+    },
+    {
+      "id": "g164",
+      "type": "NAND",
+      "inputs": [
+        "g162",
+        "g163"
+      ]
+    },
+    {
+      "id": "g165",
+      "type": "NAND",
+      "inputs": [
+        "g158",
+        "g163"
+      ]
+    },
+    {
+      "id": "g166",
+      "type": "NAND",
+      "inputs": [
+        "g164",
+        "g165"
+      ]
+    },
+    {
+      "id": "g167",
+      "type": "NAND",
+      "inputs": [
+        "g163",
+        "g159"
+      ]
+    },
+    {
+      "id": "g168",
+      "type": "NAND",
+      "inputs": [
+        "g79",
+        "g111"
+      ]
+    },
+    {
+      "id": "g169",
+      "type": "NAND",
+      "inputs": [
+        "g79",
+        "g168"
+      ]
+    },
+    {
+      "id": "g170",
+      "type": "NAND",
+      "inputs": [
+        "g111",
+        "g168"
+      ]
+    },
+    {
+      "id": "g171",
+      "type": "NAND",
+      "inputs": [
+        "g169",
+        "g170"
+      ]
+    },
+    {
+      "id": "g172",
+      "type": "NAND",
+      "inputs": [
+        "g171",
+        "g167"
+      ]
+    },
+    {
+      "id": "g173",
+      "type": "NAND",
+      "inputs": [
+        "g171",
+        "g172"
+      ]
+    },
+    {
+      "id": "g174",
+      "type": "NAND",
+      "inputs": [
+        "g167",
+        "g172"
+      ]
+    },
+    {
+      "id": "g175",
+      "type": "NAND",
+      "inputs": [
+        "g173",
+        "g174"
+      ]
+    },
+    {
+      "id": "g176",
+      "type": "NAND",
+      "inputs": [
+        "g172",
+        "g168"
+      ]
+    },
+    {
+      "id": "g177",
+      "type": "NAND",
+      "inputs": [
+        "g80",
+        "g112"
+      ]
+    },
+    {
+      "id": "g178",
+      "type": "NAND",
+      "inputs": [
+        "g80",
+        "g177"
+      ]
+    },
+    {
+      "id": "g179",
+      "type": "NAND",
+      "inputs": [
+        "g112",
+        "g177"
+      ]
+    },
+    {
+      "id": "g180",
+      "type": "NAND",
+      "inputs": [
+        "g178",
+        "g179"
+      ]
+    },
+    {
+      "id": "g181",
+      "type": "NAND",
+      "inputs": [
+        "g180",
+        "g176"
+      ]
+    },
+    {
+      "id": "g182",
+      "type": "NAND",
+      "inputs": [
+        "g180",
+        "g181"
+      ]
+    },
+    {
+      "id": "g183",
+      "type": "NAND",
+      "inputs": [
+        "g176",
+        "g181"
+      ]
+    },
+    {
+      "id": "g184",
+      "type": "NAND",
+      "inputs": [
+        "g182",
+        "g183"
+      ]
+    },
+    {
+      "id": "g185",
+      "type": "NAND",
+      "inputs": [
+        "g181",
+        "g177"
+      ]
+    },
+    {
+      "id": "g186",
+      "type": "NAND",
+      "inputs": [
+        "g148",
+        "g116"
+      ]
+    },
+    {
+      "id": "g187",
+      "type": "NAND",
+      "inputs": [
+        "g148",
+        "g186"
+      ]
+    },
+    {
+      "id": "g188",
+      "type": "NAND",
+      "inputs": [
+        "g116",
+        "g186"
+      ]
+    },
+    {
+      "id": "g189",
+      "type": "NAND",
+      "inputs": [
+        "g187",
+        "g188"
+      ]
+    },
+    {
+      "id": "g190",
+      "type": "NAND",
+      "inputs": [
+        "g186",
+        "g186"
+      ]
+    },
+    {
+      "id": "g191",
+      "type": "NAND",
+      "inputs": [
+        "g157",
+        "g125"
+      ]
+    },
+    {
+      "id": "g192",
+      "type": "NAND",
+      "inputs": [
+        "g157",
+        "g191"
+      ]
+    },
+    {
+      "id": "g193",
+      "type": "NAND",
+      "inputs": [
+        "g125",
+        "g191"
+      ]
+    },
+    {
+      "id": "g194",
+      "type": "NAND",
+      "inputs": [
+        "g192",
+        "g193"
+      ]
+    },
+    {
+      "id": "g195",
+      "type": "NAND",
+      "inputs": [
+        "g194",
+        "g190"
+      ]
+    },
+    {
+      "id": "g196",
+      "type": "NAND",
+      "inputs": [
+        "g194",
+        "g195"
+      ]
+    },
+    {
+      "id": "g197",
+      "type": "NAND",
+      "inputs": [
+        "g190",
+        "g195"
+      ]
+    },
+    {
+      "id": "g198",
+      "type": "NAND",
+      "inputs": [
+        "g196",
+        "g197"
+      ]
+    },
+    {
+      "id": "g199",
+      "type": "NAND",
+      "inputs": [
+        "g195",
+        "g191"
+      ]
+    },
+    {
+      "id": "g200",
+      "type": "NAND",
+      "inputs": [
+        "g166",
+        "g134"
+      ]
+    },
+    {
+      "id": "g201",
+      "type": "NAND",
+      "inputs": [
+        "g166",
+        "g200"
+      ]
+    },
+    {
+      "id": "g202",
+      "type": "NAND",
+      "inputs": [
+        "g134",
+        "g200"
+      ]
+    },
+    {
+      "id": "g203",
+      "type": "NAND",
+      "inputs": [
+        "g201",
+        "g202"
+      ]
+    },
+    {
+      "id": "g204",
+      "type": "NAND",
+      "inputs": [
+        "g203",
+        "g199"
+      ]
+    },
+    {
+      "id": "g205",
+      "type": "NAND",
+      "inputs": [
+        "g203",
+        "g204"
+      ]
+    },
+    {
+      "id": "g206",
+      "type": "NAND",
+      "inputs": [
+        "g199",
+        "g204"
+      ]
+    },
+    {
+      "id": "g207",
+      "type": "NAND",
+      "inputs": [
+        "g205",
+        "g206"
+      ]
+    },
+    {
+      "id": "g208",
+      "type": "NAND",
+      "inputs": [
+        "g204",
+        "g200"
+      ]
+    },
+    {
+      "id": "g209",
+      "type": "NAND",
+      "inputs": [
+        "g175",
+        "g143"
+      ]
+    },
+    {
+      "id": "g210",
+      "type": "NAND",
+      "inputs": [
+        "g175",
+        "g209"
+      ]
+    },
+    {
+      "id": "g211",
+      "type": "NAND",
+      "inputs": [
+        "g143",
+        "g209"
+      ]
+    },
+    {
+      "id": "g212",
+      "type": "NAND",
+      "inputs": [
+        "g210",
+        "g211"
+      ]
+    },
+    {
+      "id": "g213",
+      "type": "NAND",
+      "inputs": [
+        "g212",
+        "g208"
+      ]
+    },
+    {
+      "id": "g214",
+      "type": "NAND",
+      "inputs": [
+        "g212",
+        "g213"
+      ]
+    },
+    {
+      "id": "g215",
+      "type": "NAND",
+      "inputs": [
+        "g208",
+        "g213"
+      ]
+    },
+    {
+      "id": "g216",
+      "type": "NAND",
+      "inputs": [
+        "g214",
+        "g215"
+      ]
+    },
+    {
+      "id": "g217",
+      "type": "NAND",
+      "inputs": [
+        "g213",
+        "g209"
+      ]
+    },
+    {
+      "id": "g218",
+      "type": "NAND",
+      "inputs": [
+        "g184",
+        "g144"
+      ]
+    },
+    {
+      "id": "g219",
+      "type": "NAND",
+      "inputs": [
+        "g184",
+        "g218"
+      ]
+    },
+    {
+      "id": "g220",
+      "type": "NAND",
+      "inputs": [
+        "g144",
+        "g218"
+      ]
+    },
+    {
+      "id": "g221",
+      "type": "NAND",
+      "inputs": [
+        "g219",
+        "g220"
+      ]
+    },
+    {
+      "id": "g222",
+      "type": "NAND",
+      "inputs": [
+        "g221",
+        "g217"
+      ]
+    },
+    {
+      "id": "g223",
+      "type": "NAND",
+      "inputs": [
+        "g221",
+        "g222"
+      ]
+    },
+    {
+      "id": "g224",
+      "type": "NAND",
+      "inputs": [
+        "g217",
+        "g222"
+      ]
+    },
+    {
+      "id": "g225",
+      "type": "NAND",
+      "inputs": [
+        "g223",
+        "g224"
+      ]
+    },
+    {
+      "id": "g226",
+      "type": "NAND",
+      "inputs": [
+        "g222",
+        "g218"
+      ]
+    },
+    {
+      "id": "g227",
+      "type": "NAND",
+      "inputs": [
+        "g185",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g228",
+      "type": "NAND",
+      "inputs": [
+        "g185",
+        "g227"
+      ]
+    },
+    {
+      "id": "g229",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g227"
+      ]
+    },
+    {
+      "id": "g230",
+      "type": "NAND",
+      "inputs": [
+        "g228",
+        "g229"
+      ]
+    },
+    {
+      "id": "g231",
+      "type": "NAND",
+      "inputs": [
+        "g230",
+        "g226"
+      ]
+    },
+    {
+      "id": "g232",
+      "type": "NAND",
+      "inputs": [
+        "g230",
+        "g231"
+      ]
+    },
+    {
+      "id": "g233",
+      "type": "NAND",
+      "inputs": [
+        "g226",
+        "g231"
+      ]
+    },
+    {
+      "id": "g234",
+      "type": "NAND",
+      "inputs": [
+        "g232",
+        "g233"
+      ]
+    },
+    {
+      "id": "g235",
+      "type": "NAND",
+      "inputs": [
+        "g231",
+        "g227"
+      ]
+    },
+    {
+      "id": "g236",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g237",
+      "type": "NAND",
+      "inputs": [
+        "g189",
+        "g236"
+      ]
+    },
+    {
+      "id": "g238",
+      "type": "NAND",
+      "inputs": [
+        "g237",
+        "g237"
+      ]
+    },
+    {
+      "id": "g239",
+      "type": "NAND",
+      "inputs": [
+        "g189",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g240",
+      "type": "NAND",
+      "inputs": [
+        "g189",
+        "g239"
+      ]
+    },
+    {
+      "id": "g241",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "g239"
+      ]
+    },
+    {
+      "id": "g242",
+      "type": "NAND",
+      "inputs": [
+        "g240",
+        "g241"
+      ]
+    },
+    {
+      "id": "g243",
+      "type": "NAND",
+      "inputs": [
+        "g242",
+        "g242"
+      ]
+    },
+    {
+      "id": "g244",
+      "type": "NAND",
+      "inputs": [
+        "g243",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g245",
+      "type": "NAND",
+      "inputs": [
+        "g244",
+        "g244"
+      ]
+    },
+    {
+      "id": "g246",
+      "type": "NAND",
+      "inputs": [
+        "g238",
+        "g238"
+      ]
+    },
+    {
+      "id": "g247",
+      "type": "NAND",
+      "inputs": [
+        "g245",
+        "g245"
+      ]
+    },
+    {
+      "id": "g248",
+      "type": "NAND",
+      "inputs": [
+        "g246",
+        "g247"
+      ]
+    },
+    {
+      "id": "g249",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g250",
+      "type": "NAND",
+      "inputs": [
+        "g198",
+        "g249"
+      ]
+    },
+    {
+      "id": "g251",
+      "type": "NAND",
+      "inputs": [
+        "g250",
+        "g250"
+      ]
+    },
+    {
+      "id": "g252",
+      "type": "NAND",
+      "inputs": [
+        "g198",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g253",
+      "type": "NAND",
+      "inputs": [
+        "g198",
+        "g252"
+      ]
+    },
+    {
+      "id": "g254",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "g252"
+      ]
+    },
+    {
+      "id": "g255",
+      "type": "NAND",
+      "inputs": [
+        "g253",
+        "g254"
+      ]
+    },
+    {
+      "id": "g256",
+      "type": "NAND",
+      "inputs": [
+        "g255",
+        "g255"
+      ]
+    },
+    {
+      "id": "g257",
+      "type": "NAND",
+      "inputs": [
+        "g256",
+        "g248"
+      ]
+    },
+    {
+      "id": "g258",
+      "type": "NAND",
+      "inputs": [
+        "g257",
+        "g257"
+      ]
+    },
+    {
+      "id": "g259",
+      "type": "NAND",
+      "inputs": [
+        "g251",
+        "g251"
+      ]
+    },
+    {
+      "id": "g260",
+      "type": "NAND",
+      "inputs": [
+        "g258",
+        "g258"
+      ]
+    },
+    {
+      "id": "g261",
+      "type": "NAND",
+      "inputs": [
+        "g259",
+        "g260"
+      ]
+    },
+    {
+      "id": "g262",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g263",
+      "type": "NAND",
+      "inputs": [
+        "g207",
+        "g262"
+      ]
+    },
+    {
+      "id": "g264",
+      "type": "NAND",
+      "inputs": [
+        "g263",
+        "g263"
+      ]
+    },
+    {
+      "id": "g265",
+      "type": "NAND",
+      "inputs": [
+        "g207",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g266",
+      "type": "NAND",
+      "inputs": [
+        "g207",
+        "g265"
+      ]
+    },
+    {
+      "id": "g267",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "g265"
+      ]
+    },
+    {
+      "id": "g268",
+      "type": "NAND",
+      "inputs": [
+        "g266",
+        "g267"
+      ]
+    },
+    {
+      "id": "g269",
+      "type": "NAND",
+      "inputs": [
+        "g268",
+        "g268"
+      ]
+    },
+    {
+      "id": "g270",
+      "type": "NAND",
+      "inputs": [
+        "g269",
+        "g261"
+      ]
+    },
+    {
+      "id": "g271",
+      "type": "NAND",
+      "inputs": [
+        "g270",
+        "g270"
+      ]
+    },
+    {
+      "id": "g272",
+      "type": "NAND",
+      "inputs": [
+        "g264",
+        "g264"
+      ]
+    },
+    {
+      "id": "g273",
+      "type": "NAND",
+      "inputs": [
+        "g271",
+        "g271"
+      ]
+    },
+    {
+      "id": "g274",
+      "type": "NAND",
+      "inputs": [
+        "g272",
+        "g273"
+      ]
+    },
+    {
+      "id": "g275",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g276",
+      "type": "NAND",
+      "inputs": [
+        "g216",
+        "g275"
+      ]
+    },
+    {
+      "id": "g277",
+      "type": "NAND",
+      "inputs": [
+        "g276",
+        "g276"
+      ]
+    },
+    {
+      "id": "g278",
+      "type": "NAND",
+      "inputs": [
+        "g216",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g279",
+      "type": "NAND",
+      "inputs": [
+        "g216",
+        "g278"
+      ]
+    },
+    {
+      "id": "g280",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "g278"
+      ]
+    },
+    {
+      "id": "g281",
+      "type": "NAND",
+      "inputs": [
+        "g279",
+        "g280"
+      ]
+    },
+    {
+      "id": "g282",
+      "type": "NAND",
+      "inputs": [
+        "g281",
+        "g281"
+      ]
+    },
+    {
+      "id": "g283",
+      "type": "NAND",
+      "inputs": [
+        "g282",
+        "g274"
+      ]
+    },
+    {
+      "id": "g284",
+      "type": "NAND",
+      "inputs": [
+        "g283",
+        "g283"
+      ]
+    },
+    {
+      "id": "g285",
+      "type": "NAND",
+      "inputs": [
+        "g277",
+        "g277"
+      ]
+    },
+    {
+      "id": "g286",
+      "type": "NAND",
+      "inputs": [
+        "g284",
+        "g284"
+      ]
+    },
+    {
+      "id": "g287",
+      "type": "NAND",
+      "inputs": [
+        "g285",
+        "g286"
+      ]
+    },
+    {
+      "id": "g288",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g289",
+      "type": "NAND",
+      "inputs": [
+        "g225",
+        "g288"
+      ]
+    },
+    {
+      "id": "g290",
+      "type": "NAND",
+      "inputs": [
+        "g289",
+        "g289"
+      ]
+    },
+    {
+      "id": "g291",
+      "type": "NAND",
+      "inputs": [
+        "g225",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g292",
+      "type": "NAND",
+      "inputs": [
+        "g225",
+        "g291"
+      ]
+    },
+    {
+      "id": "g293",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g291"
+      ]
+    },
+    {
+      "id": "g294",
+      "type": "NAND",
+      "inputs": [
+        "g292",
+        "g293"
+      ]
+    },
+    {
+      "id": "g295",
+      "type": "NAND",
+      "inputs": [
+        "g294",
+        "g294"
+      ]
+    },
+    {
+      "id": "g296",
+      "type": "NAND",
+      "inputs": [
+        "g295",
+        "g287"
+      ]
+    },
+    {
+      "id": "g297",
+      "type": "NAND",
+      "inputs": [
+        "g296",
+        "g296"
+      ]
+    },
+    {
+      "id": "g298",
+      "type": "NAND",
+      "inputs": [
+        "g290",
+        "g290"
+      ]
+    },
+    {
+      "id": "g299",
+      "type": "NAND",
+      "inputs": [
+        "g297",
+        "g297"
+      ]
+    },
+    {
+      "id": "g300",
+      "type": "NAND",
+      "inputs": [
+        "g298",
+        "g299"
+      ]
+    },
+    {
+      "id": "g301",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g302",
+      "type": "NAND",
+      "inputs": [
+        "g234",
+        "g301"
+      ]
+    },
+    {
+      "id": "g303",
+      "type": "NAND",
+      "inputs": [
+        "g302",
+        "g302"
+      ]
+    },
+    {
+      "id": "g304",
+      "type": "NAND",
+      "inputs": [
+        "g234",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g305",
+      "type": "NAND",
+      "inputs": [
+        "g234",
+        "g304"
+      ]
+    },
+    {
+      "id": "g306",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g304"
+      ]
+    },
+    {
+      "id": "g307",
+      "type": "NAND",
+      "inputs": [
+        "g305",
+        "g306"
+      ]
+    },
+    {
+      "id": "g308",
+      "type": "NAND",
+      "inputs": [
+        "g307",
+        "g307"
+      ]
+    },
+    {
+      "id": "g309",
+      "type": "NAND",
+      "inputs": [
+        "g308",
+        "g300"
+      ]
+    },
+    {
+      "id": "g310",
+      "type": "NAND",
+      "inputs": [
+        "g309",
+        "g309"
+      ]
+    },
+    {
+      "id": "g311",
+      "type": "NAND",
+      "inputs": [
+        "g303",
+        "g303"
+      ]
+    },
+    {
+      "id": "g312",
+      "type": "NAND",
+      "inputs": [
+        "g310",
+        "g310"
+      ]
+    },
+    {
+      "id": "g313",
+      "type": "NAND",
+      "inputs": [
+        "g311",
+        "g312"
+      ]
+    },
+    {
+      "id": "g314",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g315",
+      "type": "NAND",
+      "inputs": [
+        "g235",
+        "g314"
+      ]
+    },
+    {
+      "id": "g316",
+      "type": "NAND",
+      "inputs": [
+        "g315",
+        "g315"
+      ]
+    },
+    {
+      "id": "g317",
+      "type": "NAND",
+      "inputs": [
+        "g235",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g318",
+      "type": "NAND",
+      "inputs": [
+        "g235",
+        "g317"
+      ]
+    },
+    {
+      "id": "g319",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g317"
+      ]
+    },
+    {
+      "id": "g320",
+      "type": "NAND",
+      "inputs": [
+        "g318",
+        "g319"
+      ]
+    },
+    {
+      "id": "g321",
+      "type": "NAND",
+      "inputs": [
+        "g320",
+        "g320"
+      ]
+    },
+    {
+      "id": "g322",
+      "type": "NAND",
+      "inputs": [
+        "g321",
+        "g313"
+      ]
+    },
+    {
+      "id": "g323",
+      "type": "NAND",
+      "inputs": [
+        "g322",
+        "g322"
+      ]
+    },
+    {
+      "id": "g324",
+      "type": "NAND",
+      "inputs": [
+        "g316",
+        "g316"
+      ]
+    },
+    {
+      "id": "g325",
+      "type": "NAND",
+      "inputs": [
+        "g323",
+        "g323"
+      ]
+    },
+    {
+      "id": "g326",
+      "type": "NAND",
+      "inputs": [
+        "g324",
+        "g325"
+      ]
+    },
+    {
+      "id": "g327",
+      "type": "NAND",
+      "inputs": [
+        "reset",
+        "reset"
+      ]
+    },
+    {
+      "id": "g328",
+      "type": "NAND",
+      "inputs": [
+        "g326",
+        "g327"
+      ]
+    },
+    {
+      "id": "jump_left",
+      "type": "LATCH",
+      "inputs": [
+        "g328",
+        "g327"
+      ]
+    },
+    {
+      "id": "g330",
+      "type": "NAND",
+      "inputs": [
+        "spike_22847",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g331",
+      "type": "NAND",
+      "inputs": [
+        "g330",
+        "g330"
+      ]
+    },
+    {
+      "id": "g332",
+      "type": "NAND",
+      "inputs": [
+        "spike_22847",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g333",
+      "type": "NAND",
+      "inputs": [
+        "g332",
+        "g332"
+      ]
+    },
+    {
+      "id": "g334",
+      "type": "NAND",
+      "inputs": [
+        "spike_22847",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g335",
+      "type": "NAND",
+      "inputs": [
+        "g334",
+        "g334"
+      ]
+    },
+    {
+      "id": "g336",
+      "type": "NAND",
+      "inputs": [
+        "spike_22847",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g337",
+      "type": "NAND",
+      "inputs": [
+        "g336",
+        "g336"
+      ]
+    },
+    {
+      "id": "g338",
+      "type": "NAND",
+      "inputs": [
+        "spike_16128",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g339",
+      "type": "NAND",
+      "inputs": [
+        "g338",
+        "g338"
+      ]
+    },
+    {
+      "id": "g340",
+      "type": "NAND",
+      "inputs": [
+        "spike_16128",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g341",
+      "type": "NAND",
+      "inputs": [
+        "g340",
+        "g340"
+      ]
+    },
+    {
+      "id": "g342",
+      "type": "NAND",
+      "inputs": [
+        "spike_16128",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g343",
+      "type": "NAND",
+      "inputs": [
+        "g342",
+        "g342"
+      ]
+    },
+    {
+      "id": "g344",
+      "type": "NAND",
+      "inputs": [
+        "spike_16128",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g345",
+      "type": "NAND",
+      "inputs": [
+        "g344",
+        "g344"
+      ]
+    },
+    {
+      "id": "g346",
+      "type": "NAND",
+      "inputs": [
+        "spike_17668",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g347",
+      "type": "NAND",
+      "inputs": [
+        "g346",
+        "g346"
+      ]
+    },
+    {
+      "id": "g348",
+      "type": "NAND",
+      "inputs": [
+        "spike_17668",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g349",
+      "type": "NAND",
+      "inputs": [
+        "g348",
+        "g348"
+      ]
+    },
+    {
+      "id": "g350",
+      "type": "NAND",
+      "inputs": [
+        "spike_17668",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g351",
+      "type": "NAND",
+      "inputs": [
+        "g350",
+        "g350"
+      ]
+    },
+    {
+      "id": "g352",
+      "type": "NAND",
+      "inputs": [
+        "spike_17668",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g353",
+      "type": "NAND",
+      "inputs": [
+        "g352",
+        "g352"
+      ]
+    },
+    {
+      "id": "g354",
+      "type": "NAND",
+      "inputs": [
+        "spike_20182",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g355",
+      "type": "NAND",
+      "inputs": [
+        "g354",
+        "g354"
+      ]
+    },
+    {
+      "id": "g356",
+      "type": "NAND",
+      "inputs": [
+        "spike_20182",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g357",
+      "type": "NAND",
+      "inputs": [
+        "g356",
+        "g356"
+      ]
+    },
+    {
+      "id": "g358",
+      "type": "NAND",
+      "inputs": [
+        "spike_20182",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g359",
+      "type": "NAND",
+      "inputs": [
+        "g358",
+        "g358"
+      ]
+    },
+    {
+      "id": "g360",
+      "type": "NAND",
+      "inputs": [
+        "spike_20182",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g361",
+      "type": "NAND",
+      "inputs": [
+        "g360",
+        "g360"
+      ]
+    },
+    {
+      "id": "g362",
+      "type": "NAND",
+      "inputs": [
+        "spike_20269",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g363",
+      "type": "NAND",
+      "inputs": [
+        "g362",
+        "g362"
+      ]
+    },
+    {
+      "id": "g364",
+      "type": "NAND",
+      "inputs": [
+        "spike_20269",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g365",
+      "type": "NAND",
+      "inputs": [
+        "g364",
+        "g364"
+      ]
+    },
+    {
+      "id": "g366",
+      "type": "NAND",
+      "inputs": [
+        "spike_20269",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g367",
+      "type": "NAND",
+      "inputs": [
+        "g366",
+        "g366"
+      ]
+    },
+    {
+      "id": "g368",
+      "type": "NAND",
+      "inputs": [
+        "spike_20269",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g369",
+      "type": "NAND",
+      "inputs": [
+        "g368",
+        "g368"
+      ]
+    },
+    {
+      "id": "g370",
+      "type": "NAND",
+      "inputs": [
+        "spike_19608",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g371",
+      "type": "NAND",
+      "inputs": [
+        "g370",
+        "g370"
+      ]
+    },
+    {
+      "id": "g372",
+      "type": "NAND",
+      "inputs": [
+        "spike_19608",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g373",
+      "type": "NAND",
+      "inputs": [
+        "g372",
+        "g372"
+      ]
+    },
+    {
+      "id": "g374",
+      "type": "NAND",
+      "inputs": [
+        "spike_19608",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g375",
+      "type": "NAND",
+      "inputs": [
+        "g374",
+        "g374"
+      ]
+    },
+    {
+      "id": "g376",
+      "type": "NAND",
+      "inputs": [
+        "spike_19608",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g377",
+      "type": "NAND",
+      "inputs": [
+        "g376",
+        "g376"
+      ]
+    },
+    {
+      "id": "g378",
+      "type": "NAND",
+      "inputs": [
+        "g331",
+        "g339"
+      ]
+    },
+    {
+      "id": "g379",
+      "type": "NAND",
+      "inputs": [
+        "g331",
+        "g378"
+      ]
+    },
+    {
+      "id": "g380",
+      "type": "NAND",
+      "inputs": [
+        "g339",
+        "g378"
+      ]
+    },
+    {
+      "id": "g381",
+      "type": "NAND",
+      "inputs": [
+        "g379",
+        "g380"
+      ]
+    },
+    {
+      "id": "g382",
+      "type": "NAND",
+      "inputs": [
+        "g378",
+        "g378"
+      ]
+    },
+    {
+      "id": "g383",
+      "type": "NAND",
+      "inputs": [
+        "g333",
+        "g341"
+      ]
+    },
+    {
+      "id": "g384",
+      "type": "NAND",
+      "inputs": [
+        "g333",
+        "g383"
+      ]
+    },
+    {
+      "id": "g385",
+      "type": "NAND",
+      "inputs": [
+        "g341",
+        "g383"
+      ]
+    },
+    {
+      "id": "g386",
+      "type": "NAND",
+      "inputs": [
+        "g384",
+        "g385"
+      ]
+    },
+    {
+      "id": "g387",
+      "type": "NAND",
+      "inputs": [
+        "g386",
+        "g382"
+      ]
+    },
+    {
+      "id": "g388",
+      "type": "NAND",
+      "inputs": [
+        "g386",
+        "g387"
+      ]
+    },
+    {
+      "id": "g389",
+      "type": "NAND",
+      "inputs": [
+        "g382",
+        "g387"
+      ]
+    },
+    {
+      "id": "g390",
+      "type": "NAND",
+      "inputs": [
+        "g388",
+        "g389"
+      ]
+    },
+    {
+      "id": "g391",
+      "type": "NAND",
+      "inputs": [
+        "g387",
+        "g383"
+      ]
+    },
+    {
+      "id": "g392",
+      "type": "NAND",
+      "inputs": [
+        "g335",
+        "g343"
+      ]
+    },
+    {
+      "id": "g393",
+      "type": "NAND",
+      "inputs": [
+        "g335",
+        "g392"
+      ]
+    },
+    {
+      "id": "g394",
+      "type": "NAND",
+      "inputs": [
+        "g343",
+        "g392"
+      ]
+    },
+    {
+      "id": "g395",
+      "type": "NAND",
+      "inputs": [
+        "g393",
+        "g394"
+      ]
+    },
+    {
+      "id": "g396",
+      "type": "NAND",
+      "inputs": [
+        "g395",
+        "g391"
+      ]
+    },
+    {
+      "id": "g397",
+      "type": "NAND",
+      "inputs": [
+        "g395",
+        "g396"
+      ]
+    },
+    {
+      "id": "g398",
+      "type": "NAND",
+      "inputs": [
+        "g391",
+        "g396"
+      ]
+    },
+    {
+      "id": "g399",
+      "type": "NAND",
+      "inputs": [
+        "g397",
+        "g398"
+      ]
+    },
+    {
+      "id": "g400",
+      "type": "NAND",
+      "inputs": [
+        "g396",
+        "g392"
+      ]
+    },
+    {
+      "id": "g401",
+      "type": "NAND",
+      "inputs": [
+        "g337",
+        "g345"
+      ]
+    },
+    {
+      "id": "g402",
+      "type": "NAND",
+      "inputs": [
+        "g337",
+        "g401"
+      ]
+    },
+    {
+      "id": "g403",
+      "type": "NAND",
+      "inputs": [
+        "g345",
+        "g401"
+      ]
+    },
+    {
+      "id": "g404",
+      "type": "NAND",
+      "inputs": [
+        "g402",
+        "g403"
+      ]
+    },
+    {
+      "id": "g405",
+      "type": "NAND",
+      "inputs": [
+        "g404",
+        "g400"
+      ]
+    },
+    {
+      "id": "g406",
+      "type": "NAND",
+      "inputs": [
+        "g404",
+        "g405"
+      ]
+    },
+    {
+      "id": "g407",
+      "type": "NAND",
+      "inputs": [
+        "g400",
+        "g405"
+      ]
+    },
+    {
+      "id": "g408",
+      "type": "NAND",
+      "inputs": [
+        "g406",
+        "g407"
+      ]
+    },
+    {
+      "id": "g409",
+      "type": "NAND",
+      "inputs": [
+        "g405",
+        "g401"
+      ]
+    },
+    {
+      "id": "g410",
+      "type": "NAND",
+      "inputs": [
+        "g347",
+        "g355"
+      ]
+    },
+    {
+      "id": "g411",
+      "type": "NAND",
+      "inputs": [
+        "g347",
+        "g410"
+      ]
+    },
+    {
+      "id": "g412",
+      "type": "NAND",
+      "inputs": [
+        "g355",
+        "g410"
+      ]
+    },
+    {
+      "id": "g413",
+      "type": "NAND",
+      "inputs": [
+        "g411",
+        "g412"
+      ]
+    },
+    {
+      "id": "g414",
+      "type": "NAND",
+      "inputs": [
+        "g410",
+        "g410"
+      ]
+    },
+    {
+      "id": "g415",
+      "type": "NAND",
+      "inputs": [
+        "g349",
+        "g357"
+      ]
+    },
+    {
+      "id": "g416",
+      "type": "NAND",
+      "inputs": [
+        "g349",
+        "g415"
+      ]
+    },
+    {
+      "id": "g417",
+      "type": "NAND",
+      "inputs": [
+        "g357",
+        "g415"
+      ]
+    },
+    {
+      "id": "g418",
+      "type": "NAND",
+      "inputs": [
+        "g416",
+        "g417"
+      ]
+    },
+    {
+      "id": "g419",
+      "type": "NAND",
+      "inputs": [
+        "g418",
+        "g414"
+      ]
+    },
+    {
+      "id": "g420",
+      "type": "NAND",
+      "inputs": [
+        "g418",
+        "g419"
+      ]
+    },
+    {
+      "id": "g421",
+      "type": "NAND",
+      "inputs": [
+        "g414",
+        "g419"
+      ]
+    },
+    {
+      "id": "g422",
+      "type": "NAND",
+      "inputs": [
+        "g420",
+        "g421"
+      ]
+    },
+    {
+      "id": "g423",
+      "type": "NAND",
+      "inputs": [
+        "g419",
+        "g415"
+      ]
+    },
+    {
+      "id": "g424",
+      "type": "NAND",
+      "inputs": [
+        "g351",
+        "g359"
+      ]
+    },
+    {
+      "id": "g425",
+      "type": "NAND",
+      "inputs": [
+        "g351",
+        "g424"
+      ]
+    },
+    {
+      "id": "g426",
+      "type": "NAND",
+      "inputs": [
+        "g359",
+        "g424"
+      ]
+    },
+    {
+      "id": "g427",
+      "type": "NAND",
+      "inputs": [
+        "g425",
+        "g426"
+      ]
+    },
+    {
+      "id": "g428",
+      "type": "NAND",
+      "inputs": [
+        "g427",
+        "g423"
+      ]
+    },
+    {
+      "id": "g429",
+      "type": "NAND",
+      "inputs": [
+        "g427",
+        "g428"
+      ]
+    },
+    {
+      "id": "g430",
+      "type": "NAND",
+      "inputs": [
+        "g423",
+        "g428"
+      ]
+    },
+    {
+      "id": "g431",
+      "type": "NAND",
+      "inputs": [
+        "g429",
+        "g430"
+      ]
+    },
+    {
+      "id": "g432",
+      "type": "NAND",
+      "inputs": [
+        "g428",
+        "g424"
+      ]
+    },
+    {
+      "id": "g433",
+      "type": "NAND",
+      "inputs": [
+        "g353",
+        "g361"
+      ]
+    },
+    {
+      "id": "g434",
+      "type": "NAND",
+      "inputs": [
+        "g353",
+        "g433"
+      ]
+    },
+    {
+      "id": "g435",
+      "type": "NAND",
+      "inputs": [
+        "g361",
+        "g433"
+      ]
+    },
+    {
+      "id": "g436",
+      "type": "NAND",
+      "inputs": [
+        "g434",
+        "g435"
+      ]
+    },
+    {
+      "id": "g437",
+      "type": "NAND",
+      "inputs": [
+        "g436",
+        "g432"
+      ]
+    },
+    {
+      "id": "g438",
+      "type": "NAND",
+      "inputs": [
+        "g436",
+        "g437"
+      ]
+    },
+    {
+      "id": "g439",
+      "type": "NAND",
+      "inputs": [
+        "g432",
+        "g437"
+      ]
+    },
+    {
+      "id": "g440",
+      "type": "NAND",
+      "inputs": [
+        "g438",
+        "g439"
+      ]
+    },
+    {
+      "id": "g441",
+      "type": "NAND",
+      "inputs": [
+        "g437",
+        "g433"
+      ]
+    },
+    {
+      "id": "g442",
+      "type": "NAND",
+      "inputs": [
+        "g363",
+        "g371"
+      ]
+    },
+    {
+      "id": "g443",
+      "type": "NAND",
+      "inputs": [
+        "g363",
+        "g442"
+      ]
+    },
+    {
+      "id": "g444",
+      "type": "NAND",
+      "inputs": [
+        "g371",
+        "g442"
+      ]
+    },
+    {
+      "id": "g445",
+      "type": "NAND",
+      "inputs": [
+        "g443",
+        "g444"
+      ]
+    },
+    {
+      "id": "g446",
+      "type": "NAND",
+      "inputs": [
+        "g442",
+        "g442"
+      ]
+    },
+    {
+      "id": "g447",
+      "type": "NAND",
+      "inputs": [
+        "g365",
+        "g373"
+      ]
+    },
+    {
+      "id": "g448",
+      "type": "NAND",
+      "inputs": [
+        "g365",
+        "g447"
+      ]
+    },
+    {
+      "id": "g449",
+      "type": "NAND",
+      "inputs": [
+        "g373",
+        "g447"
+      ]
+    },
+    {
+      "id": "g450",
+      "type": "NAND",
+      "inputs": [
+        "g448",
+        "g449"
+      ]
+    },
+    {
+      "id": "g451",
+      "type": "NAND",
+      "inputs": [
+        "g450",
+        "g446"
+      ]
+    },
+    {
+      "id": "g452",
+      "type": "NAND",
+      "inputs": [
+        "g450",
+        "g451"
+      ]
+    },
+    {
+      "id": "g453",
+      "type": "NAND",
+      "inputs": [
+        "g446",
+        "g451"
+      ]
+    },
+    {
+      "id": "g454",
+      "type": "NAND",
+      "inputs": [
+        "g452",
+        "g453"
+      ]
+    },
+    {
+      "id": "g455",
+      "type": "NAND",
+      "inputs": [
+        "g451",
+        "g447"
+      ]
+    },
+    {
+      "id": "g456",
+      "type": "NAND",
+      "inputs": [
+        "g367",
+        "g375"
+      ]
+    },
+    {
+      "id": "g457",
+      "type": "NAND",
+      "inputs": [
+        "g367",
+        "g456"
+      ]
+    },
+    {
+      "id": "g458",
+      "type": "NAND",
+      "inputs": [
+        "g375",
+        "g456"
+      ]
+    },
+    {
+      "id": "g459",
+      "type": "NAND",
+      "inputs": [
+        "g457",
+        "g458"
+      ]
+    },
+    {
+      "id": "g460",
+      "type": "NAND",
+      "inputs": [
+        "g459",
+        "g455"
+      ]
+    },
+    {
+      "id": "g461",
+      "type": "NAND",
+      "inputs": [
+        "g459",
+        "g460"
+      ]
+    },
+    {
+      "id": "g462",
+      "type": "NAND",
+      "inputs": [
+        "g455",
+        "g460"
+      ]
+    },
+    {
+      "id": "g463",
+      "type": "NAND",
+      "inputs": [
+        "g461",
+        "g462"
+      ]
+    },
+    {
+      "id": "g464",
+      "type": "NAND",
+      "inputs": [
+        "g460",
+        "g456"
+      ]
+    },
+    {
+      "id": "g465",
+      "type": "NAND",
+      "inputs": [
+        "g369",
+        "g377"
+      ]
+    },
+    {
+      "id": "g466",
+      "type": "NAND",
+      "inputs": [
+        "g369",
+        "g465"
+      ]
+    },
+    {
+      "id": "g467",
+      "type": "NAND",
+      "inputs": [
+        "g377",
+        "g465"
+      ]
+    },
+    {
+      "id": "g468",
+      "type": "NAND",
+      "inputs": [
+        "g466",
+        "g467"
+      ]
+    },
+    {
+      "id": "g469",
+      "type": "NAND",
+      "inputs": [
+        "g468",
+        "g464"
+      ]
+    },
+    {
+      "id": "g470",
+      "type": "NAND",
+      "inputs": [
+        "g468",
+        "g469"
+      ]
+    },
+    {
+      "id": "g471",
+      "type": "NAND",
+      "inputs": [
+        "g464",
+        "g469"
+      ]
+    },
+    {
+      "id": "g472",
+      "type": "NAND",
+      "inputs": [
+        "g470",
+        "g471"
+      ]
+    },
+    {
+      "id": "g473",
+      "type": "NAND",
+      "inputs": [
+        "g469",
+        "g465"
+      ]
+    },
+    {
+      "id": "g474",
+      "type": "NAND",
+      "inputs": [
+        "g381",
+        "g413"
+      ]
+    },
+    {
+      "id": "g475",
+      "type": "NAND",
+      "inputs": [
+        "g381",
+        "g474"
+      ]
+    },
+    {
+      "id": "g476",
+      "type": "NAND",
+      "inputs": [
+        "g413",
+        "g474"
+      ]
+    },
+    {
+      "id": "g477",
+      "type": "NAND",
+      "inputs": [
+        "g475",
+        "g476"
+      ]
+    },
+    {
+      "id": "g478",
+      "type": "NAND",
+      "inputs": [
+        "g474",
+        "g474"
+      ]
+    },
+    {
+      "id": "g479",
+      "type": "NAND",
+      "inputs": [
+        "g390",
+        "g422"
+      ]
+    },
+    {
+      "id": "g480",
+      "type": "NAND",
+      "inputs": [
+        "g390",
+        "g479"
+      ]
+    },
+    {
+      "id": "g481",
+      "type": "NAND",
+      "inputs": [
+        "g422",
+        "g479"
+      ]
+    },
+    {
+      "id": "g482",
+      "type": "NAND",
+      "inputs": [
+        "g480",
+        "g481"
+      ]
+    },
+    {
+      "id": "g483",
+      "type": "NAND",
+      "inputs": [
+        "g482",
+        "g478"
+      ]
+    },
+    {
+      "id": "g484",
+      "type": "NAND",
+      "inputs": [
+        "g482",
+        "g483"
+      ]
+    },
+    {
+      "id": "g485",
+      "type": "NAND",
+      "inputs": [
+        "g478",
+        "g483"
+      ]
+    },
+    {
+      "id": "g486",
+      "type": "NAND",
+      "inputs": [
+        "g484",
+        "g485"
+      ]
+    },
+    {
+      "id": "g487",
+      "type": "NAND",
+      "inputs": [
+        "g483",
+        "g479"
+      ]
+    },
+    {
+      "id": "g488",
+      "type": "NAND",
+      "inputs": [
+        "g399",
+        "g431"
+      ]
+    },
+    {
+      "id": "g489",
+      "type": "NAND",
+      "inputs": [
+        "g399",
+        "g488"
+      ]
+    },
+    {
+      "id": "g490",
+      "type": "NAND",
+      "inputs": [
+        "g431",
+        "g488"
+      ]
+    },
+    {
+      "id": "g491",
+      "type": "NAND",
+      "inputs": [
+        "g489",
+        "g490"
+      ]
+    },
+    {
+      "id": "g492",
+      "type": "NAND",
+      "inputs": [
+        "g491",
+        "g487"
+      ]
+    },
+    {
+      "id": "g493",
+      "type": "NAND",
+      "inputs": [
+        "g491",
+        "g492"
+      ]
+    },
+    {
+      "id": "g494",
+      "type": "NAND",
+      "inputs": [
+        "g487",
+        "g492"
+      ]
+    },
+    {
+      "id": "g495",
+      "type": "NAND",
+      "inputs": [
+        "g493",
+        "g494"
+      ]
+    },
+    {
+      "id": "g496",
+      "type": "NAND",
+      "inputs": [
+        "g492",
+        "g488"
+      ]
+    },
+    {
+      "id": "g497",
+      "type": "NAND",
+      "inputs": [
+        "g408",
+        "g440"
+      ]
+    },
+    {
+      "id": "g498",
+      "type": "NAND",
+      "inputs": [
+        "g408",
+        "g497"
+      ]
+    },
+    {
+      "id": "g499",
+      "type": "NAND",
+      "inputs": [
+        "g440",
+        "g497"
+      ]
+    },
+    {
+      "id": "g500",
+      "type": "NAND",
+      "inputs": [
+        "g498",
+        "g499"
+      ]
+    },
+    {
+      "id": "g501",
+      "type": "NAND",
+      "inputs": [
+        "g500",
+        "g496"
+      ]
+    },
+    {
+      "id": "g502",
+      "type": "NAND",
+      "inputs": [
+        "g500",
+        "g501"
+      ]
+    },
+    {
+      "id": "g503",
+      "type": "NAND",
+      "inputs": [
+        "g496",
+        "g501"
+      ]
+    },
+    {
+      "id": "g504",
+      "type": "NAND",
+      "inputs": [
+        "g502",
+        "g503"
+      ]
+    },
+    {
+      "id": "g505",
+      "type": "NAND",
+      "inputs": [
+        "g501",
+        "g497"
+      ]
+    },
+    {
+      "id": "g506",
+      "type": "NAND",
+      "inputs": [
+        "g409",
+        "g441"
+      ]
+    },
+    {
+      "id": "g507",
+      "type": "NAND",
+      "inputs": [
+        "g409",
+        "g506"
+      ]
+    },
+    {
+      "id": "g508",
+      "type": "NAND",
+      "inputs": [
+        "g441",
+        "g506"
+      ]
+    },
+    {
+      "id": "g509",
+      "type": "NAND",
+      "inputs": [
+        "g507",
+        "g508"
+      ]
+    },
+    {
+      "id": "g510",
+      "type": "NAND",
+      "inputs": [
+        "g509",
+        "g505"
+      ]
+    },
+    {
+      "id": "g511",
+      "type": "NAND",
+      "inputs": [
+        "g509",
+        "g510"
+      ]
+    },
+    {
+      "id": "g512",
+      "type": "NAND",
+      "inputs": [
+        "g505",
+        "g510"
+      ]
+    },
+    {
+      "id": "g513",
+      "type": "NAND",
+      "inputs": [
+        "g511",
+        "g512"
+      ]
+    },
+    {
+      "id": "g514",
+      "type": "NAND",
+      "inputs": [
+        "g510",
+        "g506"
+      ]
+    },
+    {
+      "id": "g515",
+      "type": "NAND",
+      "inputs": [
+        "g477",
+        "g445"
+      ]
+    },
+    {
+      "id": "g516",
+      "type": "NAND",
+      "inputs": [
+        "g477",
+        "g515"
+      ]
+    },
+    {
+      "id": "g517",
+      "type": "NAND",
+      "inputs": [
+        "g445",
+        "g515"
+      ]
+    },
+    {
+      "id": "g518",
+      "type": "NAND",
+      "inputs": [
+        "g516",
+        "g517"
+      ]
+    },
+    {
+      "id": "g519",
+      "type": "NAND",
+      "inputs": [
+        "g515",
+        "g515"
+      ]
+    },
+    {
+      "id": "g520",
+      "type": "NAND",
+      "inputs": [
+        "g486",
+        "g454"
+      ]
+    },
+    {
+      "id": "g521",
+      "type": "NAND",
+      "inputs": [
+        "g486",
+        "g520"
+      ]
+    },
+    {
+      "id": "g522",
+      "type": "NAND",
+      "inputs": [
+        "g454",
+        "g520"
+      ]
+    },
+    {
+      "id": "g523",
+      "type": "NAND",
+      "inputs": [
+        "g521",
+        "g522"
+      ]
+    },
+    {
+      "id": "g524",
+      "type": "NAND",
+      "inputs": [
+        "g523",
+        "g519"
+      ]
+    },
+    {
+      "id": "g525",
+      "type": "NAND",
+      "inputs": [
+        "g523",
+        "g524"
+      ]
+    },
+    {
+      "id": "g526",
+      "type": "NAND",
+      "inputs": [
+        "g519",
+        "g524"
+      ]
+    },
+    {
+      "id": "g527",
+      "type": "NAND",
+      "inputs": [
+        "g525",
+        "g526"
+      ]
+    },
+    {
+      "id": "g528",
+      "type": "NAND",
+      "inputs": [
+        "g524",
+        "g520"
+      ]
+    },
+    {
+      "id": "g529",
+      "type": "NAND",
+      "inputs": [
+        "g495",
+        "g463"
+      ]
+    },
+    {
+      "id": "g530",
+      "type": "NAND",
+      "inputs": [
+        "g495",
+        "g529"
+      ]
+    },
+    {
+      "id": "g531",
+      "type": "NAND",
+      "inputs": [
+        "g463",
+        "g529"
+      ]
+    },
+    {
+      "id": "g532",
+      "type": "NAND",
+      "inputs": [
+        "g530",
+        "g531"
+      ]
+    },
+    {
+      "id": "g533",
+      "type": "NAND",
+      "inputs": [
+        "g532",
+        "g528"
+      ]
+    },
+    {
+      "id": "g534",
+      "type": "NAND",
+      "inputs": [
+        "g532",
+        "g533"
+      ]
+    },
+    {
+      "id": "g535",
+      "type": "NAND",
+      "inputs": [
+        "g528",
+        "g533"
+      ]
+    },
+    {
+      "id": "g536",
+      "type": "NAND",
+      "inputs": [
+        "g534",
+        "g535"
+      ]
+    },
+    {
+      "id": "g537",
+      "type": "NAND",
+      "inputs": [
+        "g533",
+        "g529"
+      ]
+    },
+    {
+      "id": "g538",
+      "type": "NAND",
+      "inputs": [
+        "g504",
+        "g472"
+      ]
+    },
+    {
+      "id": "g539",
+      "type": "NAND",
+      "inputs": [
+        "g504",
+        "g538"
+      ]
+    },
+    {
+      "id": "g540",
+      "type": "NAND",
+      "inputs": [
+        "g472",
+        "g538"
+      ]
+    },
+    {
+      "id": "g541",
+      "type": "NAND",
+      "inputs": [
+        "g539",
+        "g540"
+      ]
+    },
+    {
+      "id": "g542",
+      "type": "NAND",
+      "inputs": [
+        "g541",
+        "g537"
+      ]
+    },
+    {
+      "id": "g543",
+      "type": "NAND",
+      "inputs": [
+        "g541",
+        "g542"
+      ]
+    },
+    {
+      "id": "g544",
+      "type": "NAND",
+      "inputs": [
+        "g537",
+        "g542"
+      ]
+    },
+    {
+      "id": "g545",
+      "type": "NAND",
+      "inputs": [
+        "g543",
+        "g544"
+      ]
+    },
+    {
+      "id": "g546",
+      "type": "NAND",
+      "inputs": [
+        "g542",
+        "g538"
+      ]
+    },
+    {
+      "id": "g547",
+      "type": "NAND",
+      "inputs": [
+        "g513",
+        "g473"
+      ]
+    },
+    {
+      "id": "g548",
+      "type": "NAND",
+      "inputs": [
+        "g513",
+        "g547"
+      ]
+    },
+    {
+      "id": "g549",
+      "type": "NAND",
+      "inputs": [
+        "g473",
+        "g547"
+      ]
+    },
+    {
+      "id": "g550",
+      "type": "NAND",
+      "inputs": [
+        "g548",
+        "g549"
+      ]
+    },
+    {
+      "id": "g551",
+      "type": "NAND",
+      "inputs": [
+        "g550",
+        "g546"
+      ]
+    },
+    {
+      "id": "g552",
+      "type": "NAND",
+      "inputs": [
+        "g550",
+        "g551"
+      ]
+    },
+    {
+      "id": "g553",
+      "type": "NAND",
+      "inputs": [
+        "g546",
+        "g551"
+      ]
+    },
+    {
+      "id": "g554",
+      "type": "NAND",
+      "inputs": [
+        "g552",
+        "g553"
+      ]
+    },
+    {
+      "id": "g555",
+      "type": "NAND",
+      "inputs": [
+        "g551",
+        "g547"
+      ]
+    },
+    {
+      "id": "g556",
+      "type": "NAND",
+      "inputs": [
+        "g514",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g557",
+      "type": "NAND",
+      "inputs": [
+        "g514",
+        "g556"
+      ]
+    },
+    {
+      "id": "g558",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g556"
+      ]
+    },
+    {
+      "id": "g559",
+      "type": "NAND",
+      "inputs": [
+        "g557",
+        "g558"
+      ]
+    },
+    {
+      "id": "g560",
+      "type": "NAND",
+      "inputs": [
+        "g559",
+        "g555"
+      ]
+    },
+    {
+      "id": "g561",
+      "type": "NAND",
+      "inputs": [
+        "g559",
+        "g560"
+      ]
+    },
+    {
+      "id": "g562",
+      "type": "NAND",
+      "inputs": [
+        "g555",
+        "g560"
+      ]
+    },
+    {
+      "id": "g563",
+      "type": "NAND",
+      "inputs": [
+        "g561",
+        "g562"
+      ]
+    },
+    {
+      "id": "g564",
+      "type": "NAND",
+      "inputs": [
+        "g560",
+        "g556"
+      ]
+    },
+    {
+      "id": "g565",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g566",
+      "type": "NAND",
+      "inputs": [
+        "g518",
+        "g565"
+      ]
+    },
+    {
+      "id": "g567",
+      "type": "NAND",
+      "inputs": [
+        "g566",
+        "g566"
+      ]
+    },
+    {
+      "id": "g568",
+      "type": "NAND",
+      "inputs": [
+        "g518",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g569",
+      "type": "NAND",
+      "inputs": [
+        "g518",
+        "g568"
+      ]
+    },
+    {
+      "id": "g570",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g568"
+      ]
+    },
+    {
+      "id": "g571",
+      "type": "NAND",
+      "inputs": [
+        "g569",
+        "g570"
+      ]
+    },
+    {
+      "id": "g572",
+      "type": "NAND",
+      "inputs": [
+        "g571",
+        "g571"
+      ]
+    },
+    {
+      "id": "g573",
+      "type": "NAND",
+      "inputs": [
+        "g572",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g574",
+      "type": "NAND",
+      "inputs": [
+        "g573",
+        "g573"
+      ]
+    },
+    {
+      "id": "g575",
+      "type": "NAND",
+      "inputs": [
+        "g567",
+        "g567"
+      ]
+    },
+    {
+      "id": "g576",
+      "type": "NAND",
+      "inputs": [
+        "g574",
+        "g574"
+      ]
+    },
+    {
+      "id": "g577",
+      "type": "NAND",
+      "inputs": [
+        "g575",
+        "g576"
+      ]
+    },
+    {
+      "id": "g578",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g579",
+      "type": "NAND",
+      "inputs": [
+        "g527",
+        "g578"
+      ]
+    },
+    {
+      "id": "g580",
+      "type": "NAND",
+      "inputs": [
+        "g579",
+        "g579"
+      ]
+    },
+    {
+      "id": "g581",
+      "type": "NAND",
+      "inputs": [
+        "g527",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g582",
+      "type": "NAND",
+      "inputs": [
+        "g527",
+        "g581"
+      ]
+    },
+    {
+      "id": "g583",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g581"
+      ]
+    },
+    {
+      "id": "g584",
+      "type": "NAND",
+      "inputs": [
+        "g582",
+        "g583"
+      ]
+    },
+    {
+      "id": "g585",
+      "type": "NAND",
+      "inputs": [
+        "g584",
+        "g584"
+      ]
+    },
+    {
+      "id": "g586",
+      "type": "NAND",
+      "inputs": [
+        "g585",
+        "g577"
+      ]
+    },
+    {
+      "id": "g587",
+      "type": "NAND",
+      "inputs": [
+        "g586",
+        "g586"
+      ]
+    },
+    {
+      "id": "g588",
+      "type": "NAND",
+      "inputs": [
+        "g580",
+        "g580"
+      ]
+    },
+    {
+      "id": "g589",
+      "type": "NAND",
+      "inputs": [
+        "g587",
+        "g587"
+      ]
+    },
+    {
+      "id": "g590",
+      "type": "NAND",
+      "inputs": [
+        "g588",
+        "g589"
+      ]
+    },
+    {
+      "id": "g591",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g592",
+      "type": "NAND",
+      "inputs": [
+        "g536",
+        "g591"
+      ]
+    },
+    {
+      "id": "g593",
+      "type": "NAND",
+      "inputs": [
+        "g592",
+        "g592"
+      ]
+    },
+    {
+      "id": "g594",
+      "type": "NAND",
+      "inputs": [
+        "g536",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g595",
+      "type": "NAND",
+      "inputs": [
+        "g536",
+        "g594"
+      ]
+    },
+    {
+      "id": "g596",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "g594"
+      ]
+    },
+    {
+      "id": "g597",
+      "type": "NAND",
+      "inputs": [
+        "g595",
+        "g596"
+      ]
+    },
+    {
+      "id": "g598",
+      "type": "NAND",
+      "inputs": [
+        "g597",
+        "g597"
+      ]
+    },
+    {
+      "id": "g599",
+      "type": "NAND",
+      "inputs": [
+        "g598",
+        "g590"
+      ]
+    },
+    {
+      "id": "g600",
+      "type": "NAND",
+      "inputs": [
+        "g599",
+        "g599"
+      ]
+    },
+    {
+      "id": "g601",
+      "type": "NAND",
+      "inputs": [
+        "g593",
+        "g593"
+      ]
+    },
+    {
+      "id": "g602",
+      "type": "NAND",
+      "inputs": [
+        "g600",
+        "g600"
+      ]
+    },
+    {
+      "id": "g603",
+      "type": "NAND",
+      "inputs": [
+        "g601",
+        "g602"
+      ]
+    },
+    {
+      "id": "g604",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g605",
+      "type": "NAND",
+      "inputs": [
+        "g545",
+        "g604"
+      ]
+    },
+    {
+      "id": "g606",
+      "type": "NAND",
+      "inputs": [
+        "g605",
+        "g605"
+      ]
+    },
+    {
+      "id": "g607",
+      "type": "NAND",
+      "inputs": [
+        "g545",
+        "const_1"
+      ]
+    },
+    {
+      "id": "g608",
+      "type": "NAND",
+      "inputs": [
+        "g545",
+        "g607"
+      ]
+    },
+    {
+      "id": "g609",
+      "type": "NAND",
+      "inputs": [
+        "const_1",
+        "g607"
+      ]
+    },
+    {
+      "id": "g610",
+      "type": "NAND",
+      "inputs": [
+        "g608",
+        "g609"
+      ]
+    },
+    {
+      "id": "g611",
+      "type": "NAND",
+      "inputs": [
+        "g610",
+        "g610"
+      ]
+    },
+    {
+      "id": "g612",
+      "type": "NAND",
+      "inputs": [
+        "g611",
+        "g603"
+      ]
+    },
+    {
+      "id": "g613",
+      "type": "NAND",
+      "inputs": [
+        "g612",
+        "g612"
+      ]
+    },
+    {
+      "id": "g614",
+      "type": "NAND",
+      "inputs": [
+        "g606",
+        "g606"
+      ]
+    },
+    {
+      "id": "g615",
+      "type": "NAND",
+      "inputs": [
+        "g613",
+        "g613"
+      ]
+    },
+    {
+      "id": "g616",
+      "type": "NAND",
+      "inputs": [
+        "g614",
+        "g615"
+      ]
+    },
+    {
+      "id": "g617",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g618",
+      "type": "NAND",
+      "inputs": [
+        "g554",
+        "g617"
+      ]
+    },
+    {
+      "id": "g619",
+      "type": "NAND",
+      "inputs": [
+        "g618",
+        "g618"
+      ]
+    },
+    {
+      "id": "g620",
+      "type": "NAND",
+      "inputs": [
+        "g554",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g621",
+      "type": "NAND",
+      "inputs": [
+        "g554",
+        "g620"
+      ]
+    },
+    {
+      "id": "g622",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g620"
+      ]
+    },
+    {
+      "id": "g623",
+      "type": "NAND",
+      "inputs": [
+        "g621",
+        "g622"
+      ]
+    },
+    {
+      "id": "g624",
+      "type": "NAND",
+      "inputs": [
+        "g623",
+        "g623"
+      ]
+    },
+    {
+      "id": "g625",
+      "type": "NAND",
+      "inputs": [
+        "g624",
+        "g616"
+      ]
+    },
+    {
+      "id": "g626",
+      "type": "NAND",
+      "inputs": [
+        "g625",
+        "g625"
+      ]
+    },
+    {
+      "id": "g627",
+      "type": "NAND",
+      "inputs": [
+        "g619",
+        "g619"
+      ]
+    },
+    {
+      "id": "g628",
+      "type": "NAND",
+      "inputs": [
+        "g626",
+        "g626"
+      ]
+    },
+    {
+      "id": "g629",
+      "type": "NAND",
+      "inputs": [
+        "g627",
+        "g628"
+      ]
+    },
+    {
+      "id": "g630",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g631",
+      "type": "NAND",
+      "inputs": [
+        "g563",
+        "g630"
+      ]
+    },
+    {
+      "id": "g632",
+      "type": "NAND",
+      "inputs": [
+        "g631",
+        "g631"
+      ]
+    },
+    {
+      "id": "g633",
+      "type": "NAND",
+      "inputs": [
+        "g563",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g634",
+      "type": "NAND",
+      "inputs": [
+        "g563",
+        "g633"
+      ]
+    },
+    {
+      "id": "g635",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g633"
+      ]
+    },
+    {
+      "id": "g636",
+      "type": "NAND",
+      "inputs": [
+        "g634",
+        "g635"
+      ]
+    },
+    {
+      "id": "g637",
+      "type": "NAND",
+      "inputs": [
+        "g636",
+        "g636"
+      ]
+    },
+    {
+      "id": "g638",
+      "type": "NAND",
+      "inputs": [
+        "g637",
+        "g629"
+      ]
+    },
+    {
+      "id": "g639",
+      "type": "NAND",
+      "inputs": [
+        "g638",
+        "g638"
+      ]
+    },
+    {
+      "id": "g640",
+      "type": "NAND",
+      "inputs": [
+        "g632",
+        "g632"
+      ]
+    },
+    {
+      "id": "g641",
+      "type": "NAND",
+      "inputs": [
+        "g639",
+        "g639"
+      ]
+    },
+    {
+      "id": "g642",
+      "type": "NAND",
+      "inputs": [
+        "g640",
+        "g641"
+      ]
+    },
+    {
+      "id": "g643",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g644",
+      "type": "NAND",
+      "inputs": [
+        "g564",
+        "g643"
+      ]
+    },
+    {
+      "id": "g645",
+      "type": "NAND",
+      "inputs": [
+        "g644",
+        "g644"
+      ]
+    },
+    {
+      "id": "g646",
+      "type": "NAND",
+      "inputs": [
+        "g564",
+        "const_0"
+      ]
+    },
+    {
+      "id": "g647",
+      "type": "NAND",
+      "inputs": [
+        "g564",
+        "g646"
+      ]
+    },
+    {
+      "id": "g648",
+      "type": "NAND",
+      "inputs": [
+        "const_0",
+        "g646"
+      ]
+    },
+    {
+      "id": "g649",
+      "type": "NAND",
+      "inputs": [
+        "g647",
+        "g648"
+      ]
+    },
+    {
+      "id": "g650",
+      "type": "NAND",
+      "inputs": [
+        "g649",
+        "g649"
+      ]
+    },
+    {
+      "id": "g651",
+      "type": "NAND",
+      "inputs": [
+        "g650",
+        "g642"
+      ]
+    },
+    {
+      "id": "g652",
+      "type": "NAND",
+      "inputs": [
+        "g651",
+        "g651"
+      ]
+    },
+    {
+      "id": "g653",
+      "type": "NAND",
+      "inputs": [
+        "g645",
+        "g645"
+      ]
+    },
+    {
+      "id": "g654",
+      "type": "NAND",
+      "inputs": [
+        "g652",
+        "g652"
+      ]
+    },
+    {
+      "id": "g655",
+      "type": "NAND",
+      "inputs": [
+        "g653",
+        "g654"
+      ]
+    },
+    {
+      "id": "g656",
+      "type": "NAND",
+      "inputs": [
+        "reset",
+        "reset"
+      ]
+    },
+    {
+      "id": "g657",
+      "type": "NAND",
+      "inputs": [
+        "g655",
+        "g656"
+      ]
+    },
+    {
+      "id": "jump_right",
+      "type": "LATCH",
+      "inputs": [
+        "g657",
+        "g656"
+      ]
+    },
+    {
+      "id": "g659",
+      "type": "NAND",
+      "inputs": [
+        "jump_left",
+        "jump_left"
+      ]
+    },
+    {
+      "id": "g660",
+      "type": "NAND",
+      "inputs": [
+        "jump_right",
+        "jump_right"
+      ]
+    },
+    {
+      "id": "g661",
+      "type": "NAND",
+      "inputs": [
+        "g659",
+        "g660"
+      ]
+    }
+  ],
+  "input_pins": [
+    "reset",
+    "spike_17478",
+    "spike_17653",
+    "spike_518439",
+    "spike_31563",
+    "spike_22253",
+    "spike_19787",
+    "const_0",
+    "const_1",
+    "spike_22847",
+    "spike_16128",
+    "spike_17668",
+    "spike_20182",
+    "spike_20269",
+    "spike_19608"
+  ],
+  "output_pins": {
+    "jump_left": "jump_left",
+    "jump_right": "jump_right",
+    "jump": "g661"
+  },
+  "neuron_gate_map": [
+    {
+      "neuron_id": 17478,
+      "type": "LC4",
+      "side": "L",
+      "role": "visual_input",
+      "signal": "spike_17478",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 17653,
+      "type": "LC4",
+      "side": "L",
+      "role": "visual_input",
+      "signal": "spike_17653",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 518439,
+      "type": "LC4",
+      "side": "L",
+      "role": "visual_input",
+      "signal": "spike_518439",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 31563,
+      "type": "LPLC2",
+      "side": "L",
+      "role": "visual_input",
+      "signal": "spike_31563",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 22253,
+      "type": "LPLC2",
+      "side": "L",
+      "role": "visual_input",
+      "signal": "spike_22253",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 19787,
+      "type": "LPLC2",
+      "side": "L",
+      "role": "visual_input",
+      "signal": "spike_19787",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 10010,
+      "type": "DNp01",
+      "side": "L",
+      "role": "gf",
+      "signal": "g326",
+      "signal_kind": "gate_output",
+      "threshold": 15,
+      "max_possible_sum": 69
+    },
+    {
+      "neuron_id": 804642,
+      "type": "TTMn",
+      "side": "L",
+      "role": "jump_motor",
+      "signal": "jump_left",
+      "signal_kind": "gate_output",
+      "threshold": 2,
+      "max_possible_sum": 3
+    },
+    {
+      "neuron_id": 22847,
+      "type": "LC4",
+      "side": "R",
+      "role": "visual_input",
+      "signal": "spike_22847",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 16128,
+      "type": "LC4",
+      "side": "R",
+      "role": "visual_input",
+      "signal": "spike_16128",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 17668,
+      "type": "LC4",
+      "side": "R",
+      "role": "visual_input",
+      "signal": "spike_17668",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 20182,
+      "type": "LPLC2",
+      "side": "R",
+      "role": "visual_input",
+      "signal": "spike_20182",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 20269,
+      "type": "LPLC2",
+      "side": "R",
+      "role": "visual_input",
+      "signal": "spike_20269",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 19608,
+      "type": "LPLC2",
+      "side": "R",
+      "role": "visual_input",
+      "signal": "spike_19608",
+      "signal_kind": "input_pin"
+    },
+    {
+      "neuron_id": 10001,
+      "type": "DNp01",
+      "side": "R",
+      "role": "gf",
+      "signal": "g655",
+      "signal_kind": "gate_output",
+      "threshold": 12,
+      "max_possible_sum": 56
+    },
+    {
+      "neuron_id": 800146,
+      "type": "TTMn",
+      "side": "R",
+      "role": "jump_motor",
+      "signal": "jump_right",
+      "signal_kind": "gate_output",
+      "threshold": 6,
+      "max_possible_sum": 11
+    }
+  ],
+  "params": {
+    "bit_width": 4,
+    "scale": 6,
+    "max_magnitude": 15,
+    "threshold_rule_multi_input": "(largest single positive input magnitude) + 1 (coincidence-detector rule, chosen on principle -- see reports/equivalence.md's threshold sweep)",
+    "threshold_rule_single_input": "ceil(0.5 * max_possible_sum) (reduces to identity pass-through, see DERIVATION.md section 6)",
+    "visual_inputs_kept": 12,
+    "visual_inputs_available": 311,
+    "visual_inputs_kept_fraction": "12 of 311 available LC4/LPLC2 neurons (3.9%)"
+  }
+}

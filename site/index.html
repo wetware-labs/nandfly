@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NANDFLY — a real fly's escape reflex, rebuilt on BNB Chain</title>
+<meta name="description" content="A real fly's escape reflex, rebuilt gate by gate on BNB Chain. It earns nothing. It just refuses to die." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="NANDFLY — a real fly's escape reflex, rebuilt on BNB Chain" />
+<meta property="og:description" content="It earns nothing. It just refuses to die. Try to swat it." />
+<meta property="og:url" content="https://wetware-labs.github.io/nandfly/" />
+<meta property="og:image" content="https://wetware-labs.github.io/nandfly/assets/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="NANDFLY — a real fly's escape reflex, rebuilt on BNB Chain" />
+<meta name="twitter:description" content="It earns nothing. It just refuses to die. Try to swat it." />
+<meta name="twitter:image" content="https://wetware-labs.github.io/nandfly/assets/og.png" />
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="wordmark" href="./"><span>NAND</span>FLY</a>
+  <nav class="site-nav">
+    <a href="methods.html">METHODS</a>
+    <a href="https://github.com/wetware-labs/nandfly">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero container">
+    <h1>NANDFLY</h1>
+    <p class="tagline">A real fly's escape reflex, rebuilt gate by gate on BNB Chain.</p>
+    <p class="subtagline">It earns nothing. It just refuses to die.</p>
+    <div class="progress-line"><span data-neuron-progress>16 / 166,700 neurons on-chain</span></div>
+  </section>
+
+  <section class="story-block container">
+    <h2><span class="kicker">the organism</span>Rebuilding one fruit fly, neuron by neuron</h2>
+    <p>
+      This is the circuit that makes flies impossible to swat — the Giant Fiber reflex, mapped by
+      science (MaleCNS, 166,700 neurons), derived independently by us, and compiled into NAND
+      gates. The original fly is mortal. This one isn't.
+    </p>
+  </section>
+
+  <section class="live-layer container">
+    <h2><span class="kicker">layer 1 — live</span>The fly is alive right now</h2>
+    <div class="live-layer-grid">
+      <div>
+        <div class="fly-stage">
+          <canvas id="fly-canvas" width="640" height="400" aria-label="live fly specimen"></canvas>
+        </div>
+        <p class="live-label" id="boot-error" hidden></p>
+        <p class="live-label">
+          <strong>Live simulation of the identical netlist.</strong>
+          The on-chain contract is the source of truth.
+        </p>
+      </div>
+      <div>
+        <div class="status-row" id="live-status"><span class="status-dot"></span>connecting to BSC...</div>
+        <div class="live-feed" id="live-feed">
+          <h4>observation feed</h4>
+        </div>
+      </div>
+    </div>
+    <p class="hint">
+      Every new BSC block is an ambient micro-stimulus (the fly twitches). Any transaction above the
+      whale threshold in that block is a looming stimulus, scaled by size, run through the same
+      661-gate netlist — if the reflex fires, the fly jumps and the event is logged here.
+    </p>
+  </section>
+
+  <section class="swat-section container">
+    <h2><span class="kicker">try it yourself</span>Try to swat it</h2>
+    <p>Send a stimulus. The real wiring decides: jump, or ignore you.</p>
+    <div id="swat-ui"></div>
+  </section>
+
+  <section class="circuit-section container">
+    <h2><span class="kicker">the body</span>The circuit</h2>
+    <p class="hint">661 gates, grouped by the 16 real neurons they were derived from. Click one.</p>
+    <div id="circuit-viewer"></div>
+    <p class="hint" id="circuit-detail">Select a neuron above to see its real body ID and gate footprint.</p>
+  </section>
+
+  <section class="birth-section container">
+    <h2><span class="kicker">layer 2 — not yet</span>It hasn't been born yet.</h2>
+    <p>
+      The on-chain circuit above is real and evaluable today. But NANDFLY's physical birth
+      certificate — a real 2-NAND+1-LATCH fragment of the GF comparator, minted as a 7-cell
+      canvas in the TapeOut fab — costs $30 and hasn't happened yet. The internet decides if it
+      gets born.
+    </p>
+    <div id="birth-gauge"></div>
+    <p class="hint">
+      Feeding wallet: <code id="feeding-wallet-address">(wallet not published yet — see METHODS)</code>
+    </p>
+    <div class="wallet-policy">
+      <strong>Wallet policy, published before first inflow:</strong> every inflow — 80% component
+      purchases (every buy = on-chain receipt), 20% operations. Equal treatment of all inflows; no
+      per-token deals, endorsements, or promotion; third parties may route their own token taxes to
+      the wallet at their own discretion.
+    </div>
+  </section>
+
+  <section class="feeding-section container">
+    <h2><span class="kicker">grow it</span>NANDFLY grows only if you feed it</h2>
+    <p>
+      Every donation buys real components; every component is a named neuron from the real
+      connectome, credited to whoever fed it. 80% of the wallet buys neurons. 20% keeps the lab
+      running. Every movement is on-chain.
+    </p>
+    <p class="hint"><em>LC4 #7 — fed by @you?</em></p>
+  </section>
+
+  <section class="scoreboard-section container">
+    <h2><span class="kicker">the ledger</span>Scoreboard</h2>
+    <div id="scoreboard"></div>
+  </section>
+
+  <section class="honesty-section container">
+    <h2><span class="kicker">the fine print</span>Honesty block</h2>
+    <div class="honesty-block">
+      <p>
+        No token. No mining. No yield. The fly cannot pay you back — that's the point. Derivation
+        is fully reproducible from the public connectome; equivalence vs the reference simulation
+        is published with real numbers; the netlist on-chain can be re-verified by anyone with our
+        open decoder. Full derivation, trust model, and limitations: <a href="methods.html">METHODS</a>.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  wetware-labs ·
+  <a href="methods.html">METHODS</a> ·
+  <a href="https://github.com/wetware-labs/nandfly">GitHub</a> ·
+  <a href="methods.html#tapeout">the fab</a> ·
+  <a href="methods.html#contract">the body</a>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

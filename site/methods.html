@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>METHODS — NANDFLY</title>
+<meta name="description" content="Derivation, equivalence numbers, trust model, and honest limitations behind NANDFLY." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="METHODS — NANDFLY" />
+<meta property="og:description" content="Derivation, equivalence numbers, trust model, and honest limitations behind NANDFLY." />
+<meta property="og:url" content="https://wetware-labs.github.io/nandfly/methods.html" />
+<meta property="og:image" content="https://wetware-labs.github.io/nandfly/assets/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <a class="wordmark" href="./"><span>NAND</span>FLY</a>
+  <nav class="site-nav">
+    <a href="index.html">HOME</a>
+    <a href="https://github.com/wetware-labs/nandfly">GitHub</a>
+  </nav>
+</header>
+
+<main class="container methods">
+  <h1>METHODS</h1>
+  <p class="hint">Every claim below is backed by a script or test in the repo. Nothing here is marketing copy.</p>
+
+  <h2 id="derivation">1. Derivation walkthrough</h2>
+  <ol>
+    <li><strong>Extraction</strong> — from MaleCNS v1.0's own annotation/edge data: the Giant Fiber (DNp01, 2 neurons: 1 per hemisphere), its visual inputs (LC4, LPLC2), and its motor target (TTMn). Top-3 highest-synapse-weight LC4 + top-3 LPLC2 per side are kept (top-K selection) — <strong>12 of 311 available LC4/LPLC2 neurons (3.9%)</strong>, stated bluntly, not buried in a footnote.</li>
+    <li><strong>Quantization</strong> — each kept synapse weight is quantized to a signed 4-bit magnitude: <code>clamp(floor(raw_weight/6), 1, 15)</code>.</li>
+    <li><strong>Gate compilation</strong> — everything except the two output LATCHes compiles to NAND only: De Morgan AND/OR, a 4-NAND XOR, a 9-NAND full adder, an LSB-up-folded magnitude comparator (all textbook digital logic, verified by exhaustive truth-table tests in <code>tests/test_gates.py</code>). Result: <strong>661 gates</strong> (659 NAND + 2 LATCH).</li>
+    <li><strong>Threshold rule</strong> — see section 2.</li>
+    <li><strong>Equivalence</strong> — the binarized netlist is checked against an independently-calibrated leaky-integrate-and-fire (LIF) reference model across all 4096 possible stimulus patterns. See section 3.</li>
+  </ol>
+
+  <h2 id="threshold">2. Threshold rule (chosen on principle, not fit to the test set)</h2>
+  <p>
+    Multi-input units (GF/DNp01) use a <strong>coincidence-detector rule</strong>: threshold = (largest single
+    quantized input magnitude) + 1. This is justified from the biology — the Giant Fiber is a
+    convergence/coincidence detector across looming-tuned channels; no single LC4 or LPLC2 afferent
+    should be able to command a jump by itself — not because it scores best against any one test set.
+    Single-input units (TTMn) keep <code>ceil(0.5 * max_possible_sum)</code>, which reduces to an
+    identity pass-through (a one-input unit's own max IS that input, so a coincidence rule would make
+    it permanently unfirable).
+  </p>
+  <p>We explicitly did <strong>not</strong> pick the best-scoring fraction (0.15, 100% on the retired sampled set) — a rule chosen to maximize agreement on one published test set is fit to that set, not derived from anything. The full sweep, both the retired sampled numbers and the current exhaustive numbers:</p>
+  <table>
+    <thead><tr><th>Multi-input threshold</th><th>Sampled 98-pattern (historical, retired)</th><th>Exhaustive 4096-pattern</th></tr></thead>
+    <tbody>
+      <tr><td>ceil(0.5 * max_sum)</td><td>80.6%</td><td>76.7%</td></tr>
+      <tr><td>ceil(0.4 * max_sum)</td><td>85.7%</td><td>88.3%</td></tr>
+      <tr><td>ceil(0.3 * max_sum)</td><td>95.9%</td><td>98.1%</td></tr>
+      <tr><td>ceil(0.2 * max_sum)</td><td>98.0%</td><td>99.1%</td></tr>
+      <tr><td>ceil(0.15 * max_sum) <em>(rejected — best score, not chosen)</em></td><td>100.0%</td><td>99.8%</td></tr>
+      <tr><td>ceil(0.1 * max_sum)</td><td>98.0%</td><td>99.9%</td></tr>
+      <tr><td class="shipped">coincidence rule (largest input + 1) — SHIPPED</td><td>n/a (didn't exist yet)</td><td class="shipped">98.9%</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="equivalence">3. Equivalence — exhaustive, not sampled</h2>
+  <p>
+    Stimulus set: <strong>all 4096</strong> possible activation patterns of the 12 kept visual inputs
+    (64 left-hemisphere subsets &times; 64 right-hemisphere subsets) — exhaustive, not a sample.
+  </p>
+  <p><strong>Overall jump/no-jump agreement: 98.9% (4051/4096)</strong>, using the shipped coincidence-detector rule.</p>
+  <table>
+    <thead><tr><th>Drive level</th><th>Patterns</th><th>Agreement</th></tr></thead>
+    <tbody>
+      <tr><td>none</td><td>1</td><td>1/1 (100.0%)</td></tr>
+      <tr><td>weak</td><td>483</td><td>438/483 (90.7%)</td></tr>
+      <tr><td>medium</td><td>2765</td><td>2765/2765 (100.0%)</td></tr>
+      <tr><td>strong</td><td>847</td><td>847/847 (100.0%)</td></tr>
+    </tbody>
+  </table>
+  <p>45 of 4096 patterns disagree, all LIF-jumped-but-binarized-didn't (zero false jumps: the binarized model never jumps when the LIF reference wouldn't).</p>
+
+  <h2 id="limitations">4. Honest limitations</h2>
+  <ul>
+    <li>The binarized netlist is purely combinational: it is evaluated once against a stimulus pattern's fully-formed active set, not against the LIF reference's tick-by-tick ramp. <strong>It has no notion of approach speed, only of the final visual population that ends up active — no time course.</strong></li>
+    <li>The LIF reference and the binarized comparator use independently chosen calibration constants — they are not fit to agree with each other, so the 98.9% figure is a genuine measurement, not a tautology.</li>
+    <li>This subgraph only models the GF/TTMn (jump) pathway; the DLMn flight-muscle pathway is excluded because MaleCNS v1.0 has no direct DNp01→DLMn synapse in this data (known to be indirect, via the PSI interneuron, out of scope).</li>
+    <li>Only the chemical synapse count is modeled. The GF→TTMn synapse is well documented in the literature to have a strong electrical (gap-junction) component that synapse-count data cannot see, so the TTMn stage's real coupling strength is likely understated here.</li>
+    <li>The inherited transmitter→sign map assigns glutamate to inhibitory (-1). That is wrong specifically for motor neurons at the Drosophila neuromuscular junction, where glutamate is excitatory — TTMn (glutamatergic in this data) is affected, but harmlessly, since TTMn has no outgoing edges in this subgraph and its sign is never read. Disclosed here rather than left for someone else to find.</li>
+    <li>Only 12 of 311 available LC4/LPLC2 neurons (3.9%) are modeled at all. Both models are toy-scale reductions; neither is a claim of accurately predicting a real fly's behavior, only of a documented, reproducible relationship between two models of the same wiring diagram.</li>
+  </ul>
+
+  <h2 id="trust">5. Trust model</h2>
+  <ul>
+    <li><strong>Hash-provable netlist:</strong> the entire 661-gate netlist is packed as <code>bytes constant</code> directly into the deployed contract's own code — anyone can decode it with our open decoder and diff it against <code>circuit/netlists/full.json</code>.</li>
+    <li><strong>No admin keys.</strong> No owner, no pausable switch, no upgrade proxy, no withdrawable balance, no constructor argument that changes behavior.</li>
+    <li><strong>The contract cannot hold value at all.</strong> No <code>payable</code> function anywhere (not <code>swat()</code>, not <code>swatTx()</code>), and no <code>receive()</code>/<code>fallback()</code> — Solidity's own callvalue check rejects any BNB sent to it, before the contract's own code even runs.</li>
+    <li><strong>Constructor-time validation.</strong> Deployment itself runs an on-chain check that every packed gate operand is in range — "the chain checked it," not just "trust the generator script."</li>
+  </ul>
+
+  <h2 id="tapeout">6. The seed fragment — "the neuron's voice"</h2>
+  <p>
+    The TapeOut seed fragment (2 NAND + 1 LATCH) is the jump-command <strong>output</strong> stage — it
+    carries no synaptic weights or thresholds of its own (those live in the omitted upstream adder
+    tree/comparator, which stays in <code>full.json</code> and the deployed contract only). Marketed
+    honestly as <strong>"the jump-latch — the neuron's voice,"</strong> never as "encodes the fly's
+    wiring" — that claim belongs to the full netlist, not this fragment.
+  </p>
+
+  <h2 id="contract">7. The contract</h2>
+  <p>
+    <code>NandFly.sol</code> — 661 gates, <code>swat(uint16)</code> free view call, <code>swatTx(uint16)</code>
+    on-chain call with a <code>Swatted</code> event and three public counters. Not deployed yet (site
+    runs in pre-deploy mode — see index.html's badges). Full deploy procedure: <code>contract/DEPLOY.md</code>.
+  </p>
+
+  <h2 id="credits">8. Credits</h2>
+  <ul class="credits-list">
+    <li>Connectome data: MaleCNS v1.0 (FlyEM @ HHMI Janelia, University of Cambridge, MRC LMB, and Google Research).</li>
+    <li>Binarization pipeline lineage: DOOMFLY-lineage pipeline (MIT license).</li>
+    <li>Parallel work: BruceBlue's independent GF-circuit work — never read or referenced during this derivation; credited here as convergent, independent effort.</li>
+  </ul>
+
+  <p class="hint">Derivation repo: <a href="https://github.com/wetware-labs/nandfly">github.com/wetware-labs/nandfly</a></p>
+</main>
+
+<footer class="site-footer">
+  wetware-labs ·
+  <a href="index.html">HOME</a> ·
+  <a href="https://github.com/wetware-labs/nandfly">GitHub</a>
+</footer>
+</body>
+</html>
