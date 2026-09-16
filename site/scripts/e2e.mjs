@@ -212,6 +212,28 @@ async function main() {
     "birth gauge disclosure note present (live-read provenance)"
   );
 
+  // --- Birth certificate: unclaimed slot renders; config-driven claim works ---
+  const certSignedBy = await page.$eval("#certificate-signed-by", (el) => el.textContent);
+  ok(certSignedBy.includes("(unclaimed)"), `birth certificate renders unclaimed slot ("${certSignedBy.trim()}")`);
+  const certCopy = await page.$eval(".birth-certificate", (el) => el.textContent);
+  ok(/credit, not yield/.test(certCopy), "birth certificate fine print states credit-not-yield");
+  {
+    // claimedBy override: exercises app.js's REAL render path (the exposed
+    // renderCertificate function) on this page, TEST-ONLY -- shipped config
+    // keeps claimedBy: null, and this page is not screenshotted afterwards.
+    const claimed = await page.evaluate(() => {
+      window.__nandflyRenderCertificate("@e2e-test-claimer");
+      return document.getElementById("certificate-signed-by").textContent;
+    });
+    ok(claimed === "@e2e-test-claimer", `birth certificate claimedBy override renders a name ("${claimed}")`);
+    const reverted = await page.evaluate(() => {
+      window.__nandflyRenderCertificate(null);
+      const el = document.getElementById("certificate-signed-by");
+      return el.textContent + "|" + el.classList.contains("unclaimed");
+    });
+    ok(reverted === "(unclaimed)|true", "birth certificate reverts to unclaimed on null");
+  }
+
   // --- The whole brain: point cloud renders, 16 gold highlights, honest caption ---
   const brainSection = await page.$("#brain-section");
   ok(!!brainSection, "brain section present");

@@ -75,6 +75,13 @@ export const CONFIG = {
     gasFloatWei: "17880468164088440",
     neuronsOnChain: 16,
     neuronsTotal: 166700,
+    // Birth certificate attribution. `claimedBy` stays null until a real
+    // wallet's inflow crosses the goal (by on-chain record); then it is set
+    // to the name/handle that wallet chooses (or its address) and redeployed.
+    // Never pre-filled -- an empty slot is the honest state.
+    certificate: {
+      claimedBy: null,
+    },
   },
 
   siteUrl: "https://wetware-labs.github.io/nandfly/",

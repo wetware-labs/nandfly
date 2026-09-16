@@ -488,6 +488,68 @@ h2 .kicker {
   font-size: 0.9rem;
 }
 
+/* --- Birth certificate: an unclaimed slot styled like a document fragment.
+   The vacancy IS the message -- the signed-by line stays prominent but
+   visibly empty until config.js's birth.certificate.claimedBy is set. --- */
+.birth-certificate {
+  position: relative;
+  background: linear-gradient(160deg, rgba(240, 185, 11, 0.05) 0%, var(--bg-card) 45%);
+  border: 1px solid var(--accent-dim);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-top: 16px;
+  max-width: 640px;
+}
+.certificate-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.certificate-seal {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--accent-bright), var(--accent) 60%, var(--accent-dim));
+  box-shadow: 0 0 10px var(--accent-glow);
+  flex: 0 0 auto;
+}
+.certificate-title {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.certificate-signed {
+  font-family: var(--mono);
+  font-size: 1.02rem;
+  color: var(--text);
+  margin: 0 0 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}
+.certificate-signed .unclaimed {
+  color: var(--text-faint);
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+.certificate-copy {
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  margin: 0 0 10px;
+}
+.certificate-fineprint {
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .birth-certificate { padding: 14px 14px; }
+  .certificate-signed { font-size: 0.94rem; }
+}
+
 /* --- Scoreboard --- */
 .scoreboard { display: flex; gap: 24px; flex-wrap: wrap; }
 .stat { min-width: 110px; }

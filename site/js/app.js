@@ -200,6 +200,23 @@ async function main() {
   if (walletEl) {
     walletEl.textContent = CONFIG.birth.feedingWalletAddress || "(wallet not published yet -- see METHODS)";
   }
+  // Birth certificate: config-driven attribution. Stays "(unclaimed)" until
+  // a real wallet crosses the goal (see config.js's birth.certificate note).
+  // Names are rendered via textContent only (config is ours, but the rule is
+  // uniform: no dynamic string ever reaches innerHTML).
+  function renderCertificate(claimedBy) {
+    const signedByEl = document.getElementById("certificate-signed-by");
+    if (!signedByEl) return;
+    if (claimedBy) {
+      signedByEl.textContent = claimedBy;
+      signedByEl.classList.remove("unclaimed");
+    } else {
+      signedByEl.textContent = "(unclaimed)";
+      signedByEl.classList.add("unclaimed");
+    }
+  }
+  renderCertificate(CONFIG.birth.certificate && CONFIG.birth.certificate.claimedBy);
+  window.__nandflyRenderCertificate = renderCertificate; // for Playwright / debugging (same as __nandflyLiveLayer)
 }
 
 main().catch((err) => {
