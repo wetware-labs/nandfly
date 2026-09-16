@@ -1,0 +1,185 @@
+{
+  "source": "MaleCNS v1.0 annotations.feather, somaLocation column (soma positions; anatomy, not wiring)",
+  "dataset_headline_neurons": 166700,
+  "annotation_rows": 211577,
+  "neurons_with_soma_position": 141781,
+  "malformed_location_rows": 0,
+  "dim_points_shown": 30000,
+  "decimation": "bodyId-sorted uniform stride 4 (deterministic, no RNG)",
+  "quantization": {
+    "format": "3x uint16 little-endian per point",
+    "box_min": [
+      2468.0,
+      4758.0,
+      10154.0
+    ],
+    "box_max": [
+      93668.0,
+      68996.0,
+      134531.0
+    ]
+  },
+  "onchain_neurons": [
+    {
+      "bodyId": 10001,
+      "label": "DNp01 - R",
+      "role": "gf",
+      "pos": [
+        24903,
+        17853,
+        13763
+      ]
+    },
+    {
+      "bodyId": 10010,
+      "label": "DNp01 - L",
+      "role": "gf",
+      "pos": [
+        40076,
+        17829,
+        13764
+      ]
+    },
+    {
+      "bodyId": 16128,
+      "label": "LC4 - R",
+      "role": "visual_input",
+      "pos": [
+        20458,
+        28618,
+        10402
+      ]
+    },
+    {
+      "bodyId": 17478,
+      "label": "LC4 - L",
+      "role": "visual_input",
+      "pos": [
+        45954,
+        27995,
+        9657
+      ]
+    },
+    {
+      "bodyId": 17653,
+      "label": "LC4 - L",
+      "role": "visual_input",
+      "pos": [
+        45837,
+        28313,
+        9912
+      ]
+    },
+    {
+      "bodyId": 17668,
+      "label": "LC4 - R",
+      "role": "visual_input",
+      "pos": [
+        19890,
+        29123,
+        9901
+      ]
+    },
+    {
+      "bodyId": 19608,
+      "label": "LPLC2 - R",
+      "role": "visual_input",
+      "pos": [
+        18235,
+        15557,
+        12206
+      ]
+    },
+    {
+      "bodyId": 19787,
+      "label": "LPLC2 - L",
+      "role": "visual_input",
+      "pos": [
+        49347,
+        14417,
+        10871
+      ]
+    },
+    {
+      "bodyId": 20182,
+      "label": "LPLC2 - R",
+      "role": "visual_input",
+      "pos": [
+        18224,
+        15939,
+        13196
+      ]
+    },
+    {
+      "bodyId": 20269,
+      "label": "LPLC2 - R",
+      "role": "visual_input",
+      "pos": [
+        17627,
+        15278,
+        12432
+      ]
+    },
+    {
+      "bodyId": 22253,
+      "label": "LPLC2 - L",
+      "role": "visual_input",
+      "pos": [
+        49866,
+        13367,
+        10998
+      ]
+    },
+    {
+      "bodyId": 22847,
+      "label": "LC4 - R",
+      "role": "visual_input",
+      "pos": [
+        21683,
+        24882,
+        12390
+      ]
+    },
+    {
+      "bodyId": 31563,
+      "label": "LPLC2 - L",
+      "role": "visual_input",
+      "pos": [
+        50218,
+        12603,
+        10714
+      ]
+    },
+    {
+      "bodyId": 518439,
+      "label": "LC4 - L",
+      "role": "visual_input",
+      "pos": [
+        45188,
+        24691,
+        11004
+      ]
+    },
+    {
+      "bodyId": 800146,
+      "label": "TTMn - R",
+      "role": "jump_motor",
+      "pos": [
+        25018,
+        52274,
+        40865
+      ]
+    },
+    {
+      "bodyId": 804642,
+      "label": "TTMn - L",
+      "role": "jump_motor",
+      "pos": [
+        43240,
+        57512,
+        40046
+      ]
+    }
+  ],
+  "onchain_neurons_missing_soma": []
+}

@@ -7,6 +7,7 @@ import { CircuitViewer } from "./circuit-viewer.js";
 import { LiveLayer } from "./live-layer.js";
 import { SwatUI } from "./swat.js";
 import { renderScoreboard, renderNeuronProgress, renderBirthGauge } from "./scoreboard.js";
+import { BrainViewer } from "./brain.js";
 
 const DATA_URL = new URL("../data/full.json", import.meta.url);
 
@@ -172,6 +173,20 @@ async function main() {
   const swatContainer = document.getElementById("swat-ui");
   if (swatContainer) {
     new SwatUI(swatContainer, netlist, { fly, circuitViewer });
+  }
+
+  // --- The whole brain (soma point cloud) ---
+  const brainCanvas = document.getElementById("brain-canvas");
+  if (brainCanvas) {
+    const viewer = new BrainViewer(
+      brainCanvas,
+      document.getElementById("brain-caption"),
+      document.getElementById("brain-tooltip"),
+      accent ? { accent } : {}
+    );
+    // init() handles its own fetch failure with an honest fallback line; a
+    // brain-view problem must never take down the rest of the page.
+    viewer.init().catch((e) => console.warn("brain view disabled:", e));
   }
 
   // --- Scoreboard ---

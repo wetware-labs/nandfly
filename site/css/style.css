@@ -353,6 +353,38 @@ h2 .kicker {
 .swat-error { color: var(--danger); }
 .swat-hint { color: var(--text-dim); font-size: 0.9rem; }
 
+/* --- The whole brain (soma point cloud) --- */
+.brain-canvas-wrap {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: radial-gradient(ellipse at center, #14101f 0%, #0b0912 85%);
+  overflow: hidden;
+}
+.brain-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 440px;
+  cursor: grab;
+}
+.brain-canvas-wrap canvas:active { cursor: grabbing; }
+@media (max-width: 700px) {
+  .brain-canvas-wrap canvas { height: 300px; }
+}
+.brain-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent-bright);
+  background: rgba(16, 14, 23, 0.92);
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  padding: 4px 10px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .swat-tx-panel { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; }
 .swat-tx-panel summary { cursor: pointer; color: var(--text-dim); font-weight: 600; }
 .calldata {

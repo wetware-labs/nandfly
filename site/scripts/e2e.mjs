@@ -170,6 +170,29 @@ async function main() {
     ok(/^0xc52ff196/.test(calldata) === false && calldata.startsWith("0x81f2b317"), "swatTx calldata shown with correct selector");
   }
 
+  // --- The whole brain: point cloud renders, 16 gold highlights, honest caption ---
+  const brainSection = await page.$("#brain-section");
+  ok(!!brainSection, "brain section present");
+  if (brainSection) {
+    await brainSection.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(1800); // fetch + first frames while in view
+    const stats = await page.evaluate(() => window.__nandflyBrainStats || null);
+    ok(!!stats && stats.highlighted === 16, `brain stats: 16 on-chain highlights (got ${stats && stats.highlighted})`);
+    ok(!!stats && stats.shown >= 10000, `brain stats: point cloud loaded (shown=${stats && stats.shown})`);
+    const nonBlank = await page.$eval("#brain-canvas", (c) => {
+      const ctx = c.getContext("2d");
+      const data = ctx.getImageData(0, 0, c.width, c.height).data;
+      let lit = 0;
+      for (let i = 3; i < data.length; i += 4) if (data[i] > 0) lit++;
+      return lit;
+    });
+    ok(nonBlank > 1000, `brain canvas renders (non-blank pixels: ${nonBlank})`);
+    const caption = await page.$eval("#brain-caption", (el) => el.textContent);
+    ok(/anatomy, not wiring/.test(caption), "brain caption carries the anatomy-not-wiring disclosure");
+    await brainSection.screenshot({ path: path.join(SCREENSHOT_DIR, "site-brain.png") });
+    console.log("  screenshot: site-brain.png");
+  }
+
   // --- Mobile viewport smoke test ---
   const mobileContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const mobilePage = await mobileContext.newPage();

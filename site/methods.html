@@ -127,6 +127,19 @@
     counts inflows from launch onward.
   </p>
 
+  <h2 id="brain-view">7c. The whole-brain view (data provenance)</h2>
+  <p>
+    The "whole brain" point cloud on the home page renders <strong>soma positions only</strong> from
+    MaleCNS v1.0's annotations (<code>somaLocation</code> column): 141,781 of the 211,577 annotation
+    rows carry a soma position; the rest have none and are not shown (nothing is invented). The cloud
+    is decimated to 30,000 points for rendering (uniform stride over the bodyId-sorted list —
+    deterministic, no RNG; ~10,000 on small screens) and quantized to 3&times;uint16 per point.
+    Extraction script, binary, and a manifest with the exact counts, quantization box, and the 16
+    on-chain neurons' positions: <code>site/scripts/extract_brain_points.py</code>,
+    <code>site/data/brain-points.json</code>. Positions are anatomy, not wiring — no connectivity is
+    used or implied by this view; the wiring lives in the netlist the contract evaluates.
+  </p>
+
   <h2 id="credits">8. Credits</h2>
   <ul class="credits-list">
     <li>Connectome data: MaleCNS v1.0 (FlyEM @ HHMI Janelia, University of Cambridge, MRC LMB, and Google Research).</li>
