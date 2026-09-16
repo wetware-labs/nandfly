@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 import {NandFlyNetlist} from "./NandFlyNetlist.sol";
+import {NandFlyValidation} from "./NandFlyValidation.sol";
 
 /// @title NandFly
 /// @notice The fly's on-chain body: a 661-gate NAND/LATCH netlist derived from a
@@ -16,6 +17,13 @@ import {NandFlyNetlist} from "./NandFlyNetlist.sol";
 /// one -- that is a deliberate trust property, not an oversight. (If you are auditing
 /// this for the site copy: the ONLY state this contract ever writes is three public
 /// counters incremented by swatTx(), nothing else.)
+///
+/// THIS CONTRACT CANNOT HOLD VALUE. There is no `payable` function anywhere (not
+/// swat(), not swatTx()), and no `receive()`/`fallback()`. Solidity's automatic
+/// callvalue check therefore rejects any plain BNB transfer or `swatTx()` call that
+/// attaches `msg.value > 0` -- not by application-level logic that could have a bug,
+/// but by the compiler itself, before this contract's own code even runs. There is
+/// nothing here to accidentally lock, nothing to drain, nothing to rescue.
 ///
 /// -----------------------------------------------------------------------------
 /// Two-tick LATCH evaluation protocol (mirrors circuit/gates.py exactly)
@@ -60,19 +68,19 @@ contract NandFly {
     }
 
     /// @notice Credit + derivation provenance. The connectome data this netlist was
-    /// derived from is the MaleCNS dataset (FlyWire/male Drosophila CNS connectome
-    /// project); this circuit is an independent derivation -- see the derivation
-    /// repo for the full binarization pipeline, threshold rulings, and equivalence
-    /// report against a leaky-integrate-and-fire reference model.
+    /// derived from is the MaleCNS v1.0 dataset; this circuit is an independent
+    /// derivation of it -- see the derivation repo for the full binarization
+    /// pipeline, threshold rulings, and equivalence report against a
+    /// leaky-integrate-and-fire reference model.
     function PROVENANCE() public pure returns (string memory) {
         return
-            "Derived from the MaleCNS connectome dataset (male Drosophila melanogaster "
-            "CNS, FlyWire consortium). GF/TTMn escape-reflex subgraph (12 kept "
+            "Derived from the MaleCNS v1.0 connectome dataset (male Drosophila "
+            "melanogaster CNS; FlyEM @ HHMI Janelia, University of Cambridge, MRC "
+            "LMB, and Google Research). GF/TTMn escape-reflex subgraph (12 kept "
             "LC4/LPLC2 visual-input neurons of 311 available) binarized to a flat "
-            "NAND+LATCH netlist by an independent NANDFLY derivation pipeline. Full "
-            "derivation repo pointer: PLACEHOLDER -- see project site / GitHub org at "
-            "deploy time for the exact commit this contract's netlist was generated "
-            "from (contract/gen_netlist_sol.py from circuit/netlists/full.json).";
+            "NAND+LATCH netlist by the NANDFLY project; independently derived; "
+            "reproducible from the public connectome. Derivation repo: "
+            "https://github.com/wetware-labs/nandfly";
     }
 
     function GATE_COUNT() public pure returns (uint256) {
@@ -87,6 +95,22 @@ contract NandFly {
     constructor() {
         // Defense in depth for the NUM_LATCHES duplication noted above.
         require(NUM_LATCHES == NandFlyNetlist.NUM_LATCHES, "NUM_LATCHES drift");
+
+        // One-time, on-chain check (added after Task 3's opcode-level audit, I2b)
+        // that every gate operand in PACKED_GATES is in range. _runTick()'s
+        // inline-assembly evaluator loop (below) trusts that range without
+        // re-checking it on every call, for gas -- this makes that trust a
+        // verified fact of THIS deployment's own bytecode, checked once here,
+        // rather than something only the generator script promised. See
+        // NandFlyValidation.sol for exactly what is (and isn't) checked and why;
+        // test/validation.test.js proves a corrupted packed gate list actually
+        // fails deployment via this exact call.
+        NandFlyValidation.validatePackedGates(
+            NandFlyNetlist.PACKED_GATES,
+            NandFlyNetlist.NUM_GATES,
+            NandFlyNetlist.NUM_SIGNALS
+        );
+
         bornAt = block.timestamp;
     }
 
@@ -102,6 +126,13 @@ contract NandFly {
     /// it jump -- i.e. it survived the swat.
     uint256 public survivedSwats;
 
+    /// @notice Emitted by every swatTx() call. `stimulus` is always the MASKED
+    /// value actually evaluated (see swatTx()'s masking below) -- never the raw
+    /// argument. WARNING for indexers/integrators: this event's shape (topic0 +
+    /// argument types) is not, by itself, proof a given log came from THIS
+    /// contract -- any contract can emit a log with the same signature. Always
+    /// filter by the emitting contract's address (this deployment's address),
+    /// never by event shape alone.
     event Swatted(address indexed swatter, uint16 stimulus, bool jumped);
 
     // ---------------------------------------------------------------------
@@ -109,34 +140,45 @@ contract NandFly {
     // ---------------------------------------------------------------------
 
     /// @notice Free, read-only evaluation of the netlist against a 12-bit visual
-    /// stimulus pattern (bits 12-15 of `stimulus` are ignored). Pure function of
-    /// its argument -- calling it twice with the same stimulus always returns the
-    /// same answer; it does not depend on, or affect, any on-chain state.
+    /// stimulus pattern. Pure function of its argument -- calling it twice with the
+    /// same stimulus always returns the same answer; it does not depend on, or
+    /// affect, any on-chain state.
     /// @param stimulus 12-bit stimulus pattern; bit i corresponds to a specific
     /// spike_<body_id> visual-input neuron -- see NandFlyNetlist's spike bit-order
-    /// comment for the exact neuron each bit represents.
+    /// comment for the exact neuron each bit represents. Bits 12-15 are MASKED OFF
+    /// (see the canonicalization comment inside this function) rather than
+    /// rejected, so `swat(x)` and `swat(x | 0xF000)` always agree for every x --
+    /// see test/canonicalization.test.js's aliasing check.
     function swat(uint16 stimulus)
         public
         pure
         returns (bool jumped, bool jumpLeft, bool jumpRight)
     {
-        (jumpLeft, jumpRight) = _evaluate(stimulus);
-        jumped = jumpLeft || jumpRight;
+        // Canonicalize: only bits 0-11 are meaningful (see NandFlyNetlist's
+        // spikeSignalIndices() -- exactly 12 stimulus bits are wired to a
+        // spike_<body_id> pin). Masking (not reverting) on out-of-range high bits
+        // added after Task 3's opcode-level audit (I1): swatTx() emits `stimulus`
+        // in its Swatted event, and without this mask that emitted value could
+        // silently disagree with the pattern actually evaluated (bits 12-15
+        // WOULD be ignored by evaluation either way, since spikeSignalIndices()
+        // only ever reads bits 0-11, but the RAW argument would still be what got
+        // logged). Masking first makes "what was logged" and "what was evaluated"
+        // provably the same value, always.
+        stimulus &= 0x0FFF;
+        (jumped, jumpLeft, jumpRight) = _evaluate(stimulus);
     }
 
     /// @notice Same evaluation as swat(), but as a transaction: emits a Swatted
-    /// event and increments the public counters. No fee is required or charged
-    /// (call it with msg.value == 0). `payable` exists only so a swatter MAY
-    /// voluntarily attach value; the site copy is expected to steer feeding-wallet
-    /// donations elsewhere (see the project ledger's feeding-wallet policy) rather
-    /// than to this function, because -- consistent with "no admin keys" above --
-    /// this contract has NO withdraw function and no owner, so any value attached
-    /// here is PERMANENTLY LOCKED in the contract's balance, by design, forever.
-    /// That is disclosed here rather than hidden: there is no backdoor for anyone,
-    /// including us, to later add a withdraw function and sweep it.
-    function swatTx(uint16 stimulus) public payable {
-        (bool jumpLeft, bool jumpRight) = _evaluate(stimulus);
-        bool jumped = jumpLeft || jumpRight;
+    /// event (with the canonicalized/masked stimulus -- see swat()'s doc comment)
+    /// and increments the public counters. No fee, ever: this function is NOT
+    /// `payable` -- Solidity's automatic callvalue check reverts any call that
+    /// attaches msg.value, at the ABI-dispatch level, before this function's own
+    /// code runs at all. Combined with having no `receive()`/`fallback()` either,
+    /// this contract cannot hold BNB under any call path (see this contract's
+    /// top-level NatSpec).
+    function swatTx(uint16 stimulus) public {
+        stimulus &= 0x0FFF; // see swat()'s doc comment for why
+        (bool jumped, , ) = _evaluate(stimulus);
 
         totalSwats += 1;
         if (jumped) {
@@ -153,10 +195,22 @@ contract NandFly {
     // ---------------------------------------------------------------------
 
     /// @dev Runs the documented two-tick protocol once, fully in memory, and
-    /// returns the final jump_left / jump_right signal values. See this contract's
-    /// top-level NatSpec for why this is a faithful (not approximate) stateless
-    /// re-simulation of circuit/gates.py's stateful reference protocol.
-    function _evaluate(uint16 stimulus) internal pure returns (bool jumpLeft, bool jumpRight) {
+    /// returns the final jump / jump_left / jump_right signal values. See this
+    /// contract's top-level NatSpec for why this is a faithful (not approximate)
+    /// stateless re-simulation of circuit/gates.py's stateful reference protocol.
+    /// `jumped` is read directly from the netlist's OWN `jump` output gate
+    /// (NandFlyNetlist.SIG_JUMP -- full.json's `output_pins["jump"]`, which
+    /// full.json's own builder defines as OR(jump_left, jump_right); see
+    /// circuit/SCHEMA.md's "Output pins" section), not re-derived in Solidity as
+    /// `jumpLeft || jumpRight` -- more faithful to "the organism's own output pin
+    /// is the answer," and the exhaustive 4096-pattern parity fixture already
+    /// proves this agrees with jumpLeft||jumpRight on every pattern (gen_parity_fixture.py
+    /// asserts exactly this equality while building that fixture).
+    function _evaluate(uint16 stimulus)
+        internal
+        pure
+        returns (bool jumped, bool jumpLeft, bool jumpRight)
+    {
         bytes memory packed = NandFlyNetlist.PACKED_GATES;
         uint256[12] memory spikeIdx = NandFlyNetlist.spikeSignalIndices();
 
@@ -174,6 +228,7 @@ contract NandFly {
         // outputs.
         (uint256[] memory sig2, ) = _runTick(packed, spikeIdx, 0, stimulus, tick1LatchQ);
 
+        jumped = sig2[NandFlyNetlist.SIG_JUMP] == 1;
         jumpLeft = sig2[NandFlyNetlist.SIG_JUMP_LEFT] == 1;
         jumpRight = sig2[NandFlyNetlist.SIG_JUMP_RIGHT] == 1;
     }
@@ -206,15 +261,26 @@ contract NandFly {
         // Solidity for gas: profiling showed the checked-arithmetic + bounds-
         // checked dynamic-array-access Solidity would normally emit for this
         // (661 gates x 2 ticks = 1322 iterations) pushed swatTx() over 1.5M gas,
-        // comfortably above the < 1M gas target. Every index used below (left,
-        // right, outIdx, and the byte offsets into `packed`) is PROVEN in-range
-        // by construction: gen_netlist_sol.py only ever emits signal indices <
-        // NUM_SIGNALS (checked there -- see that script's pack_gates()), and
-        // `packed`/`sig` are sized exactly NUM_GATES*4 / NUM_SIGNALS by this
-        // function. Skipping Solidity's redundant runtime bounds checks here is
-        // therefore safe, not merely fast; the full 4096-pattern parity test
-        // (test/parity.test.js) re-verifies correctness after this optimization,
-        // not just gas.
+        // comfortably above the < 1M gas target. This skips Solidity's own
+        // per-access bounds checks on `left`/`right`/`outIdx`, so those checks
+        // have to actually happen somewhere else for this to be safe, not just
+        // fast -- and they do, in TWO independent places (not just "trust the
+        // generator"):
+        //   1. gen_netlist_sol.py's pack_gates() asserts, at generation time,
+        //      that every operand index is < NUM_SIGNALS AND topologically
+        //      before its own gate (see that function's docstring).
+        //   2. This contract's constructor calls
+        //      NandFlyValidation.validatePackedGates(), which independently
+        //      RE-CHECKS every operand index < NUM_SIGNALS ON CHAIN, once, at
+        //      deploy time, against the actual deployed PACKED_GATES bytes --
+        //      not the generator's claim about them. A corrupted PACKED_GATES
+        //      constant fails deployment outright (see
+        //      test/validation.test.js) rather than silently reading
+        //      out-of-bounds here.
+        // `sig`/`packed` are also sized exactly NUM_SIGNALS/NUM_GATES*4 by this
+        // function. The full 4096-pattern parity test (test/parity.test.js) then
+        // re-verifies actual correctness (not just memory safety) after this
+        // optimization, not just gas.
         uint256 latchSlot = 0;
         uint256 numInputPins = NandFlyNetlist.NUM_INPUT_PINS;
         uint256 packedPtr;
@@ -230,8 +296,21 @@ contract NandFly {
             uint256 outIdx;
             assembly {
                 // Load the 4-byte big-endian gate word at byte offset k*4 by
-                // reading a full word starting there and shifting the top 4
-                // bytes down (avoids 4 separate bounds-checked byte reads).
+                // reading a full 32-byte word starting there and shifting the
+                // top 4 bytes down (avoids 4 separate bounds-checked byte reads).
+                // INTENTIONAL TAIL OVER-READ: for the LAST gate (k = NUM_GATES-1,
+                // byte offset 2640), this mload reads bytes [2640, 2672) from a
+                // `packed` array that only actually contains 2644 bytes -- i.e.
+                // 28 bytes past its logical end. This is safe and deliberate:
+                // `shr(224, ...)` keeps only the TOP 4 bytes of the loaded word
+                // (bytes [2640, 2644), which ARE the real, in-bounds final gate
+                // word), and unconditionally discards the other 28 -- whatever
+                // memory garbage lives past `packed`'s end never reaches `word`.
+                // The only cost is a few extra gas for memory-expansion (the EVM
+                // still charges for touching those bytes even though their value
+                // is discarded); it never affects correctness, and is exercised
+                // (not just theorized) by every parity test call, since gate 661
+                // is always the last one evaluated.
                 let word := shr(224, mload(add(packedPtr, mul(k, 4))))
                 let left := and(shr(15, word), 0x7FFF)
                 let right := and(word, 0x7FFF)

@@ -58,22 +58,25 @@ describe("NandFly.swatTx", function () {
     expect(total).to.equal(jumps + survived);
   });
 
-  it("accepts an optional attached value without taking a fee or reverting", async function () {
+  it("C1: rejects any attached value -- swatTx is not payable, contract cannot hold BNB", async function () {
     const nandfly = await deploy();
-    const [swatter] = await ethers.getSigners();
     const value = ethers.parseEther("0.001");
 
+    // swatTx() has no `payable` modifier, so solc's own generated dispatcher
+    // rejects msg.value > 0 before NandFly's code runs at all -- this is not
+    // application-level logic, it's the ABI dispatch itself.
+    await expect(nandfly.swatTx(0, { value })).to.be.reverted;
+
+    // Same for a plain BNB transfer: no receive()/fallback() exists either.
+    const [sender] = await ethers.getSigners();
     const contractAddress = await nandfly.getAddress();
-    const balanceBefore = await ethers.provider.getBalance(contractAddress);
+    await expect(
+      sender.sendTransaction({ to: contractAddress, value })
+    ).to.be.reverted;
 
-    await expect(nandfly.swatTx(0, { value })).to.not.be.reverted;
-
-    const balanceAfter = await ethers.provider.getBalance(contractAddress);
-    // No fee logic exists; whatever value was attached simply sits in the
-    // contract balance (there is no withdraw function -- documented as a
-    // "no admin keys" property in NandFly.sol's top comment). We only assert
-    // the call does not revert and the contract does not reject value.
-    expect(balanceAfter - balanceBefore).to.equal(value);
+    // Contract balance must stay exactly zero -- there is truly nothing to
+    // ever hold, lock, or need a withdraw function for.
+    expect(await ethers.provider.getBalance(contractAddress)).to.equal(0n);
   });
 
   it("swat() is a pure view and never touches state (counters stay zero across repeated calls)", async function () {

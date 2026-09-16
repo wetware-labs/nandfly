@@ -20,6 +20,13 @@
  *
  * Usage (REAL DEPLOY -- Task 5 only, after explicit user go-ahead):
  *   npx hardhat run scripts/deploy.js --network bsc
+ *
+ * Gas price (see contract/DEPLOY.md's "Gas price guidance"): by default this
+ * lets ethers/Hardhat estimate the network's current gas price automatically
+ * (`eth_gasPrice`). To pin an explicit gas price instead -- recommended for a
+ * real deploy, so the actual cost is known BEFORE broadcasting, not just
+ * estimated -- set NANDFLY_GAS_PRICE_GWEI, e.g.:
+ *   NANDFLY_GAS_PRICE_GWEI=1 npx hardhat run scripts/deploy.js --network bsc
  */
 const hre = require("hardhat");
 
@@ -27,8 +34,16 @@ async function main() {
   const network = hre.network.name;
   console.log(`Deploying NandFly to network: ${network}`);
 
+  const overrides = {};
+  if (process.env.NANDFLY_GAS_PRICE_GWEI) {
+    overrides.gasPrice = hre.ethers.parseUnits(process.env.NANDFLY_GAS_PRICE_GWEI, "gwei");
+    console.log(`Using explicit gas price: ${process.env.NANDFLY_GAS_PRICE_GWEI} gwei`);
+  } else {
+    console.log("No NANDFLY_GAS_PRICE_GWEI set -- using network-estimated gas price.");
+  }
+
   const NandFly = await hre.ethers.getContractFactory("NandFly");
-  const nandfly = await NandFly.deploy();
+  const nandfly = await NandFly.deploy(overrides);
   await nandfly.waitForDeployment();
 
   const address = await nandfly.getAddress();

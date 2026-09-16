@@ -28,7 +28,7 @@ python contract/gen_parity_fixture.py
 cd contract
 npm install         # first time only
 npx hardhat compile
-npx hardhat test     # all 9 tests, incl. the 4096-pattern parity test, must pass
+npx hardhat test     # all 17 tests, incl. the 4096-pattern parity test, must pass
 ```
 
 ## 1. Network configuration
@@ -47,7 +47,26 @@ None of these are set anywhere in this repo or its `.gitignore`d dirs. Without
 them, `--network bsc` fails closed (empty RPC URL / no signer) rather than
 silently doing something unexpected.
 
-## 2. Deploy
+## 2. Gas price guidance (read before broadcasting anything real)
+
+`scripts/deploy.js` lets ethers/Hardhat auto-estimate the current gas price
+(`eth_gasPrice`) by default. For a REAL deploy (testnet or mainnet), pin an
+explicit gas price instead, so the exact cost is known BEFORE you broadcast,
+not just estimated after the fact:
+
+1. Check the current BSC gas price at https://bscscan.com/gastracker (BSC's
+   fee market is normally very flat -- often ~1 gwei -- but confirm rather
+   than assume).
+2. Export `NANDFLY_GAS_PRICE_GWEI` to that value (or a small margin above it)
+   before running `scripts/deploy.js`:
+   ```bash
+   export NANDFLY_GAS_PRICE_GWEI=1   # example -- use the tracker's live value
+   ```
+3. `scripts/deploy.js` prints which mode it used ("Using explicit gas price"
+   vs "using network-estimated gas price") so the deploy log itself records
+   which one happened.
+
+## 3. Deploy
 
 Dry run locally first (always safe, no real chain touched):
 
@@ -55,39 +74,49 @@ Dry run locally first (always safe, no real chain touched):
 npx hardhat run scripts/deploy.js
 ```
 
-Testnet rehearsal (recommended before mainnet -- real transactions, fake
-funds; get testnet BNB from a BSC testnet faucet):
+Testnet rehearsal (**required** before mainnet, not merely recommended --
+real transactions, fake funds; get testnet BNB from a BSC testnet faucet).
+This rehearsal MUST include the BscScan verify step (section 4 below) too,
+not just the deploy tx -- verification failing (e.g. a solc/optimizer
+settings mismatch) is exactly the kind of thing you want to discover on
+testnet, where it costs nothing to fix and redeploy, not on mainnet, where
+this contract is immutable the moment it lands:
 
 ```bash
 export BSC_TESTNET_RPC_URL=...
 export BSC_DEPLOYER_PRIVATE_KEY=...
+export NANDFLY_GAS_PRICE_GWEI=...   # see section 2
 npx hardhat run scripts/deploy.js --network bscTestnet
+npx hardhat verify --network bscTestnet <DEPLOYED_ADDRESS>   # do this on testnet too, not just mainnet
 ```
 
-Mainnet (Task 5, after explicit go-ahead):
+Mainnet (Task 5, after explicit go-ahead, and only after the testnet
+rehearsal above -- deploy AND verify -- has succeeded):
 
 ```bash
 export BSC_RPC_URL=...
 export BSC_DEPLOYER_PRIVATE_KEY=...
+export NANDFLY_GAS_PRICE_GWEI=...   # see section 2
 npx hardhat run scripts/deploy.js --network bsc
 ```
 
 `scripts/deploy.js` prints the deployed address, the deployment tx hash, gas
-used, and (on `bsc`/`bscTestnet`) the exact next-step commands for steps 3-4
+used, and (on `bsc`/`bscTestnet`) the exact next-step commands for steps 4-5
 below with the address already filled in.
 
-## 3. Verify on BscScan
+## 4. Verify on BscScan
 
 ```bash
 npx hardhat verify --network bsc <DEPLOYED_ADDRESS>
 ```
 
 No constructor arguments to pass (the constructor takes none). This publishes
-`NandFly.sol` + `NandFlyNetlist.sol` source so anyone can read the embedded
-netlist bytes and the "no admin keys" claim directly on BscScan, not just
-trust this repo.
+`NandFly.sol`, `NandFlyNetlist.sol`, and `NandFlyValidation.sol` source so
+anyone can read the embedded netlist bytes, the on-chain validation that ran
+at construction, and the "no admin keys" / "cannot hold value" claims
+directly on BscScan, not just trust this repo.
 
-## 4. Post-deploy parity spot-check (against the LIVE address)
+## 5. Post-deploy parity spot-check (against the LIVE address)
 
 `scripts/parity_check.js` re-checks `swat()` on the deployed contract against
 `contract/fixtures/parity_4096.json` (the same fixture the local test suite
@@ -109,41 +138,59 @@ The script also sanity-checks `GATE_COUNT() == 661` before spending any calls
 on the actual sample, and exits non-zero with a printed mismatch list on any
 disagreement.
 
-## 5. Gas / cost estimates
+## 6. Gas / cost estimates
 
 Measured on the local Hardhat network (solc 0.8.24, optimizer 200 runs; see
-`.superpowers/sdd/nandfly-mvp/task-3-report.md` for the full run):
+`.superpowers/sdd/nandfly-mvp/task-3-report.md` and its fix-round addendum for
+the full run):
 
 | Item | Gas |
 |---|---|
-| Deployment (`NandFly.deploy()`) | 1,134,857 |
-| `swatTx()` (a full stimulus pattern, min/avg/max across sampled patterns) | 455,066 / 479,420 / 489,580 |
-| `swat()` (view/`eth_call`; free in normal use -- shown here as its gas-equivalent cost if it were a state-changing call) | ~443,300-443,627 |
+| Deployment (`NandFly.deploy()`, incl. the one-time on-chain netlist validation pass -- see NandFlyValidation.sol) | 1,629,797 |
+| `swatTx()` (a full stimulus pattern, min/avg/max across sampled patterns) | 455,132 / 477,632 / 489,641 |
+| `swat()` (view/`eth_call`; free in normal use -- shown here as its gas-equivalent cost if it were a state-changing call) | ~443,348-443,680 |
 
 BSC gas price and BNB/USD both move; here is the arithmetic at a few
 illustrative gas prices (BNB price fixed at an example $600 for the USD
 column -- **re-check both numbers at actual deploy time**, e.g. via
-https://bscscan.com/gastracker and any BNB price source):
+https://bscscan.com/gastracker and any BNB price source; see section 2 above
+for pinning the real gas price on the actual deploy tx):
 
 | Gas price | Deploy cost (BNB) | Deploy cost (USD @ $600/BNB) | Avg `swatTx()` cost (BNB) | Avg `swatTx()` cost (USD) |
 |---|---|---|---|---|
-| 1 gwei | 0.001135 | $0.68 | 0.000479 | $0.29 |
-| 3 gwei | 0.003405 | $2.04 | 0.001438 | $0.86 |
-| 5 gwei | 0.005674 | $3.40 | 0.002397 | $1.44 |
+| 1 gwei | 0.001630 | $0.98 | 0.000478 | $0.29 |
+| 3 gwei | 0.004889 | $2.93 | 0.001433 | $0.86 |
+| 5 gwei | 0.008149 | $4.89 | 0.002388 | $1.43 |
 
 This is consistent with the project ledger's earlier "~$3" budget line for
 the Layer-1 contract's gas footprint (see
-`.superpowers/sdd/nandfly-mvp/progress.md`), and leaves a wide margin under
-the project's overall $50 budget cap.
+`.superpowers/sdd/nandfly-mvp/progress.md`; the on-chain validation pass added
+during the audit fix round pushed deploy cost up somewhat, from ~$0.68-$3.40
+to ~$0.98-$4.89 across the same 1-5 gwei range -- still a one-time cost, and
+still a wide margin under the project's overall $50 budget cap).
 
-## 6. What Task 5 should NOT need to touch
+## 7. Indexers / integrators: filter `Swatted` by contract address
+
+The `Swatted(address indexed swatter, uint16 stimulus, bool jumped)` event's
+shape (its signature / `topic0`) is **not, by itself, proof a given log came
+from this deployment** -- any contract, including an unrelated or malicious
+one, can emit a log with the exact same signature and argument types. Any
+indexer, dashboard, or bot consuming `Swatted` logs MUST filter by the
+emitting contract's address (this deployment's address from step 3 above),
+never by event shape/signature alone. This is also documented directly on the
+event in `NandFly.sol`'s NatSpec, but is repeated here since it's the kind of
+thing that's easy to get right in a first integration and then silently wrong
+after copy-pasting to a second one.
+
+## 8. What Task 5 should NOT need to touch
 
 - The netlist encoding (`contract/gen_netlist_sol.py`) -- only re-run it if
   `circuit/netlists/full.json` changes.
 - `hardhat.config.js` -- network config is already complete; only env vars
   need to be supplied.
-- `contract/contracts/NandFly.sol` / `NandFlyNetlist.sol` -- these are the
-  audited, parity-tested artifacts. If a change is needed here, treat it as a
-  new implementation change (re-run the full test suite, including the
-  4096-pattern parity test) before any real-network deploy, not a Task 5
-  on-the-fly edit.
+- `contract/contracts/NandFly.sol` / `NandFlyNetlist.sol` /
+  `NandFlyValidation.sol` -- these are the audited, parity-tested artifacts.
+  If a change is needed here, treat it as a new implementation change
+  (re-run the full test suite, including the 4096-pattern parity test)
+  before any real-network deploy, not a Task 5 on-the-fly edit -- this
+  contract is IMMUTABLE once deployed, there is no second chance to patch it.
