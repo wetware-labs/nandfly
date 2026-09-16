@@ -12,7 +12,7 @@
 // URI) is documented as a v2 follow-up, not built here.
 
 import { evaluateStimulus, packStimulusBits } from "./netlist.js";
-import { encodeUint16Call, decodeBool3, SELECTORS } from "./abi.js";
+import { encodeUint16Call, decodeBool3, SELECTORS, SWATTED_TOPIC0 } from "./abi.js";
 import { CONFIG } from "../config.js";
 
 const GROUP_ORDER = ["LC4-L", "LPLC2-L", "LC4-R", "LPLC2-R"];
@@ -139,22 +139,55 @@ export class SwatUI {
     body.className = "swat-tx-body";
     this._txBody = body;
     panel.appendChild(body);
+
+    // One-click path: only offered when the browser has an injected
+    // EIP-1193 provider (MetaMask, Rabby, ...). We never bundle a wallet
+    // SDK (zero deps) and never touch keys -- the wallet itself shows and
+    // approves the single swatTx(uint16) transaction we construct.
+    const oneClick = document.createElement("div");
+    oneClick.className = "oneclick-swat";
+    if (window.ethereum && CONFIG.contractAddress) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-primary oneclick-swat-btn";
+      btn.textContent = "SWAT ON-CHAIN (your wallet)";
+      const status = document.createElement("p");
+      status.className = "oneclick-status hint";
+      status.textContent =
+        "One transaction, built in front of you: swatTx(uint16) with the stimulus selected above. The only cost is gas.";
+      btn.addEventListener("click", () => this._oneClickSwat(btn, status));
+      oneClick.appendChild(btn);
+      oneClick.appendChild(status);
+      this._oneClickStatus = status;
+    } else {
+      const p = document.createElement("p");
+      p.className = "hint";
+      p.textContent = CONFIG.contractAddress
+        ? "No browser wallet detected -- with one installed (MetaMask, Rabby, ...) this becomes a single click. The manual path below works with any wallet:"
+        : "";
+      oneClick.appendChild(p);
+    }
+    body.appendChild(oneClick);
+
+    const info = document.createElement("div");
+    this._txInfo = info;
+    body.appendChild(info);
     this._renderTxCalldata();
 
     this.container.appendChild(panel);
   }
 
   _renderTxCalldata() {
-    if (!this._txBody) return;
+    if (!this._txInfo) return;
     const stimulus = packStimulusBits(this.netlist, this.bits);
     const calldata = encodeUint16Call(SELECTORS["swatTx(uint16)"], stimulus);
     const address = CONFIG.contractAddress || "(not deployed yet -- see METHODS)";
-    this._txBody.innerHTML = `
+    this._txInfo.innerHTML = `
       <p>This calls <code>swatTx(uint16)</code> -- the same evaluation as the free swat above, but as a real transaction: it emits a <code>Swatted</code> event and increments the public counters. No fee beyond gas; the contract cannot hold value (see METHODS).</p>
       <p>Target contract: <code>${address}</code></p>
       <p>Calldata (copy into your wallet's "contract interaction" / raw data field):</p>
       <pre class="calldata">${calldata}</pre>
-      <p class="hint">Deep-link "open in wallet" (WalletConnect / mobile deep link) is a documented v2 follow-up -- this site stays zero-deps and never touches your keys.</p>
+      <p class="hint">WalletConnect / mobile deep link is a documented v2 follow-up -- this site stays zero-deps and never touches your keys.</p>
     `;
   }
 
@@ -255,5 +288,207 @@ export class SwatUI {
       <p class="verdict-line">${verdict}</p>
       <p class="verdict-meta">stimulus 0x${stimulus.toString(16).padStart(3, "0")} &middot; jump_left=${result.jumpLeft} &middot; jump_right=${result.jumpRight} &middot; ${mode}</p>
     `;
+  }
+
+  // --- One-click on-chain swat (injected EIP-1193 wallet) ----------------
+
+  /** Generic JSON-RPC call against OUR public read endpoints (config.js's
+   * rpcUrls, same fallback pattern as _evalOnChain) -- receipt polling goes
+   * through these, NOT through the wallet's provider, so verdict rendering
+   * never depends on trusting the wallet's view of the chain. */
+  async _rpcCall(method, params) {
+    const urls = CONFIG.rpcUrls;
+    let lastErr;
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (json.error) throw new Error(json.error.message || "RPC error");
+        return json.result;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error("all RPC endpoints failed");
+  }
+
+  /** Poll for the tx receipt every ~3s for up to ~90s. Returns the receipt
+   * object, or null on timeout. */
+  async _waitForReceipt(txHash) {
+    for (let i = 0; i < 30; i++) {
+      await new Promise((r) => setTimeout(r, 3000));
+      try {
+        const receipt = await this._rpcCall("eth_getTransactionReceipt", [txHash]);
+        if (receipt) return receipt;
+      } catch {
+        // transient RPC failure -- keep polling until the time budget runs out
+      }
+    }
+    return null;
+  }
+
+  /** BscScan link for a tx hash -- href is only set when the hash actually
+   * looks like one (the value came from the wallet, treat as untrusted). */
+  _txLink(txHash) {
+    const a = document.createElement("a");
+    a.textContent = "view on BscScan";
+    a.target = "_blank";
+    a.rel = "noopener";
+    if (/^0x[0-9a-fA-F]{64}$/.test(txHash)) {
+      a.href = `https://bscscan.com/tx/${txHash}`;
+    }
+    return a;
+  }
+
+  _setOneClickStatus(el, text, txHash) {
+    // Wallet/RPC strings are untrusted -- textContent only (existing rule).
+    el.textContent = text;
+    if (txHash) {
+      el.appendChild(document.createTextNode(" -- "));
+      el.appendChild(this._txLink(txHash));
+    }
+  }
+
+  /** Extract `jumped` from the receipt's Swatted log. Per DEPLOY.md section
+   * 7 (and abi.js's own warning): topic0 alone is never proof -- the log
+   * must ALSO come from our contract address. Event layout:
+   * Swatted(address indexed swatter, uint16 stimulus, bool jumped) --
+   * swatter is topics[1]; stimulus and jumped are data words 0 and 1.
+   * Returns true/false, or null if no matching log exists. */
+  _decodeSwattedJumped(receipt) {
+    const ours = CONFIG.contractAddress.toLowerCase();
+    for (const log of receipt.logs || []) {
+      if (!log || typeof log.address !== "string") continue;
+      if (log.address.toLowerCase() !== ours) continue;
+      if (!log.topics || log.topics[0] !== SWATTED_TOPIC0) continue;
+      const data = (log.data || "").startsWith("0x") ? log.data.slice(2) : log.data || "";
+      const jumpedWord = data.slice(64, 128);
+      if (jumpedWord.length !== 64) return null;
+      return BigInt("0x" + jumpedWord) === 1n;
+    }
+    return null;
+  }
+
+  async _oneClickSwat(btn, status) {
+    const eth = window.ethereum;
+    if (!eth) return;
+    const stimulus = packStimulusBits(this.netlist, this.bits);
+    if (stimulus === 0) {
+      this._setOneClickStatus(
+        status,
+        'You swung at nothing (stimulus 0x000). Check some inputs above or hit a preset like "full loom" first.'
+      );
+      return;
+    }
+    btn.disabled = true;
+    try {
+      this._setOneClickStatus(status, "Requesting wallet account...");
+      const accounts = await eth.request({ method: "eth_requestAccounts" });
+      const from = Array.isArray(accounts) ? accounts[0] : null;
+      if (!from) throw new Error("wallet returned no account");
+
+      const chainIdHex = await eth.request({ method: "eth_chainId" });
+      if (parseInt(chainIdHex, 16) !== CONFIG.chainId) {
+        this._setOneClickStatus(status, "Switching wallet to BNB Smart Chain...");
+        try {
+          await eth.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x38" }],
+          });
+        } catch (switchErr) {
+          // 4902 = chain not added to this wallet yet
+          if (switchErr && switchErr.code === 4902) {
+            await eth.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: "0x38",
+                  chainName: "BNB Smart Chain",
+                  nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+                  rpcUrls: ["https://bsc-dataseed.bnbchain.org"],
+                  blockExplorerUrls: ["https://bscscan.com"],
+                },
+              ],
+            });
+          } else {
+            throw switchErr;
+          }
+        }
+      }
+
+      const data = encodeUint16Call(SELECTORS["swatTx(uint16)"], stimulus);
+      this._setOneClickStatus(
+        status,
+        "Confirm in your wallet. One swatTx(uint16) call -- the only cost is gas; the contract cannot receive value."
+      );
+      const txHash = await eth.request({
+        method: "eth_sendTransaction",
+        params: [{ from, to: CONFIG.contractAddress, data }],
+      });
+
+      this._setOneClickStatus(status, "Transaction sent. Waiting for it to be mined...", txHash);
+      const receipt = await this._waitForReceipt(txHash);
+      if (!receipt) {
+        this._setOneClickStatus(status, "Still pending after 90s -- check the status yourself:", txHash);
+        return;
+      }
+      if (receipt.status && BigInt(receipt.status) === 0n) {
+        this._setOneClickStatus(status, "Transaction reverted on-chain:", txHash);
+        return;
+      }
+      const jumped = this._decodeSwattedJumped(receipt);
+      if (jumped === null) {
+        this._setOneClickStatus(
+          status,
+          "Mined, but no Swatted event from this contract was found in the receipt:",
+          txHash
+        );
+        return;
+      }
+
+      // The Swatted event only carries the aggregate `jumped` bit. For the
+      // circuit-flow animation's per-side detail, evaluate the identical
+      // local netlist (parity vs the contract is exhaustively proven);
+      // the VERDICT text itself is driven by the on-chain event alone.
+      let sides = { jumped, jumpLeft: jumped, jumpRight: jumped };
+      try {
+        const local = evaluateStimulus(this.netlist, stimulus);
+        if (local.jumped === jumped) sides = local;
+      } catch {
+        // fall back to the aggregate-only animation
+      }
+      if (this.circuitViewer) this.circuitViewer.pulseEvaluation(sides, true);
+      if (this.fly) {
+        this.fly.pulse(jumped);
+        if (jumped) this.fly.jump();
+        else this.fly.twitch(0.5);
+      }
+      this.verdictEl.textContent = "";
+      const line = document.createElement("p");
+      line.className = "verdict-line";
+      line.textContent = jumped
+        ? "IT JUMPED. It saw you coming and escaped."
+        : "it ignored you. Survived without moving.";
+      const meta = document.createElement("p");
+      meta.className = "verdict-meta";
+      meta.textContent = `stimulus 0x${stimulus.toString(16).padStart(3, "0")} · on-chain (transaction) · `;
+      meta.appendChild(this._txLink(txHash));
+      this.verdictEl.appendChild(line);
+      this.verdictEl.appendChild(meta);
+      this._setOneClickStatus(status, "Mined. Your swat is now part of the public counters.", txHash);
+    } catch (e) {
+      if (e && e.code === 4001) {
+        this._setOneClickStatus(status, "Cancelled in wallet -- nothing was sent.");
+      } else {
+        this._setOneClickStatus(status, `Failed: ${String((e && e.message) || e)}`);
+      }
+    } finally {
+      btn.disabled = false;
+    }
   }
 }

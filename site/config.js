@@ -66,9 +66,13 @@ export const CONFIG = {
     // project's own deploy-gas float, not donations.
     feedingWalletAddress: "0x14Ab88CF91376451a24179C41965D1f24269e3a6",
     goalUsd: 30,
-    // Manually updated as real inflows happen (checked daily during the
-    // launch window); counts inflows from launch onward.
-    raisedUsd: 0,
+    // The wallet's disclosed pre-launch deploy-gas float, in wei (exact
+    // on-chain balance at launch, 2026-09-16: 0.01788046816408844 BNB).
+    // The birth gauge shows max(0, live balance - this float) so the
+    // project's own leftover gas can never be displayed as donations.
+    // There is deliberately NO manual "raised" number in this config --
+    // the gauge reads the chain (see scoreboard.js's renderBirthGauge).
+    gasFloatWei: "17880468164088440",
     neuronsOnChain: 16,
     neuronsTotal: 166700,
   },

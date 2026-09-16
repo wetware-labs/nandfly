@@ -386,6 +386,10 @@ h2 .kicker {
 }
 
 .swat-tx-panel { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; }
+.oneclick-swat { margin: 12px 0 4px; }
+.oneclick-swat .oneclick-swat-btn { margin-bottom: 6px; }
+.oneclick-swat .oneclick-status { margin: 4px 0 0; }
+.birth-gauge-note { max-width: 640px; }
 .swat-tx-panel summary { cursor: pointer; color: var(--text-dim); font-weight: 600; }
 .calldata {
   background: var(--bg);

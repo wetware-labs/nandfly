@@ -170,6 +170,48 @@ async function main() {
     ok(/^0xc52ff196/.test(calldata) === false && calldata.startsWith("0x81f2b317"), "swatTx calldata shown with correct selector");
   }
 
+  // --- One-click swat: with NO injected provider, the calldata fallback and
+  // the "browser wallet enables one click" hint must both be visible; the
+  // one-click button must NOT render.
+  const oneClickBtnAbsent = await page.$(".oneclick-swat-btn");
+  ok(!oneClickBtnAbsent, "no injected wallet: one-click button absent");
+  const fallbackHint = await page.$eval(".oneclick-swat", (el) => el.textContent);
+  ok(/browser wallet/i.test(fallbackHint), "no injected wallet: one-click hint shown next to calldata fallback");
+
+  // With a minimal fake EIP-1193 provider injected before load, the
+  // one-click button must render (no tx simulation -- render check only).
+  const walletPage = await context.newPage();
+  await walletPage.addInitScript(() => {
+    window.ethereum = { request: async () => { throw new Error("test stub"); } };
+  });
+  await walletPage.goto(`${BASE_URL}/index.html`, { waitUntil: "networkidle" });
+  await walletPage.waitForTimeout(1000);
+  const oneClickBtn = await walletPage.$(".oneclick-swat-btn");
+  ok(!!oneClickBtn, "injected wallet stub: one-click SWAT ON-CHAIN button renders");
+  if (oneClickBtn) {
+    // Empty stimulus guard applies to the tx path too.
+    await walletPage.$eval(".swat-tx-panel summary", (el) => el.click());
+    await oneClickBtn.click();
+    await walletPage.waitForTimeout(300);
+    const status = await walletPage.$eval(".oneclick-status", (el) => el.textContent);
+    ok(/swung at nothing/.test(status), "one-click with empty stimulus shows the guidance hint, sends nothing");
+  }
+  await walletPage.close();
+
+  // --- Birth gauge: live on-chain value (numeric $) or the honest fallback,
+  // never a fabricated number ---
+  await page.waitForTimeout(1500); // gauge fetches balance + Chainlink feed
+  const gaugeLabel = await page.$eval(".birth-gauge-label", (el) => el.textContent);
+  ok(
+    /\$\d+\.\d{2} \/ \$30\.00/.test(gaugeLabel) || /\$-- \/ \$30\.00/.test(gaugeLabel),
+    `birth gauge shows live value or honest fallback ("${gaugeLabel.trim().slice(0, 60)}")`
+  );
+  const gaugeNote = await page.$eval(".birth-gauge-note", (el) => el.textContent);
+  ok(
+    /Chainlink|only ever shows live/.test(gaugeNote),
+    "birth gauge disclosure note present (live-read provenance)"
+  );
+
   // --- The whole brain: point cloud renders, 16 gold highlights, honest caption ---
   const brainSection = await page.$("#brain-section");
   ok(!!brainSection, "brain section present");
