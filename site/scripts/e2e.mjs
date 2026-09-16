@@ -132,7 +132,17 @@ async function main() {
     await page.waitForTimeout(500);
     const verdictText = await page.$eval(".swat-verdict", (el) => el.textContent);
     ok(/IT JUMPED\.|it ignored you\./.test(verdictText), `swat verdict rendered ("${verdictText.trim().slice(0, 60)}")`);
-    ok(verdictText.includes("pre-deploy simulation"), "swat verdict honestly labeled pre-deploy simulation");
+    // Mode-aware honesty label: live deployment shows "on-chain"; a null
+    // contractAddress config must show the "pre-deploy simulation" badge.
+    const hasContract = await page.evaluate(async () => {
+      const { CONFIG } = await import("./config.js");
+      return Boolean(CONFIG.contractAddress);
+    });
+    if (hasContract) {
+      ok(verdictText.includes("on-chain"), "swat verdict labeled on-chain (live contract mode)");
+    } else {
+      ok(verdictText.includes("pre-deploy simulation"), "swat verdict honestly labeled pre-deploy simulation");
+    }
   }
 
   const swatSection = await page.$(".swat-section");

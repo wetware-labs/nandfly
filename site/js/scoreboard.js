@@ -7,14 +7,26 @@ import { CONFIG } from "../config.js";
 import { decodeUint256, SELECTORS } from "./abi.js";
 
 async function rpcCall(method, params) {
-  const res = await fetch(CONFIG.rpcUrls[0], {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
-  });
-  const json = await res.json();
-  if (json.error) throw new Error(json.error.message || "RPC error");
-  return json.result;
+  // Try each configured endpoint in order (same fallback pattern as
+  // live-layer.js) so a single flaky public RPC can't blank the scoreboard.
+  const urls = CONFIG.rpcUrls;
+  let lastErr;
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json.error) throw new Error(json.error.message || "RPC error");
+      return json.result;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error("all RPC endpoints failed");
 }
 
 async function readUint(selectorHex) {

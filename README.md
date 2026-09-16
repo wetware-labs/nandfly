@@ -27,7 +27,7 @@ Full methods, every rejected design choice, and the honest limitations (includin
 
 - **Verified source.** The deployed bytecode's source is published and verified on [BscScan](https://bscscan.com/address/0x3AB7b7621dB958c989B4B628D38B2D3d3642980A#code) — read the actual netlist, not just this repo's claims.
 - **No admin keys.** No owner, no pausable switch, no upgrade proxy, no constructor argument that changes behavior. This organism belongs to no one.
-- **Cannot hold value.** No `payable` function anywhere, no `receive()`/`fallback()`. Solidity's own compiler rejects any BNB sent to the contract, before any application logic runs. Nothing to lock, nothing to drain, nothing to rescue.
+- **Takes no money.** No `payable` function anywhere, no `receive()`/`fallback()` — a direct BNB transfer is rejected before any application logic runs, and no function exists that can move or use funds. (Like any address, it can still be force-sent dust via `selfdestruct` or airdropped tokens; there is no code path for anyone, including us, to use, move, or recover anything that lands there — it is inert forever.)
 - **Constructor-validated netlist.** The full gate netlist is checked on-chain at deployment time (see `NandFlyValidation.sol`) — "the chain checked it," not just "trust the script."
 - **Reproducible pipeline.** Every step from raw connectome data to deployed bytecode is scripted and reproducible (see below); three independent implementations — the Python reference, the Solidity contract, and the site's JS evaluator — agree bit-for-bit across all 4096 possible stimulus patterns.
 
@@ -37,7 +37,8 @@ The deployed contract is real, live, and swattable today — but it is not yet *
 
 - **Goal: $30** (the current fab-quoted cost of the 7-cell mint).
 - **Feeding wallet:** [`0x14Ab88CF91376451a24179C41965D1f24269e3a6`](https://bscscan.com/address/0x14Ab88CF91376451a24179C41965D1f24269e3a6) — published here, before any inflow.
-- **Policy, locked before the first donation ever arrives:** 80% of every inflow buys components (every purchase = an on-chain receipt); 20% keeps the lab running. Equal treatment for all inflows — no per-token deals, no endorsements. Third parties may route their own token taxes to this wallet at their own discretion; we do not solicit or promote any token.
+- **Policy, locked before the first donation ever arrives:** 80% of every inflow buys components (every purchase = an on-chain receipt); 20% keeps the lab running. Equal treatment for all inflows — no per-token deals, no endorsements. Third parties may route their own token taxes to this wallet at their own discretion; we do not solicit or promote any token. If the 80% falls short of the mint cost when prices move, we cover the gap ourselves.
+- **Pre-launch balance disclosure:** the wallet's small starting balance is our own deploy-gas float, not donations — the 80/20 policy counts inflows from launch onward.
 - Every subsequent addition follows the real anatomy: **16 / 166,700 neurons on-chain today.** The unfinishable goal is the point.
 
 ## Parallel work

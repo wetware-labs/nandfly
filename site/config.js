@@ -2,13 +2,10 @@
 // environment-specific (contract address, RPC endpoint, progress numbers).
 // Plain ES module, no build step -- edit this file directly and redeploy.
 //
-// PRE-DEPLOY MODE: `contractAddress` is null because NandFly.sol has not
-// been deployed yet (see contract/DEPLOY.md -- deployment is Task 5's job,
-// gated on explicit user go-ahead). Every part of the site that would
-// normally read on-chain state (scoreboard counters, swat's official tx
-// mode) falls back to "pre-deploy simulation" / "--" when this is null.
-// Fill in the deployed address here (and nothing else needs to change) the
-// moment Task 5 completes.
+// LIVE MODE: `contractAddress` points at the deployed, BscScan-verified
+// NandFly contract (see contract/DEPLOY.md for the deploy record). If it is
+// ever set back to null the site degrades to a clearly-labeled local
+// simulation ("pre-deploy simulation" badges) instead of breaking.
 
 export const CONFIG = {
   // --- Layer 1 contract (NandFly.sol) ---
@@ -63,13 +60,14 @@ export const CONFIG = {
 
   // --- Birth milestone (spec section 10) ---
   birth: {
-    // Feeding wallet address: not created yet (published BEFORE first
-    // inflow per the locked wallet policy -- see METHODS page and
-    // docs/specs section 3). Placeholder until the wallet exists.
+    // Feeding wallet (live). Policy published on the site BEFORE the first
+    // inflow: 80% of every inflow buys components, 20% operations; equal
+    // treatment of all inflows. The wallet's small pre-launch balance is the
+    // project's own deploy-gas float, not donations.
     feedingWalletAddress: "0x14Ab88CF91376451a24179C41965D1f24269e3a6",
     goalUsd: 30,
-    // Manual value until the feeding wallet exists and can be read live;
-    // update by hand as real inflows happen (see progress.md ledger).
+    // Manually updated as real inflows happen (checked daily during the
+    // launch window); counts inflows from launch onward.
     raisedUsd: 0,
     neuronsOnChain: 16,
     neuronsTotal: 166700,

@@ -92,7 +92,7 @@
   <ul>
     <li><strong>Hash-provable netlist:</strong> the entire 661-gate netlist is packed as <code>bytes constant</code> directly into the deployed contract's own code — anyone can decode it with our open decoder and diff it against <code>circuit/netlists/full.json</code>.</li>
     <li><strong>No admin keys.</strong> No owner, no pausable switch, no upgrade proxy, no withdrawable balance, no constructor argument that changes behavior.</li>
-    <li><strong>The contract cannot hold value at all.</strong> No <code>payable</code> function anywhere (not <code>swat()</code>, not <code>swatTx()</code>), and no <code>receive()</code>/<code>fallback()</code> — Solidity's own callvalue check rejects any BNB sent to it, before the contract's own code even runs.</li>
+    <li><strong>The contract takes no money.</strong> No <code>payable</code> function anywhere (not <code>swat()</code>, not <code>swatTx()</code>), and no <code>receive()</code>/<code>fallback()</code> — a direct BNB transfer is rejected before the contract's own code even runs, and no function exists that can move or use funds. Like any address, it can still be force-sent dust via <code>selfdestruct</code> or airdropped tokens — there is no code path for anyone, including us, to use, move, or recover anything that lands there; it is inert forever.</li>
     <li><strong>Constructor-time validation.</strong> Deployment itself runs an on-chain check that every packed gate operand is in range — "the chain checked it," not just "trust the generator script."</li>
   </ul>
 
@@ -108,8 +108,22 @@
   <h2 id="contract">7. The contract</h2>
   <p>
     <code>NandFly.sol</code> — 661 gates, <code>swat(uint16)</code> free view call, <code>swatTx(uint16)</code>
-    on-chain call with a <code>Swatted</code> event and three public counters. Not deployed yet (site
-    runs in pre-deploy mode — see index.html's badges). Full deploy procedure: <code>contract/DEPLOY.md</code>.
+    on-chain call with a <code>Swatted</code> event and three public counters. <strong>Deployed and live on BNB
+    Chain</strong> at <a href="https://bscscan.com/address/0x3AB7b7621dB958c989B4B628D38B2D3d3642980A#code"><code>0x3AB7b7621dB958c989B4B628D38B2D3d3642980A</code></a>
+    (source verified on BscScan), born <code>2026-09-16T07:12:05Z</code> (<code>bornAt() = 1789542725</code>).
+    A post-deploy parity spot-check of 200 patterns against the live contract matched the reference
+    evaluator 200/200 (<code>contract/scripts/parity_check.js</code> — rerun it yourself against the live
+    address). Full deploy procedure: <code>contract/DEPLOY.md</code>.
+  </p>
+
+  <h2 id="feeding">7b. The feeding wallet</h2>
+  <p>
+    Feeding wallet: <code>0x14Ab88CF91376451a24179C41965D1f24269e3a6</code>. Policy, published before the
+    first inflow: <strong>80% of every inflow buys components (every purchase is an on-chain receipt),
+    20% keeps the lab running.</strong> All inflows are treated equally — no per-token deals, no
+    endorsements. If the 80% falls short of the mint cost when prices move, we cover the gap ourselves.
+    The wallet's small pre-launch balance is our own deploy-gas float, not donations — the 80/20 policy
+    counts inflows from launch onward.
   </p>
 
   <h2 id="credits">8. Credits</h2>
