@@ -163,22 +163,27 @@ export class LiveLayer {
   }
 
   _ambientStimulus() {
-    // 1-2 random low bits flicker. Still run through the real evaluator
-    // (usually sub-threshold, occasionally not) rather than faking the
-    // signal-flow diagram's pulse -- every pulse shown is a genuine
-    // evaluateStimulus() result.
-    const bits = 1 + (Math.random() < 0.3 ? 1 : 0);
-    let stim = 0;
-    for (let i = 0; i < bits; i++) {
-      stim |= 1 << Math.floor(Math.random() * this.spikePins.length);
-    }
+    // At most ONE active spike bit -- never two. This is load-bearing, not
+    // cosmetic: the reflex's coincidence detector requires >=2 coincident
+    // input channels to reach threshold (see circuit/DERIVATION.md /
+    // NandFlyNetlist.sol -- the LC4/LPLC2 looming-detector adders sum
+    // multiple visual-input bits and only cross their threshold with
+    // multi-bit coincidence). With a single bit set, the sum into every
+    // coincidence-threshold gate is provably 1, which is below every
+    // threshold in the netlist -- so evaluateStimulus() can NEVER return
+    // jumped:true from this function, by construction, not by luck. That is
+    // the whole point: routine chain noise (every block) must never be able
+    // to fire the reflex on its own. Only a whale-sized transaction (>=2
+    // bits, via _loomingStimulus below) can. Previously this picked 1-2
+    // bits, which meant an ordinary block COULD coincidentally satisfy a
+    // 2-bit threshold and fire a "reflex" that had nothing to do with a
+    // whale -- a narrative bug (ambient chain noise "assassinating" the fly)
+    // fixed here.
+    const stim = Math.random() < 0.55 ? 1 << Math.floor(Math.random() * this.spikePins.length) : 0;
     const result = evaluateStimulus(this.netlist, stim);
-    this.fly.twitch(0.3 + Math.random() * 0.3);
+    if (stim !== 0) this.fly.twitch(0.3 + Math.random() * 0.3);
     if (this.circuitViewer) this.circuitViewer.pulseEvaluation(result, stim !== 0);
-    if (result.jumped) {
-      this.fly.jump();
-      this.onEvent({ type: "jump", source: "ambient", stimulus: stim });
-    }
+    this.fly.pulse(false);
   }
 
   _loomingStimulus(blockNumber, bnb, synthetic) {
@@ -200,7 +205,12 @@ export class LiveLayer {
     const result = evaluateStimulus(this.netlist, stim);
     this.fly.loom(frac);
     if (this.circuitViewer) this.circuitViewer.pulseEvaluation(result, true);
-    if (result.jumped) this.fly.jump();
+    this.fly.pulse(result.jumped);
+    // Jump drama scales with whale size: `frac` (0 = just over the whale
+    // threshold, 1 = at/above maxLoomBnb) drives Fly.jump()'s hop distance,
+    // scale pop, and screen-shake amplitude -- a bigger whale produces a
+    // visibly bigger jump, not just a bigger number in the feed.
+    if (result.jumped) this.fly.jump(Math.max(0.4, frac));
     this.onEvent({
       type: result.jumped ? "jump" : "loom-survived",
       source: synthetic ? "synthetic" : "chain",

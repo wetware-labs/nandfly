@@ -194,6 +194,7 @@ export class SwatUI {
 
     if (this.circuitViewer) this.circuitViewer.pulseEvaluation(result, stimulus !== 0);
     if (this.fly) {
+      this.fly.pulse(result.jumped);
       if (result.jumped) this.fly.jump();
       else this.fly.twitch(0.5);
     }

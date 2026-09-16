@@ -161,13 +161,39 @@ h2 .kicker {
 .feed-item {
   font-family: var(--mono);
   font-size: 0.82rem;
-  padding: 7px 0;
+  padding: 7px 8px;
+  margin: 2px 0;
   border-bottom: 1px dashed var(--border);
+  border-left: 2px solid transparent;
   color: var(--text-dim);
 }
 .feed-item:last-child { border-bottom: none; }
-.feed-item.jump { color: var(--accent); }
 .feed-item .feed-time { color: var(--text-faint); margin-right: 6px; }
+
+/* Visual hierarchy: ordinary ambient blocks are the quietest thing in the
+   feed (routine chain noise, can never fire the reflex -- see
+   live-layer.js's _ambientStimulus); a whale-sized block is a notch
+   brighter as a preview of the loom/jump events it triggers; a
+   loom-survived event is brighter still (something big happened and the
+   fly resisted it); a jump is the loudest thing in the feed -- the actual
+   money moment. */
+.feed-item.ambient-block { color: var(--text-faint); font-size: 0.78rem; }
+.feed-item.whale-block { color: var(--text-dim); border-left-color: var(--warn); }
+.feed-item.loom { color: var(--text); border-left-color: var(--warn); }
+.feed-item.jump {
+  color: var(--text);
+  font-weight: 600;
+  background: rgba(139, 124, 255, 0.1);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.18);
+  animation: feed-jump-pulse 0.9s ease-out;
+}
+@keyframes feed-jump-pulse {
+  0% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  35% { box-shadow: 0 0 16px 2px var(--accent-glow); }
+  100% { box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.18); }
+}
 
 /* Test-hook-injected events (site/js/live-layer.js's gated
    window.__nandflyTestHook) are always visually distinct from real chain

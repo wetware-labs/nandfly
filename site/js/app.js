@@ -101,10 +101,18 @@ async function main() {
         `block #${info.blockNumber}${info.synthetic ? " (test-injected)" : ""} · ${info.txCount} tx · largest tx ${info.maxBnb.toFixed(2)} BNB`
       );
       if (feedEl) {
+        // "twitch" language for ordinary blocks (ambient stimulus, at most
+        // one spike bit -- see live-layer.js's _ambientStimulus -- can never
+        // fire the reflex); a block that crosses the whale threshold gets a
+        // distinct dimmer-vs-brighter treatment so the feed's hierarchy
+        // previews the loom/jump events that follow it.
+        const isWhale = info.maxBnb >= CONFIG.live.whaleThresholdBnb;
         addFeedItem(
           feedEl,
-          `block #${info.blockNumber} -- ${info.txCount} tx, largest ${info.maxBnb.toFixed(2)} BNB`,
-          { synthetic: info.synthetic }
+          isWhale
+            ? `block #${info.blockNumber} -- ${info.txCount} tx, largest ${info.maxBnb.toFixed(2)} BNB (whale-sized)`
+            : `block #${info.blockNumber} -- ${info.txCount} tx, fly twitches`,
+          { cls: isWhale ? "whale-block" : "ambient-block", synthetic: info.synthetic }
         );
       }
     },
@@ -118,16 +126,20 @@ async function main() {
       if (!feedEl) return;
       const synthetic = evt.source === "synthetic";
       if (evt.type === "jump") {
-        const detail =
-          evt.source === "chain" || evt.source === "synthetic"
-            ? `reflex fired at block #${evt.blockNumber} -- ${evt.bnb.toFixed(2)} BNB whale`
-            : "reflex fired -- ambient stimulus";
-        addFeedItem(feedEl, detail, { cls: "jump", synthetic });
+        // "reflex fired" language is reserved for real jumps -- and a jump
+        // only ever originates from a whale-sized looming stimulus now (see
+        // live-layer.js's _loomingStimulus; ambient blocks never reach this
+        // branch at all).
+        addFeedItem(
+          feedEl,
+          `reflex fired at block #${evt.blockNumber} -- ${evt.bnb.toFixed(2)} BNB whale`,
+          { cls: "jump", synthetic }
+        );
       } else if (evt.type === "loom-survived") {
         addFeedItem(
           feedEl,
           `looming stimulus at block #${evt.blockNumber} (${evt.bnb.toFixed(2)} BNB) -- it ignored it`,
-          { synthetic }
+          { cls: "loom", synthetic }
         );
       }
     },
