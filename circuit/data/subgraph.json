@@ -1,0 +1,282 @@
+{
+  "candidate_population_counts": {
+    "DLMn a, b": {
+      "L": 1,
+      "R": 1
+    },
+    "DLMn c-f": {
+      "L": 4,
+      "R": 4
+    },
+    "DNp01": {
+      "L": 1,
+      "R": 1
+    },
+    "LC4": {
+      "L": 71,
+      "R": 55
+    },
+    "LPLC2": {
+      "L": 94,
+      "R": 91
+    },
+    "TTMn": {
+      "L": 1,
+      "R": 1
+    }
+  },
+  "edges": [
+    {
+      "post": 10010,
+      "pre": 17478,
+      "sign": 1,
+      "weight": 86
+    },
+    {
+      "post": 10010,
+      "pre": 17653,
+      "sign": 1,
+      "weight": 83
+    },
+    {
+      "post": 10010,
+      "pre": 518439,
+      "sign": 1,
+      "weight": 82
+    },
+    {
+      "post": 10001,
+      "pre": 22847,
+      "sign": 1,
+      "weight": 67
+    },
+    {
+      "post": 10001,
+      "pre": 16128,
+      "sign": 1,
+      "weight": 65
+    },
+    {
+      "post": 10001,
+      "pre": 17668,
+      "sign": 1,
+      "weight": 63
+    },
+    {
+      "post": 10010,
+      "pre": 31563,
+      "sign": 1,
+      "weight": 64
+    },
+    {
+      "post": 10010,
+      "pre": 22253,
+      "sign": 1,
+      "weight": 60
+    },
+    {
+      "post": 10010,
+      "pre": 19787,
+      "sign": 1,
+      "weight": 55
+    },
+    {
+      "post": 10001,
+      "pre": 20182,
+      "sign": 1,
+      "weight": 59
+    },
+    {
+      "post": 10001,
+      "pre": 20269,
+      "sign": 1,
+      "weight": 53
+    },
+    {
+      "post": 10001,
+      "pre": 19608,
+      "sign": 1,
+      "weight": 49
+    },
+    {
+      "post": 800146,
+      "pre": 10001,
+      "sign": 1,
+      "weight": 70
+    },
+    {
+      "post": 804642,
+      "pre": 10010,
+      "sign": 1,
+      "weight": 20
+    }
+  ],
+  "excluded_motor_types": {
+    "DLMn a, b": {
+      "direct_synapse_from_DNp01": false,
+      "found_in_annotations": 2,
+      "reason_excluded": "no direct chemical synapse from DNp01 in MaleCNS v1.0; GF's flight-muscle output is known to be indirect, via the PSI interneuron, which is out of scope for this extraction"
+    },
+    "DLMn c-f": {
+      "direct_synapse_from_DNp01": false,
+      "found_in_annotations": 8,
+      "reason_excluded": "no direct chemical synapse from DNp01 in MaleCNS v1.0; GF's flight-muscle output is known to be indirect, via the PSI interneuron, which is out of scope for this extraction"
+    }
+  },
+  "meta": {
+    "gf_type": "DNp01",
+    "motor_candidate_types": [
+      "TTMn",
+      "DLMn a, b",
+      "DLMn c-f"
+    ],
+    "selection": "top-3 by ipsilateral synapse weight onto DNp01, per visual type per side",
+    "top_k": 3,
+    "visual_types": [
+      "LC4",
+      "LPLC2"
+    ]
+  },
+  "neurons": [
+    {
+      "id": 10001,
+      "role": "gf",
+      "side": "R",
+      "sign": 1,
+      "transmitter": "acetylcholine",
+      "type": "DNp01"
+    },
+    {
+      "id": 10010,
+      "role": "gf",
+      "side": "L",
+      "sign": 1,
+      "transmitter": "acetylcholine",
+      "type": "DNp01"
+    },
+    {
+      "id": 17478,
+      "role": "visual_input",
+      "side": "L",
+      "sign": 1,
+      "synapse_weight_onto_gf": 86,
+      "transmitter": "acetylcholine",
+      "type": "LC4"
+    },
+    {
+      "id": 17653,
+      "role": "visual_input",
+      "side": "L",
+      "sign": 1,
+      "synapse_weight_onto_gf": 83,
+      "transmitter": "acetylcholine",
+      "type": "LC4"
+    },
+    {
+      "id": 518439,
+      "role": "visual_input",
+      "side": "L",
+      "sign": 1,
+      "synapse_weight_onto_gf": 82,
+      "transmitter": "acetylcholine",
+      "type": "LC4"
+    },
+    {
+      "id": 22847,
+      "role": "visual_input",
+      "side": "R",
+      "sign": 1,
+      "synapse_weight_onto_gf": 67,
+      "transmitter": "acetylcholine",
+      "type": "LC4"
+    },
+    {
+      "id": 16128,
+      "role": "visual_input",
+      "side": "R",
+      "sign": 1,
+      "synapse_weight_onto_gf": 65,
+      "transmitter": "acetylcholine",
+      "type": "LC4"
+    },
+    {
+      "id": 17668,
+      "role": "visual_input",
+      "side": "R",
+      "sign": 1,
+      "synapse_weight_onto_gf": 63,
+      "transmitter": "acetylcholine",
+      "type": "LC4"
+    },
+    {
+      "id": 31563,
+      "role": "visual_input",
+      "side": "L",
+      "sign": 1,
+      "synapse_weight_onto_gf": 64,
+      "transmitter": "acetylcholine",
+      "type": "LPLC2"
+    },
+    {
+      "id": 22253,
+      "role": "visual_input",
+      "side": "L",
+      "sign": 1,
+      "synapse_weight_onto_gf": 60,
+      "transmitter": "acetylcholine",
+      "type": "LPLC2"
+    },
+    {
+      "id": 19787,
+      "role": "visual_input",
+      "side": "L",
+      "sign": 1,
+      "synapse_weight_onto_gf": 55,
+      "transmitter": "acetylcholine",
+      "type": "LPLC2"
+    },
+    {
+      "id": 20182,
+      "role": "visual_input",
+      "side": "R",
+      "sign": 1,
+      "synapse_weight_onto_gf": 59,
+      "transmitter": "acetylcholine",
+      "type": "LPLC2"
+    },
+    {
+      "id": 20269,
+      "role": "visual_input",
+      "side": "R",
+      "sign": 1,
+      "synapse_weight_onto_gf": 53,
+      "transmitter": "acetylcholine",
+      "type": "LPLC2"
+    },
+    {
+      "id": 19608,
+      "role": "visual_input",
+      "side": "R",
+      "sign": 1,
+      "synapse_weight_onto_gf": 49,
+      "transmitter": "acetylcholine",
+      "type": "LPLC2"
+    },
+    {
+      "id": 800146,
+      "role": "jump_motor",
+      "side": "R",
+      "sign": -1,
+      "transmitter": "glutamate",
+      "type": "TTMn"
+    },
+    {
+      "id": 804642,
+      "role": "jump_motor",
+      "side": "L",
+      "sign": -1,
+      "transmitter": "glutamate",
+      "type": "TTMn"
+    }
+  ]
+}
