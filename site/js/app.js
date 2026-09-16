@@ -69,8 +69,24 @@ async function main() {
 
   // --- Fly + live layer ---
   const flyCanvas = document.getElementById("fly-canvas");
-  const fly = new Fly(flyCanvas);
+  // Read the live accent (BNB gold) from CSS so fly.js's rim glow / firing
+  // glow / circuit-trace tint stay a single source of truth with the rest
+  // of the page's accent instead of drifting from a hardcoded duplicate.
+  const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+  const fly = new Fly(flyCanvas, accent ? { accent } : {});
   fly.start();
+
+  // --- Hero CTA: smooth-scroll to the swat section (CSS already sets
+  // `scroll-behavior: smooth`) and move focus there for keyboard/screen
+  // reader users, since the anchor jump alone doesn't move focus.
+  const heroCta = document.getElementById("hero-cta");
+  const swatSection = document.getElementById("swat-section");
+  if (heroCta && swatSection) {
+    heroCta.addEventListener("click", () => {
+      if (!swatSection.hasAttribute("tabindex")) swatSection.setAttribute("tabindex", "-1");
+      window.setTimeout(() => swatSection.focus({ preventScroll: true }), 400);
+    });
+  }
 
   const circuitContainer = document.getElementById("circuit-viewer");
   let circuitViewer = null;

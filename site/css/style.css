@@ -1,4 +1,4 @@
-/* NANDFLY -- dark wetware identity. Accent: electric violet (#8b7cff),
+/* NANDFLY -- dark wetware identity. Accent: BNB gold (#F0B90B family),
    distinct from FlyMarket's pink/green and Outguess's crimson. */
 
 :root {
@@ -9,9 +9,10 @@
   --text: #eae7f5;
   --text-dim: #9a94b3;
   --text-faint: #665f80;
-  --accent: #8b7cff;
-  --accent-dim: #5b4fb0;
-  --accent-glow: rgba(139, 124, 255, 0.35);
+  --accent: #F0B90B;
+  --accent-bright: #F8D33A;
+  --accent-dim: #9c7f28;
+  --accent-glow: rgba(248, 211, 58, 0.35);
   --ok: #6ee7b7;
   --warn: #ffb454;
   --danger: #ff6b81;
@@ -21,7 +22,7 @@
 
 * { box-sizing: border-box; }
 
-html { background: var(--bg); color-scheme: dark; }
+html { background: var(--bg); color-scheme: dark; scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -32,7 +33,7 @@ body {
 }
 
 a { color: var(--accent); }
-a:hover { color: #c2b8ff; }
+a:hover { color: var(--accent-bright); }
 
 code, pre { font-family: var(--mono); }
 
@@ -42,25 +43,13 @@ code, pre { font-family: var(--mono); }
   padding: 0 20px;
 }
 
-header.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: rgba(8, 7, 12, 0.85);
-  backdrop-filter: blur(6px);
-  z-index: 10;
-}
-
 .wordmark {
   font-weight: 700;
   letter-spacing: 0.02em;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-decoration: none;
   color: var(--text);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
 }
 .wordmark span { color: var(--accent); }
 
@@ -68,7 +57,8 @@ nav.site-nav a {
   color: var(--text-dim);
   text-decoration: none;
   margin-left: 18px;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
 }
 nav.site-nav a:hover { color: var(--text); }
 
@@ -78,35 +68,101 @@ section {
 }
 section:last-of-type { border-bottom: none; }
 
-.hero {
-  padding-top: 64px;
-  text-align: center;
+/* --- Hero: fly canvas is the hero, everything else overlays it --- */
+.hero-stage {
+  position: relative;
+  overflow: hidden;
+  height: 78vh;
+  min-height: 460px;
+  max-height: 720px;
+  border-bottom: 1px solid var(--border);
+  padding: 0;
 }
-.hero h1 {
-  font-size: clamp(2.4rem, 6vw, 3.6rem);
-  margin: 0 0 10px;
-  letter-spacing: -0.02em;
+@media (max-width: 760px) {
+  .hero-stage {
+    height: 58vh;
+    min-height: 340px;
+    max-height: 480px;
+  }
 }
-.hero p.tagline {
-  font-size: 1.2rem;
-  color: var(--text-dim);
+
+.hero-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #171227 0%, #0c0a13 80%);
+}
+.hero-canvas-wrap canvas { display: block; width: 100%; height: 100%; }
+
+.hero-scrim-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(4, 3, 6, 0.75) 0%, rgba(4, 3, 6, 0) 100%);
+  pointer-events: none;
+}
+.hero-scrim-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 62%;
+  background: linear-gradient(0deg, rgba(4, 3, 6, 0.88) 0%, rgba(4, 3, 6, 0.45) 55%, rgba(4, 3, 6, 0) 100%);
+  pointer-events: none;
+}
+
+.hero-topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.hero-copy {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 4;
+  margin: 0;
+  padding-bottom: clamp(22px, 5vh, 56px);
   max-width: 640px;
-  margin: 0 auto 6px;
+  text-align: left;
 }
-.hero p.subtagline {
-  color: var(--text-faint);
-  margin: 0 auto 24px;
-}
-.progress-line {
+.hero-copy .chip {
   display: inline-block;
   font-family: var(--mono);
   color: var(--accent);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: rgba(16, 14, 23, 0.7);
+  border: 1px solid var(--accent-dim);
   border-radius: 999px;
-  padding: 6px 16px;
-  font-size: 0.95rem;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  margin: 0 0 14px;
 }
+.hero-headline {
+  font-size: clamp(1.7rem, 4.4vw, 2.7rem);
+  line-height: 1.12;
+  margin: 0 0 10px;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+.hero-sub {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: var(--text-dim);
+  margin: 0 0 22px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+.hero-copy .btn-cta {
+  display: inline-block;
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 1rem;
+  padding: 14px 26px;
+  text-decoration: none;
+  box-shadow: 0 6px 24px rgba(240, 185, 11, 0.28);
+}
+
 
 h2 { font-size: 1.5rem; margin-top: 0; }
 h2 .kicker {
@@ -120,32 +176,22 @@ h2 .kicker {
 
 .story-block p { color: var(--text-dim); max-width: 700px; }
 
-/* --- Live layer --- */
-.live-layer-grid {
-  display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(240px, 320px);
-  gap: 24px;
-  align-items: start;
+/* --- Live layer: compact strip below the hero (the fly canvas itself now
+   lives in .hero-stage) --- */
+.live-strip {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: 8px;
 }
-@media (max-width: 760px) {
-  .live-layer-grid { grid-template-columns: 1fr; }
-}
-
-.fly-stage {
-  background: radial-gradient(ellipse at center, #171227 0%, #0c0a13 80%);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px;
-  position: relative;
-  overflow: hidden;
-}
-.fly-stage canvas { display: block; width: 100%; }
+.live-strip .status-row { flex: 0 0 auto; margin-bottom: 0; padding-top: 4px; }
+.live-strip .live-feed { flex: 1 1 320px; }
 
 .live-label {
   font-size: 0.8rem;
   color: var(--text-faint);
   margin-top: 8px;
-  text-align: center;
 }
 .live-label strong { color: var(--text-dim); }
 
@@ -154,7 +200,7 @@ h2 .kicker {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 14px 16px;
-  max-height: 420px;
+  max-height: 160px;
   overflow-y: auto;
 }
 .live-feed h4 { margin: 0 0 8px; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
@@ -183,16 +229,16 @@ h2 .kicker {
 .feed-item.jump {
   color: var(--text);
   font-weight: 600;
-  background: rgba(139, 124, 255, 0.1);
+  background: rgba(240, 185, 11, 0.12);
   border-left: 3px solid var(--accent);
   border-radius: 0 6px 6px 0;
-  box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.18);
+  box-shadow: 0 0 0 1px rgba(240, 185, 11, 0.22);
   animation: feed-jump-pulse 0.9s ease-out;
 }
 @keyframes feed-jump-pulse {
   0% { box-shadow: 0 0 0 0 var(--accent-glow); }
   35% { box-shadow: 0 0 16px 2px var(--accent-glow); }
-  100% { box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.18); }
+  100% { box-shadow: 0 0 0 1px rgba(240, 185, 11, 0.22); }
 }
 
 /* Test-hook-injected events (site/js/live-layer.js's gated
@@ -281,8 +327,8 @@ h2 .kicker {
 }
 .btn:hover { border-color: var(--accent-dim); }
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), #6f5fe0);
-  color: #0a0812;
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  color: #1a1200;
   border: none;
 }
 .btn-primary:hover { filter: brightness(1.08); }
@@ -368,7 +414,7 @@ h2 .kicker {
 .flow-arrow { color: var(--text-faint); }
 .flow-box.selected-neuron {
   border-color: var(--accent);
-  background: rgba(139, 124, 255, 0.14);
+  background: rgba(240, 185, 11, 0.14);
   color: var(--text);
 }
 .flow-box.pulse {

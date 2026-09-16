@@ -19,20 +19,48 @@
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<header class="site-header">
-  <a class="wordmark" href="./"><span>NAND</span>FLY</a>
-  <nav class="site-nav">
-    <a href="methods.html">METHODS</a>
-    <a href="https://github.com/wetware-labs/nandfly">GitHub</a>
-  </nav>
-</header>
+<section class="hero-stage">
+  <div class="hero-canvas-wrap">
+    <canvas id="fly-canvas" width="640" height="400" aria-label="live fly specimen"></canvas>
+  </div>
+  <div class="hero-scrim-top" aria-hidden="true"></div>
+  <div class="hero-scrim-bottom" aria-hidden="true"></div>
+
+  <header class="hero-topbar">
+    <a class="wordmark" href="./"><span>NAND</span>FLY</a>
+    <nav class="site-nav">
+      <a href="methods.html">METHODS</a>
+      <a href="https://github.com/wetware-labs/nandfly">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="hero-copy container">
+    <p class="chip" data-neuron-progress>16 / 166,700 neurons on-chain</p>
+    <h1 class="hero-headline">A real fly's escape reflex, living on BNB Chain.</h1>
+    <p class="hero-sub">It earns nothing. It just refuses to die.</p>
+    <a class="btn btn-primary btn-cta" href="#swat-section" id="hero-cta">[ TRY TO SWAT IT ]</a>
+  </div>
+</section>
 
 <main>
-  <section class="hero container">
-    <h1>NANDFLY</h1>
-    <p class="tagline">A real fly's escape reflex, rebuilt gate by gate on BNB Chain.</p>
-    <p class="subtagline">It earns nothing. It just refuses to die.</p>
-    <div class="progress-line"><span data-neuron-progress>16 / 166,700 neurons on-chain</span></div>
+  <section class="live-layer container">
+    <h2><span class="kicker">layer 1 — live</span>The fly is alive right now</h2>
+    <p class="live-label" id="boot-error" hidden></p>
+    <p class="live-label">
+      <strong>Live simulation of the identical netlist.</strong>
+      The on-chain contract is the source of truth.
+    </p>
+    <div class="live-strip">
+      <div class="status-row" id="live-status"><span class="status-dot"></span>connecting to BSC...</div>
+      <div class="live-feed" id="live-feed">
+        <h4>observation feed</h4>
+      </div>
+    </div>
+    <p class="hint">
+      Every new BSC block is an ambient micro-stimulus (the fly twitches). Any transaction above the
+      whale threshold in that block is a looming stimulus, scaled by size, run through the same
+      661-gate netlist — if the reflex fires, the fly jumps and the event is logged here.
+    </p>
   </section>
 
   <section class="story-block container">
@@ -44,34 +72,7 @@
     </p>
   </section>
 
-  <section class="live-layer container">
-    <h2><span class="kicker">layer 1 — live</span>The fly is alive right now</h2>
-    <div class="live-layer-grid">
-      <div>
-        <div class="fly-stage">
-          <canvas id="fly-canvas" width="640" height="400" aria-label="live fly specimen"></canvas>
-        </div>
-        <p class="live-label" id="boot-error" hidden></p>
-        <p class="live-label">
-          <strong>Live simulation of the identical netlist.</strong>
-          The on-chain contract is the source of truth.
-        </p>
-      </div>
-      <div>
-        <div class="status-row" id="live-status"><span class="status-dot"></span>connecting to BSC...</div>
-        <div class="live-feed" id="live-feed">
-          <h4>observation feed</h4>
-        </div>
-      </div>
-    </div>
-    <p class="hint">
-      Every new BSC block is an ambient micro-stimulus (the fly twitches). Any transaction above the
-      whale threshold in that block is a looming stimulus, scaled by size, run through the same
-      661-gate netlist — if the reflex fires, the fly jumps and the event is logged here.
-    </p>
-  </section>
-
-  <section class="swat-section container">
+  <section class="swat-section container" id="swat-section">
     <h2><span class="kicker">try it yourself</span>Try to swat it</h2>
     <p>Send a stimulus. The real wiring decides: jump, or ignore you.</p>
     <div id="swat-ui"></div>

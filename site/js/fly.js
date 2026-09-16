@@ -81,7 +81,7 @@ export class Fly {
    */
   constructor(canvas, opts = {}) {
     this.canvas = canvas;
-    this.accent = opts.accent || "#8b7cff";
+    this.accent = opts.accent || "#F0B90B";
     this.ctx = canvas.getContext("2d");
     this._raf = null;
     this._tick = 0;
@@ -130,8 +130,15 @@ export class Fly {
 
   _resize() {
     const canvas = this.canvas;
-    const cssWidth = canvas.parentElement ? canvas.parentElement.clientWidth : canvas.clientWidth || 300;
-    const cssHeight = Math.round(cssWidth * 0.62);
+    const parent = canvas.parentElement;
+    const cssWidth = parent ? parent.clientWidth : canvas.clientWidth || 300;
+    // Prefer the wrapping element's own CSS-defined height (the hero stage
+    // sizes its canvas wrap via viewport-relative CSS so the fly reads as a
+    // tall, full-width hero) over a fixed aspect ratio; fall back to the
+    // original 0.62 aspect ratio for any box that doesn't set an explicit
+    // height (shrink-to-fit).
+    const parentHeight = parent ? parent.clientHeight : 0;
+    const cssHeight = parentHeight > 0 ? parentHeight : Math.round(cssWidth * 0.62);
     const dpr = window.devicePixelRatio || 1;
     canvas.style.width = cssWidth + "px";
     canvas.style.height = cssHeight + "px";
@@ -459,7 +466,7 @@ export class Fly {
     // body than a naive uniform scale-up would, so legs read as legs, not
     // as a chevron crossing the wings.
     const LEG_REACH = 0.62;
-    ctx.strokeStyle = "rgba(180,168,220,0.85)";
+    ctx.strokeStyle = "rgba(196,192,200,0.85)";
     ctx.lineWidth = 2.3 / scale;
     ctx.lineCap = "round";
     const walking = speed > WALK_EPS;
@@ -525,7 +532,7 @@ export class Fly {
     ctx.bezierCurveTo(-0.35, 0.4, -0.72, 0.5, -1.5, 0.02);
     ctx.bezierCurveTo(-0.72, -0.5, -0.35, -0.4, -0.02, -0.32);
     ctx.closePath();
-    paintRimmed(ctx, "#2b2438", accentRim);
+    paintRimmed(ctx, "#26232a", accentRim);
     ctx.fillStyle = "rgba(255,255,255,0.06)";
     ctx.beginPath();
     ctx.ellipse(-0.45, -0.08, 0.4, 0.13, 0.15, 0, Math.PI * 2);
@@ -534,15 +541,15 @@ export class Fly {
     // --- Thorax ---
     ctx.beginPath();
     ctx.ellipse(0.35, 0, 0.42, 0.4, 0, 0, Math.PI * 2);
-    paintRimmed(ctx, "#332b44", accentRim);
+    paintRimmed(ctx, "#2d2a30", accentRim);
 
     // --- Head ---
     ctx.beginPath();
     ctx.ellipse(1.05, 0, 0.34, 0.27, 0, 0, Math.PI * 2);
-    paintRimmed(ctx, "#1c1726", accentRim);
+    paintRimmed(ctx, "#18161a", accentRim);
 
     // Eyes -- glow with accent under loom/burst (looking at the threat).
-    ctx.fillStyle = burst > 0 || loom > 0.3 ? this.accent : "#0c0910";
+    ctx.fillStyle = burst > 0 || loom > 0.3 ? this.accent : "#0c0c0e";
     ctx.beginPath();
     ctx.arc(1.12, 0.16, 0.09, 0, Math.PI * 2);
     ctx.arc(1.12, -0.16, 0.09, 0, Math.PI * 2);
