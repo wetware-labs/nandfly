@@ -30,8 +30,11 @@ import json
 import urllib.request
 from pathlib import Path
 
+from tapeout import format as tf
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REPORT_PATH = REPO_ROOT / "reports" / "tapeout-quote.md"
+SEED_PATH = REPO_ROOT / "circuit" / "netlists" / "seed.json"
 
 DEFAULT_RPC = "https://bsc-dataseed.binance.org"
 PROCESSOR_REGISTRY_URL = "https://tapeout-public-monitor.tapeout-labs.workers.dev/api/v1/processors"
@@ -189,33 +192,49 @@ def build_report(live: dict) -> str:
     seed_bytes = 21  # 2*7 (NAND) + 1*4 (LATCH) -- naive "2N+1L" gate count
     seed_row = quote_row(seed_nand, seed_latch, live, seed_bytes)
     lines.append(
-        f"| seed, naive \"2 NAND + 1 LATCH\" gate count | {seed_row['gates']} | {seed_bytes} | "
+        f"| seed, naive \"2 NAND + 1 LATCH\" gate count (superseded, see below) | {seed_row['gates']} | {seed_bytes} | "
         f"{seed_row['component_bnb']:.5f} BNB (${seed_row['component_usd']:.2f}) | "
         f"{seed_row['gas_bnb']:.6f} BNB (${seed_row['gas_usd']:.4f}) | "
-        f"**{seed_row['total_bnb']:.5f} BNB (${seed_row['total_usd']:.2f})** |"
+        f"{seed_row['total_bnb']:.5f} BNB (${seed_row['total_usd']:.2f}) |"
     )
 
-    # TRUE on-chain component cost: our LATCH gate is an SR-latch, which
-    # TapeOut cannot express as a bare primitive (its own LATCH is a
-    # single-input D-register -- see tapeout/format.py's module docstring).
-    # Reproducing our exact SR semantics costs 1 native LATCH + 4 NAND
-    # PRIMITIVES, on the canvas exactly as much as via direct bytes -- this
-    # is not a submission-path artifact, it is the real cost of the gate.
-    # 2 original NAND + 4 SR-latch-translation NAND + 2 output-identity-buffer NAND
-    # (tapeout/format.py's encoder always emits an output buffer for generality/
-    # simplicity, even though jump_left already happens to be the last-defined
-    # gate here -- a size-optimizing encoder could special-case that and save
-    # 2 NAND/14 bytes; this project's encoder does not, intentionally, to stay
-    # simple and correct for the general case -- see tapeout/SUBMISSION.md).
-    true_nand, true_latch = seed_nand + 4 + 2, seed_latch
-    true_bytes = 60  # tapeout/format.py's actual encode_netlist(seed.json) output
-    true_row = quote_row(true_nand, true_latch, live, true_bytes)
+    # Our LATCH gate is an SR-latch, which TapeOut cannot express as a bare
+    # primitive (its own LATCH is a single-input D-register -- see
+    # tapeout/format.py's module docstring). Reproducing our exact SR
+    # semantics costs 1 native LATCH + 4 NAND primitives, on the canvas
+    # exactly as much as via direct bytes -- this is real gate cost, not a
+    # submission-path artifact. Both rows below are computed by actually
+    # calling tapeout.format.encode_netlist on the real seed.json, not
+    # hand-derived, so they track the encoder if it ever changes.
+    seed_json = json.loads(SEED_PATH.read_text(encoding="utf-8"))
+
+    default_bytes, default_meta = tf.encode_netlist(seed_json, optimize_output_buffer=False)
+    default_cells = tf.decode_cells(default_bytes, n_inputs=default_meta.n_inputs)
+    default_nand = sum(isinstance(c, tf.Nand) for c in default_cells)
+    default_latch = sum(isinstance(c, tf.Latch) for c in default_cells)
+    default_row = quote_row(default_nand, default_latch, live, len(default_bytes))
     lines.append(
-        f"| **seed, TRUE on-chain cost ({true_nand} NAND + {true_latch} LATCH primitives -- see note below)** | "
-        f"{true_row['gates']} | {true_bytes} | "
-        f"{true_row['component_bnb']:.5f} BNB (${true_row['component_usd']:.2f}) | "
-        f"{true_row['gas_bnb']:.6f} BNB (${true_row['gas_usd']:.4f}) | "
-        f"**{true_row['total_bnb']:.5f} BNB (${true_row['total_usd']:.2f})** |"
+        f"| seed, direct-bytes encoding, unoptimized ({default_nand} NAND + {default_latch} LATCH -- "
+        f"`encode_netlist(seed, optimize_output_buffer=False)`, the default; see note below) | "
+        f"{default_row['gates']} | {len(default_bytes)} | "
+        f"{default_row['component_bnb']:.5f} BNB (${default_row['component_usd']:.2f}) | "
+        f"{default_row['gas_bnb']:.6f} BNB (${default_row['gas_usd']:.4f}) | "
+        f"{default_row['total_bnb']:.5f} BNB (${default_row['total_usd']:.2f}) |"
+    )
+
+    opt_bytes, opt_meta = tf.encode_netlist(seed_json, optimize_output_buffer=True)
+    opt_cells = tf.decode_cells(opt_bytes, n_inputs=opt_meta.n_inputs)
+    opt_nand = sum(isinstance(c, tf.Nand) for c in opt_cells)
+    opt_latch = sum(isinstance(c, tf.Latch) for c in opt_cells)
+    opt_row = quote_row(opt_nand, opt_latch, live, len(opt_bytes))
+    lines.append(
+        f"| **seed, RECOMMENDED: hand-built canvas mint, technology-mapped "
+        f"({opt_nand} NAND + {opt_latch} LATCH -- `optimize_output_buffer=True`; "
+        f"see tapeout/SUBMISSION.md's cell-by-cell wiring list)** | "
+        f"{opt_row['gates']} | {len(opt_bytes)} | "
+        f"{opt_row['component_bnb']:.5f} BNB (${opt_row['component_usd']:.2f}) | "
+        f"{opt_row['gas_bnb']:.6f} BNB (${opt_row['gas_usd']:.4f}) | "
+        f"**{opt_row['total_bnb']:.5f} BNB (${opt_row['total_usd']:.2f})** |"
     )
 
     for total_gates, n_nand, n_latch in HYPOTHETICAL_SIZES:
@@ -237,8 +256,20 @@ def build_report(live: dict) -> str:
         "SR set/reset semantics as a bare primitive. Reproducing the seed's exact behavior therefore "
         "costs 1 native LATCH + 4 extra NAND primitives (tapeout/format.py's module docstring has the "
         "derivation), REGARDLESS of submission path: a canvas build would need those same 4 NAND gates "
-        "hand-wired, not just a direct-bytes one. The naive \"2N+1L\" row above understates the real "
-        "cost; use the \"TRUE on-chain cost\" row for budgeting."
+        "hand-wired, not just a direct-bytes one. The naive \"2N+1L\" row above understates the real cost."
+    )
+    lines.append("")
+    lines.append(
+        "**Why the RECOMMENDED row is cheaper than the unoptimized default**: `encode_netlist`'s default "
+        "(`optimize_output_buffer=False`) always appends a 2-cell NAND identity buffer per named output, "
+        "for general-purpose correctness (see its docstring). For seed.json specifically, jump_left's "
+        "LATCH-translation final NAND (`q = NOT(NAND(reset_n, NAND(set_n, NOT(prev_Q))))`) already sits "
+        "at the exact tail position TapeOut's format requires, so that buffer is provably a no-op: dropping "
+        "it changes no wiring and cannot change what any signal computes (reset-dominance is unaffected -- "
+        "it is a property of the 4-NAND network itself, never of the buffer). "
+        "`optimize_output_buffer=True` detects this all-or-nothing case and skips the buffer, which is why "
+        "it is the RECOMMENDED number for an actual hand-built canvas mint: 7 cells (6 NAND + 1 LATCH) "
+        "instead of 9 (8 NAND + 1 LATCH). See tapeout/SUBMISSION.md for the exact cell-by-cell wiring list."
     )
     lines.append("")
     lines.append("## Notes")
@@ -249,7 +280,8 @@ def build_report(live: dict) -> str:
     )
     lines.append(
         "- Hypothetical 10/50/100-gate rows use the naive gate count (their NAND/LATCH split is already "
-        "illustrative/assumed, not a real design), for order-of-magnitude comparison only."
+        "illustrative/assumed, not a real design), for order-of-magnitude comparison only -- they do not "
+        "apply the output-buffer optimization."
     )
     lines.append("- Re-run `python -m tapeout.quote` immediately before Task 5's real spend for fresh numbers.")
     lines.append("")

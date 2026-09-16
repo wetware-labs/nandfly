@@ -24,6 +24,16 @@ SEED_GOLDEN_HEX = (
     "000004000008000000090000090000000a00000a0000000b00000b"
 )
 
+# Same seed, encoded with optimize_output_buffer=True: jump_left's LATCH
+# translation already ends at the last-defined signal, so the 2-cell output
+# identity buffer is redundant and dropped -- 7 cells (6 NAND + 1 LATCH),
+# 46 bytes. See encode_netlist's docstring and tapeout/SUBMISSION.md's
+# 7-cell canvas layout.
+SEED_GOLDEN_HEX_OPTIMIZED = (
+    "00000003000003000000020000040100000a00000006000006000000050000070000"
+    "000400000800000009000009"
+)
+
 SYNTHETIC_NETLISTS = {
     "single_nand": {
         "schema_version": 1,
@@ -151,6 +161,80 @@ def test_seed_two_tick_protocol_matches_our_evaluator_for_every_input_combinatio
             mismatches.append((g326_1, reset_1, g326_2, reset_2, ours, chain))
 
     assert not mismatches, mismatches
+
+
+@pytest.mark.skipif(not SEED_PATH.exists(), reason="circuit/netlists/seed.json not present")
+def test_optimize_output_buffer_drops_redundant_cells_for_seed():
+    """seed.json's single output (jump_left) already resolves to the very
+    last cell the LATCH translation emits, so optimize_output_buffer=True
+    should drop the 2-cell buffer entirely: 9 cells (8 NAND + 1 LATCH, 60
+    bytes) become 7 cells (6 NAND + 1 LATCH, 46 bytes) -- this is the 7-cell
+    canvas layout documented as the recommended mint route in
+    tapeout/SUBMISSION.md."""
+    seed = _load_seed()
+    data, meta = tf.encode_netlist(seed, optimize_output_buffer=True)
+
+    assert meta.buffered_outputs is False
+    assert len(data) == 46
+    assert data.hex() == SEED_GOLDEN_HEX_OPTIMIZED
+
+    cells = tf.decode_cells(data, n_inputs=meta.n_inputs)
+    assert len(cells) == 7
+    assert sum(isinstance(c, tf.Nand) for c in cells) == 6
+    assert sum(isinstance(c, tf.Latch) for c in cells) == 1
+
+    decoded = tf.decode_to_schema(data, meta)
+    assert decoded == _schema_of(seed)
+
+
+@pytest.mark.skipif(not SEED_PATH.exists(), reason="circuit/netlists/seed.json not present")
+def test_optimize_output_buffer_preserves_seed_semantics():
+    """The optimization must be semantics-preserving: re-run the same
+    exhaustive two-tick protocol check as
+    test_seed_two_tick_protocol_matches_our_evaluator_for_every_input_combination,
+    against the 7-cell optimized encoding this time."""
+    seed = _load_seed()
+    data, meta = tf.encode_netlist(seed, optimize_output_buffer=True)
+    circuit = tf.decode_circuit(data, meta.n_inputs, meta.n_outputs)
+
+    mismatches = []
+    for g326_1, reset_1, g326_2, reset_2 in itertools.product((0, 1), repeat=4):
+        r1 = evaluate_netlist(seed, {"g326": g326_1, "reset": reset_1})
+        r2 = evaluate_netlist(seed, {"g326": g326_2, "reset": reset_2}, prev_state=r1["_latch_state"])
+        ours = r2["jump_left"]
+
+        _o1, st1 = tf.tick(circuit, [g326_1, reset_1], state=None)
+        o2, _st2 = tf.tick(circuit, [g326_2, reset_2], state=st1)
+        chain = o2[0]
+
+        if ours != chain:
+            mismatches.append((g326_1, reset_1, g326_2, reset_2, ours, chain))
+
+    assert not mismatches, mismatches
+
+
+def test_optimize_output_buffer_falls_back_when_output_is_not_already_trailing():
+    """g1 is NOT the last-defined gate here (g2 is, and is not an output),
+    so the all-or-nothing optimization must NOT apply: encoding with
+    optimize_output_buffer=True must fall back to the same buffered bytes as
+    the default (False) path -- never silently drop a needed buffer."""
+    netlist = {
+        "schema_version": 1,
+        "gates": [
+            {"id": "g1", "type": "NAND", "inputs": ["a", "b"]},
+            {"id": "g2", "type": "NAND", "inputs": ["g1", "g1"]},
+        ],
+        "input_pins": ["a", "b"],
+        "output_pins": {"out": "g1"},
+    }
+    data_default, meta_default = tf.encode_netlist(netlist, optimize_output_buffer=False)
+    data_opt, meta_opt = tf.encode_netlist(netlist, optimize_output_buffer=True)
+
+    assert meta_opt.buffered_outputs is True
+    assert data_opt == data_default
+
+    decoded = tf.decode_to_schema(data_opt, meta_opt)
+    assert decoded == _schema_of(netlist)
 
 
 def test_decode_cells_rejects_truncated_bytes():

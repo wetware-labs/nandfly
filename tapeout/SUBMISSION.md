@@ -98,15 +98,30 @@ seed.json specifically
 (`test_seed_two_tick_protocol_matches_our_evaluator_for_every_input_combination`).
 
 **Cost consequence** (see `reports/tapeout-quote.md`, regenerate with
-`python -m tapeout.quote`): the seed's TRUE on-chain primitive cost is
-**8 NAND + 1 LATCH (9 primitives)**, not the "2 NAND + 1 LATCH (3
-primitives)" framing used in the project's earlier budget ruling
-(`docs/plans/2026-09-16-nandfly-mvp.md`'s progress ledger, "~$12"). This is
-not a direct-bytes-submission artifact -- a canvas build would need the same
-4 extra NAND gates hand-wired to reproduce the exact SR-latch behavior,
-since the canvas's own LATCH primitive is the same native D-register. At
-current secondary-market prices this is closer to **~$38**, not ~$12 (see
-the quote report's "TRUE on-chain cost" row).
+`python -m tapeout.quote`): the seed's on-chain primitive cost is **not**
+the "2 NAND + 1 LATCH (3 primitives, ~$12)" framing used in the project's
+earlier budget ruling (`docs/plans/2026-09-16-nandfly-mvp.md`'s progress
+ledger) -- that undercounts the SR-latch translation entirely. This is not
+a direct-bytes-submission artifact -- a canvas build needs the same 4 extra
+NAND gates hand-wired to reproduce the exact SR-latch behavior, since the
+canvas's own LATCH primitive is the same native D-register.
+
+`encode_netlist`'s default output is **8 NAND + 1 LATCH (9 primitives,
+~$38)**: it always appends a 2-cell NAND identity buffer per named output,
+for general-purpose correctness regardless of a gate's position (see the
+function's docstring). But for seed.json specifically, that buffer is
+*provably a no-op*: `jump_left`'s LATCH-translation final NAND (`g4`, i.e.
+`q = NOT(NAND(reset_n, NAND(set_n, NOT(prev_Q))))`) already sits at the
+exact tail position TapeOut's format requires, so nothing needs moving.
+Dropping the buffer cannot change what any signal computes -- reset
+dominance (`q = r AND (...)`, section above) is a property of the 4-NAND
+network itself, never of the buffer -- and `encode_netlist(...,
+optimize_output_buffer=True)` detects this all-or-nothing case and drops
+it: **6 NAND + 1 LATCH (7 primitives, ~$29)**. This 7-cell encoding is
+proven identical to the 9-cell one under the same tests as above
+(`test_optimize_output_buffer_drops_redundant_cells_for_seed`,
+`test_optimize_output_buffer_preserves_seed_semantics`), and is the
+**RECOMMENDED** number for an actual mint -- see section 3.1.
 
 ## 2. What we could NOT confirm: the mint/write function
 
@@ -129,41 +144,62 @@ irreversible mistake that constraint exists to prevent.
 
 ## 3. Submission path
 
-### 3.1 Recommended: manual canvas (primary route)
+### 3.1 RECOMMENDED: manual canvas, 7-cell technology-mapped layout
 
 Given section 2, the safe, confirmed-working path for Task 5 is the
 `tapeout.net` "Processor Canvas System" (drag NAND/LATCH primitives, wire
 them, free to build/test, gas spent only on the final Tape Out tx -- see
-spike findings.md section 3). Concretely, for seed.json:
+spike findings.md section 3). Build the **7-cell** layout below (6 NAND + 1
+LATCH -- this is `tapeout.format.encode_netlist(seed_json,
+optimize_output_buffer=True)`'s output, ~$29 in components per
+`reports/tapeout-quote.md`'s RECOMMENDED row, not the 9-cell/~$38 default
+encoding -- see section 1.4 for why the 2-cell output buffer is provably
+unneeded for this specific circuit). A human should follow this list
+literally at the canvas, primitive by primitive, in this order:
 
-1. Place 2 input pins (`g326`, `reset`) and 1 output pin (`jump_left`).
-2. Place 2 NAND primitives: `g327 = NAND(reset, reset)`, `g328 = NAND(g326, g327)`.
-3. Reproduce the SR-latch: place 1 native LATCH primitive plus the 4-NAND
-   translation network from section 1.4, using this fragment's own `g327`
-   (reset_n) and `g328` (set_n) as the two logical inputs, and wire the
-   translation's final NAND (`q`) to the `jump_left` output pin. (Concretely,
-   with `p` = the LATCH primitive's own output: `g1=NAND(p,p)`,
-   `g2=NAND(g328,g1)`, `g3=NAND(g327,g2)`, `g4=NAND(g3,g3)`; wire the LATCH's
-   `d` input to `g4`, and `jump_left` output to `g4`.)
-4. Submit the Tape Out transaction (small BNB gas, ~$2-10 per spike
-   findings.md; component cost per section 1.4/reports/tapeout-quote.md).
+| # | Primitive | Inputs | Notes |
+|---|---|---|---|
+| -- | input pin `g326` | -- | seed's non-const input #1 |
+| -- | input pin `reset` | -- | seed's non-const input #2 |
+| 1 | NAND -> call its output `g327` | `reset`, `reset` | = NOT(reset) |
+| 2 | NAND -> call its output `g328` | `g326`, `g327` | = NAND(g326, g327) |
+| 3 | LATCH -> call its output `p` | `d` wired in step 8, after `g4` exists (`p` denotes the LATCH's own output signal, used below before `d` is set -- if the canvas UI requires every input wired at placement time, this is unconfirmed UX and may need a temporary placeholder input, rewired to `g4` in step 8 before submitting) | this is the ONE native LATCH primitive |
+| 4 | NAND -> call its output `g1` | `p`, `p` | = NOT(p) |
+| 5 | NAND -> call its output `g2` | `g328`, `g1` | = NAND(set_n, NOT(p)) |
+| 6 | NAND -> call its output `g3` | `g327`, `g2` | = NAND(reset_n, g2) |
+| 7 | NAND -> call its output `g4` (= `q`) | `g3`, `g3` | = NOT(g3) -- **this is jump_left's real value** |
+| 8 | wire the LATCH's `d` input to `g4` | -- | forward wiring, closes the feedback loop; TapeOut's LATCH captures `d` only after the whole tick settles, so this is valid (see `tapeout/format.py`'s module docstring) |
+| 9 | wire output pin `jump_left` directly to `g4` | -- | **do NOT add any buffer/passthrough gate here** -- `g4` already IS the last cell, wiring it straight to the output pin is exactly what makes this 7 cells instead of 9 |
 
-### 3.2 Direct contract call (documented, marked NOT CERTAIN)
+Reset-dominance is preserved by construction: `q = r AND (NOT(s) OR p)`,
+i.e. whenever `reset_n=0` (`r=0`), `q=0` regardless of `s` or `p` -- this
+identity depends only on gates 4-7 above, not on how (or whether) the
+output pin is buffered, so it holds exactly the same in this 7-cell layout
+as in the 9-cell one.
+
+After wiring, submit the Tape Out transaction (small BNB gas, ~$2-10 per
+spike findings.md; component cost per section 1.4/reports/tapeout-quote.md).
+
+### 3.2 Direct contract call (documented, marked NOT CERTAIN, fallback only)
 
 If/when the write function is identified (or the canvas's own submitted
 transaction is inspected on BscScan to recover it empirically -- the
-cleanest way to close this gap, see "Task 5 pre-step" below), the encoded
-bytes to submit for seed.json are:
+cleanest way to close this gap, see "Task 5 pre-step" below), two encodings
+of seed.json are available. **Prefer the 7-cell one** (matches section
+3.1's canvas layout exactly, byte-for-byte); the 9-cell one is kept only as
+the general-purpose encoder's unoptimized fallback (e.g. if a future,
+larger netlist's outputs are not already trailing and the optimization
+cannot apply).
 
 - **Contract**: `0xb1024b89886b9a34aa4ff5f31c411d708b20a14c` ("TapeOut" fab, BSC mainnet, chain id 56)
-- **n_inputs**: 2, **n_outputs**: 1, **n_state** (latches): 1, **n_cells**: 9
-- **Netlist bytes** (60 bytes), produced by `tapeout.format.encode_netlist(seed_json)`:
+- **n_inputs**: 2, **n_outputs**: 1, **n_state** (latches): 1
+
+**RECOMMENDED -- 7 cells (6 NAND + 1 LATCH), 46 bytes**, produced by
+`tapeout.format.encode_netlist(seed_json, optimize_output_buffer=True)`:
 
 ```
-0x00000003000003000000020000040100000a000000060000060000000500000700000004000008000000090000090000000a00000a0000000b00000b
+0x00000003000003000000020000040100000a00000006000006000000050000070000000400000800000009000009
 ```
-
-Hex dump (7-byte NAND cells / 4-byte LATCH cell, annotated):
 
 ```
 00 000003 000003   NAND  sig4  = NAND(3, 3)          # g327 = NAND(reset, reset)   [reset is input signal 3]
@@ -172,16 +208,31 @@ Hex dump (7-byte NAND cells / 4-byte LATCH cell, annotated):
 00 000006 000006   NAND  sig7  = NAND(6, 6)          # g1 = NOT(p)
 00 000005 000007   NAND  sig8  = NAND(5, 7)          # g2 = NAND(set_n=g328, g1)
 00 000004 000008   NAND  sig9  = NAND(4, 8)          # g3 = NAND(reset_n=g327, g2)
-00 000009 000009   NAND  sig10 = NAND(9, 9)          # g4 = NOT(g3) = q  (jump_left's real value)
-00 00000a 00000a   NAND  sig11 = NAND(10, 10)        # output buffer 1/2
-00 00000b 00000b   NAND  sig12 = NAND(11, 11)        # output buffer 2/2 -- the actual output signal
+00 000009 000009   NAND  sig10 = NAND(9, 9)          # g4 = NOT(g3) = q  -- jump_left's output signal directly (no buffer)
 ```
 
-(Regenerate at any time: `python -c "import json; from tapeout import format as tf; print(tf.to_hex(tf.encode_netlist(json.load(open('circuit/netlists/seed.json')))[0]))"`.)
+(Regenerate: `python -c "import json; from tapeout import format as tf; print(tf.to_hex(tf.encode_netlist(json.load(open('circuit/netlists/seed.json')), optimize_output_buffer=True)[0]))"`.)
+
+**Fallback -- 9 cells (8 NAND + 1 LATCH), 60 bytes**, `encode_netlist`'s
+default (`optimize_output_buffer=False`):
+
+```
+0x00000003000003000000020000040100000a000000060000060000000500000700000004000008000000090000090000000a00000a0000000b00000b
+```
+
+Identical to the 7-cell layout through `sig10` (`g4`/`q`), plus a 2-cell
+identity buffer that only re-reads `g4` twice without changing it:
+
+```
+00 00000a 00000a   NAND  sig11 = NAND(10, 10)        # output buffer 1/2 (redundant for this circuit)
+00 00000b 00000b   NAND  sig12 = NAND(11, 11)        # output buffer 2/2 -- the actual output signal in THIS encoding
+```
+
+(Regenerate: `python -c "import json; from tapeout import format as tf; print(tf.to_hex(tf.encode_netlist(json.load(open('circuit/netlists/seed.json')))[0]))"`.)
 
 **We do NOT have a confirmed mint function signature or argument order to
-submit this with.** Do not attempt a direct write call against the real
-contract without first closing that gap (see below).
+submit either encoding with.** Do not attempt a direct write call against
+the real contract without first closing that gap (see below).
 
 ## 4. Recommended Task 5 pre-step: a tiny canvas-made test circuit
 
@@ -213,17 +264,23 @@ really on-chain and really what we intended, using nothing but our own code:
 1. `tapeout.verify.fetch_onchain_circuit(rpc, PROCESSOR_ADDRESS, our_token_id)`
    -- fetches `netlist()` + `circuitInfo()` for the real minted token id.
 2. `tapeout.format.decode_circuit(bytes, n_inputs, n_outputs).describe()`
-   -- structural sanity report (gate/latch counts must be 9 cells, 8 NAND +
-   1 LATCH, matching section 1.4).
-3. Byte-for-byte: the fetched `netlist_hex` must equal the exact hex dump in
-   section 3.2 above (this is the strongest check -- if the canvas UI
-   produced different wiring for logically-equivalent gates, this would
-   catch it, even though `describe()`'s counts alone would not).
+   -- structural sanity report. If minted via the recommended 7-cell canvas
+   layout (section 3.1), expect 7 cells, 6 NAND + 1 LATCH; if minted via the
+   9-cell fallback encoding (section 3.2), expect 9 cells, 8 NAND + 1 LATCH.
+3. Byte-for-byte: the fetched `netlist_hex` must equal the exact hex dump for
+   whichever encoding was actually minted (the 7-cell one in section 3.2 for
+   the recommended canvas route, the 9-cell one for the fallback) -- this is
+   the strongest check: if the canvas UI produced different wiring for
+   logically-equivalent gates (e.g. a different but equally-valid NAND
+   ordering), this would catch it even though `describe()`'s counts alone
+   would not.
 4. Semantic replay: feed the same two-tick reset+stimulus test vectors used
    in `tests/test_tapeout_format.py` through `tapeout.format.tick()` against
    the freshly-decoded on-chain `Circuit`, and confirm they still match
    `circuit/gates.py::evaluate_netlist`'s output for seed.json -- proving the
    MINTED circuit, not just our local encoding of it, behaves as intended.
+   (`tests/test_tapeout_format.py::test_optimize_output_buffer_preserves_seed_semantics`
+   already proves this for the 7-cell encoding locally, before any mint.)
 
 ## 6. Format-certainty verdict
 
@@ -231,9 +288,14 @@ really on-chain and really what we intended, using nothing but our own code:
 our encoder/decoder's correctness for netlists built from those two
 primitives (structural round-trip + exhaustive semantic equivalence, all
 locally testable, no network needed --
-`tests/test_tapeout_format.py`), and the `netlist()`/`circuitInfo()`
+`tests/test_tapeout_format.py`), the `netlist()`/`circuitInfo()`
 read-path ABI (confirmed against 2 independent real on-chain circuits,
-`tests/test_tapeout_onchain_fixture.py`).
+`tests/test_tapeout_onchain_fixture.py`), and the `optimize_output_buffer`
+technology-mapping optimization that produces the RECOMMENDED 7-cell
+layout (semantics-preserving by construction -- it only ever drops cells
+already proven dead, never rewires anything live; falls back safely to the
+9-cell default whenever the all-or-nothing tail condition doesn't hold --
+`test_optimize_output_buffer_falls_back_when_output_is_not_already_trailing`).
 
 **NOT CERTAIN / NEEDS-CANVAS-TEST**:
 - OP_REF's byte layout (unused by this project; no real fixture found).
@@ -242,6 +304,6 @@ read-path ABI (confirmed against 2 independent real on-chain circuits,
   section 4's pre-step (a cheap canvas-built test circuit + reading its real
   mint tx's calldata on BscScan) before attempting any direct contract call,
   or simply use the canvas path (3.1) throughout and skip 3.2 entirely.
-- Whether the mint function's component accounting is per-raw-cell (8 NAND +
-  1 LATCH held, per section 1.4) or some other scheme -- also closed by the
-  section 4 pre-step.
+- Whether the mint function's component accounting is per-raw-cell (6 NAND +
+  1 LATCH held for the recommended 7-cell layout, per section 1.4) or some
+  other scheme -- also closed by the section 4 pre-step.

@@ -377,13 +377,14 @@ class EncodeMeta:
     output_order: list        # netlist["output_pins"] keys, in order
     n_inputs: int
     n_outputs: int
+    buffered_outputs: bool = True  # False iff optimize_output_buffer dropped the tail buffer (see encode_netlist)
 
 
 def _non_const_input_pins(input_pins) -> list:
     return [p for p in input_pins if p not in CONST_PINS]
 
 
-def encode_netlist(netlist: dict):
+def encode_netlist(netlist: dict, optimize_output_buffer: bool = False):
     """Encode our netlist JSON (circuit/SCHEMA.md) into TapeOut bytes.
 
     Returns (bytes, EncodeMeta). The EncodeMeta is required to decode back to
@@ -391,6 +392,34 @@ def encode_netlist(netlist: dict):
     role any real TapeOut netlist needs (n_inputs, n_outputs, pin names): the
     wire bytes alone never carry names or port counts for ANY TapeOut circuit,
     ours included.
+
+    By default (`optimize_output_buffer=False`), every named output gets its
+    own 2-cell NAND identity buffer (see the loop below), even when its
+    source gate already happens to sit at the exact tail position TapeOut's
+    format requires (the last n_outputs signals, in output_pins order) --
+    this keeps the encoder simple and correct for the fully general case
+    (arbitrary output ordering/aliasing), at the cost of 2 redundant NAND
+    cells per output that didn't actually need moving.
+
+    `optimize_output_buffer=True` is an OPTIONAL, narrowly-scoped
+    optimization used only for cost/documentation purposes (e.g.
+    tapeout/quote.py's "true minimal cost" row, tapeout/SUBMISSION.md's
+    7-cell canvas layout): it drops the buffer entirely, but ONLY in the
+    all-or-nothing case where every output's resolved source signal is
+    ALREADY exactly the trailing n_outputs signals, in the exact order
+    output_pins declares them (i.e. no cells need to move at all). This is
+    semantics-preserving by construction: it emits strictly fewer cells and
+    changes no wiring, so it cannot change what any signal computes -- it
+    only skips writing 2 dead identity-buffer cells nothing depended on.
+    For seed.json specifically, jump_left's LATCH-translation final NAND
+    (`q = NOT(NAND(reset_n, NAND(set_n, NOT(prev_Q))))` -- reset-dominance is
+    unaffected, since that identity is proved purely from the 4-NAND network
+    itself and never touches the buffer) already IS the last cell emitted,
+    so the whole 2-cell buffer is redundant and gets dropped: 9 cells (8
+    NAND + 1 LATCH) become 7 cells (6 NAND + 1 LATCH). If the all-or-nothing
+    condition does NOT hold (e.g. multiple outputs whose sources are not
+    already contiguous/in-order), this option has no effect and the encoder
+    falls back to the default buffered behavior for every output.
     """
     raw_input_pins = list(netlist.get("input_pins", []))
     ordered_inputs = _non_const_input_pins(raw_input_pins)
@@ -443,18 +472,26 @@ def encode_netlist(netlist: dict):
             raise ValueError(f"unknown gate type {gtype!r} for gate {gid!r}")
 
     output_order = list(netlist["output_pins"].keys())
-    for name in output_order:
-        src = resolve(netlist["output_pins"][name])
-        buf1 = next_sig
-        cells.append(Nand(src, src))
-        next_sig += 1
-        buf2 = next_sig
-        cells.append(Nand(buf1, buf1))
-        next_sig += 1
+    n_outputs = len(output_order)
+    output_srcs = [resolve(netlist["output_pins"][name]) for name in output_order]
+
+    already_trailing = output_srcs == list(range(next_sig - n_outputs, next_sig)) and n_outputs > 0
+    buffered_outputs = not (optimize_output_buffer and already_trailing)
+
+    if buffered_outputs:
+        for src in output_srcs:
+            buf1 = next_sig
+            cells.append(Nand(src, src))
+            next_sig += 1
+            buf2 = next_sig
+            cells.append(Nand(buf1, buf1))
+            next_sig += 1
+    # else: outputs are already exactly the trailing n_outputs signals in
+    # order (checked above) -- nothing to emit, see optimize_output_buffer's
+    # docstring above.
 
     n_inputs = len(ordered_inputs)
-    n_outputs = len(output_order)
-    meta = EncodeMeta(raw_input_pins, gate_order, gate_blocks, output_order, n_inputs, n_outputs)
+    meta = EncodeMeta(raw_input_pins, gate_order, gate_blocks, output_order, n_inputs, n_outputs, buffered_outputs)
     return encode_cells(cells), meta
 
 
@@ -523,13 +560,18 @@ def decode_to_schema(data: bytes, meta: EncodeMeta, schema_version: int = 1) -> 
     output_signals_by_pos = decode_circuit(data, meta.n_inputs, meta.n_outputs).output_signals()
     output_pins = {}
     for name, out_sig in zip(meta.output_order, output_signals_by_pos):
-        buf2 = cells[out_sig - meta.n_inputs - 2]
-        if not isinstance(buf2, Nand) or buf2.a != buf2.b:
-            raise ValueError(f"output {name!r}: does not match the expected identity-buffer pattern")
-        buf1 = cells[buf2.a - meta.n_inputs - 2]
-        if not isinstance(buf1, Nand) or buf1.a != buf1.b:
-            raise ValueError(f"output {name!r}: does not match the expected identity-buffer pattern")
-        output_pins[name] = name_of(buf1.a)
+        if meta.buffered_outputs:
+            buf2 = cells[out_sig - meta.n_inputs - 2]
+            if not isinstance(buf2, Nand) or buf2.a != buf2.b:
+                raise ValueError(f"output {name!r}: does not match the expected identity-buffer pattern")
+            buf1 = cells[buf2.a - meta.n_inputs - 2]
+            if not isinstance(buf1, Nand) or buf1.a != buf1.b:
+                raise ValueError(f"output {name!r}: does not match the expected identity-buffer pattern")
+            output_pins[name] = name_of(buf1.a)
+        else:
+            # optimize_output_buffer dropped the buffer: the output signal
+            # IS directly the underlying gate/pin's own final signal.
+            output_pins[name] = name_of(out_sig)
 
     return {
         "schema_version": schema_version,
