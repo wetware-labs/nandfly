@@ -53,7 +53,7 @@ flat, append-only signal space (0=const0, 1=const1, then inputs, then one
 signal per cell output). This was cross-checked two independent ways:
 
 1. **Documentation**: the third-party project named in the feasibility spike
-   (`C:\Users\gmldn\Documents\Codex\_spikes\tapeout-fly-spike\findings.md`
+   (local feasibility-spike notes, not committed to this repo;
    section 3), `github.com/BruceLanLan/c3s-reflex-circuits` (Apache-2.0),
    documents this exact layout in its generic wire-format module
    `c3s/netlist.py`. We read only that generic module (and its generic

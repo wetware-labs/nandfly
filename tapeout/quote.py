@@ -16,7 +16,7 @@ Data sources, each timestamped in the output:
       1% fee). This script does NOT re-derive live order-book depth (that
       contract's ABI has not been probed -- out of scope for this task); it
       reuses the same-day snapshot from the project's feasibility spike
-      (C:\\Users\\gmldn\\Documents\\Codex\\_spikes\\tapeout-fly-spike\\findings.md
+      (local feasibility-spike notes, not committed to this repo;
       section 1, source: understand-tapeout.netlify.app, 2026-09-01 snapshot)
       and flags this explicitly as NOT live-refreshed, with a volatility
       caveat, in the output report.

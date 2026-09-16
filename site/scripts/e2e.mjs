@@ -23,7 +23,7 @@ mkdirSync(SCREENSHOT_DIR, { recursive: true });
 
 const PLAYWRIGHT_PATH =
   process.env.PLAYWRIGHT_PATH ||
-  "C:/Users/gmldn/Documents/Codex/outguess/node_modules/playwright/index.mjs";
+  path.join(REPO_ROOT, "..", "outguess", "node_modules", "playwright", "index.mjs");
 const BASE_URL = process.env.NANDFLY_BASE_URL || "http://localhost:8934";
 
 const { chromium } = await import(pathToFileURL(PLAYWRIGHT_PATH).href);

@@ -1,7 +1,7 @@
 // Top-down vector fly renderer for the live layer + swat verdict animation.
 //
 // Adapted from FlyMarket's arena-replay fly (drawFly() in
-// C:\Users\gmldn\Documents\Codex\flymarket\site\js\replay.js -- same body/
+// a local FlyMarket checkout's site/js/replay.js -- same body/
 // wing/leg vector-drawing technique and rim-light paint trick, credited here
 // as the heritage this was adapted from (NOT imported; FlyMarket has no
 // runtime dependency on this project or vice versa). Reworked for a

@@ -16,7 +16,7 @@ this work.
 
 MaleCNS v1.0 (FlyEM/Janelia, Cambridge, MRC LMB, Google Research), the same
 public dataset vendored by the FlyMarket project
-(`C:\Users\gmldn\Documents\Codex\flymarket\connectome_data\malecns_v1`, not
+(a local FlyMarket checkout's `connectome_data/malecns_v1`, not
 committed to this repo -- see `sim/data/datasets.json` in FlyMarket for the
 original public download URLs, all under
 `storage.googleapis.com/flyem-male-cns`). This repo's `circuit/lib/

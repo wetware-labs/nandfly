@@ -10,8 +10,8 @@ source on BscScan as of 2026-09-16 -- see tapeout/SUBMISSION.md). The layout
 below was cross-checked two ways before being relied on:
 
 1. Documentation: the third-party project named in the project's feasibility
-   spike (C:\\Users\\gmldn\\Documents\\Codex\\_spikes\\tapeout-fly-spike\\findings.md
-   section 3), github.com/BruceLanLan/c3s-reflex-circuits (Apache-2.0),
+   spike (local notes, not committed to this repo; section 3),
+   github.com/BruceLanLan/c3s-reflex-circuits (Apache-2.0),
    documents this exact layout in its generic circuit-IR module
    `c3s/netlist.py` (NOT its fly-circuit-specific files, which this project
    deliberately never reads or copies -- see docs/plans/2026-09-16-nandfly-mvp.md's
