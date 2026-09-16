@@ -12,7 +12,7 @@
 
 export const CONFIG = {
   // --- Layer 1 contract (NandFly.sol) ---
-  contractAddress: null, // e.g. "0x1234...abcd" once deployed (Task 5)
+  contractAddress: "0x3AB7b7621dB958c989B4B628D38B2D3d3642980A", // deployed 2026-09-16, bornAt 1789542725
   chainId: 56, // BSC mainnet
 
   // Public, read-only BSC RPC endpoints (no API key, no wallet, no write
@@ -66,7 +66,7 @@ export const CONFIG = {
     // Feeding wallet address: not created yet (published BEFORE first
     // inflow per the locked wallet policy -- see METHODS page and
     // docs/specs section 3). Placeholder until the wallet exists.
-    feedingWalletAddress: null,
+    feedingWalletAddress: "0x14Ab88CF91376451a24179C41965D1f24269e3a6",
     goalUsd: 30,
     // Manual value until the feeding wallet exists and can be read live;
     // update by hand as real inflows happen (see progress.md ledger).
