@@ -60,3 +60,15 @@ Sample disagreements (up to 10):
 - Only the chemical synapse count is modeled. The GF->TTMn synapse is well documented in the literature to have a strong electrical (gap-junction) component that synapse-count data cannot see, so the TTMn stage's real coupling strength is likely understated here.
 - The inherited transmitter->sign map assigns glutamate to inhibitory (-1). That is wrong specifically for motor neurons at the Drosophila neuromuscular junction, where glutamate is excitatory -- TTMn (glutamatergic in this data) is affected, but harmlessly, since TTMn has no outgoing edges in this subgraph and its sign is never read. Disclosed here rather than left for someone else to find; see circuit/DERIVATION.md section 3.
 - Only 12 of 311 available LC4/LPLC2 neurons (3.9%) are modeled at all. Both models are toy-scale reductions; neither is a claim of accurately predicting a real fly's behavior, only of a documented, reproducible relationship between two models of the same wiring diagram.
+
+## Baseline caveat (added 2026-09-16, from external cold review)
+
+The headline agreement rate is a weak metric on its own: the LIF reference
+jumps on 4092 of the 4096 exhaustive patterns, so a trivial always-jump
+function would score 99.9% -- HIGHER than the shipped netlist's 98.9%. What
+that baseline cannot do is refuse: the shipped netlist has zero false jumps
+(never jumps when the reference wouldn't, including the empty stimulus), and
+all discriminative behavior lives in the weak-drive rows (90.7%). Read the
+per-level table, not the headline. Both models are ours -- this is an
+internal-consistency measurement between two implementations, not
+third-party validation of the biology.
