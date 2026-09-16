@@ -1,0 +1,30 @@
+{
+  "source": {
+    "chain_id": 56,
+    "chain_name": "BNB Smart Chain mainnet",
+    "contract": "0xb1024b89886b9a34aa4ff5f31c411d708b20a14c",
+    "contract_name": "TapeOut (processor/circuit-registry fab, per live registry https://tapeout-public-monitor.tapeout-labs.workers.dev/api/v1/processors)",
+    "token_id": 1,
+    "rpc_endpoint": "https://bsc-dataseed.binance.org",
+    "fetched_at": "2026-09-16T05:20:00.968025+00:00",
+    "method": "eth_call, read-only, no wallet/tx/gas",
+    "abi_recovery": "Contract is not verified on BscScan. Function selectors were independently recovered by (1) extracting all PUSH4 operands from the processor's proxy-implementation bytecode (0x8e1d125def6d3826c278299273a0760d47626068, reached via the proxy's masterCopy() beacon pattern), then (2) keccak256-hashing candidate Solidity function signatures and matching the first 4 bytes. netlist(uint256)->bytes = 0x3fc4be56 and circuitInfo(uint256)->(uint256,uint256,uint256,uint256) = 0x084d60f1 both matched; circuitInfo's returned (n_inputs, n_outputs, n_state, n_cells) was then cross-checked against this module's own decode of netlist()'s bytes (nand+latch+ref counts, n_cells) as a second, independent confirmation."
+  },
+  "circuit_info": {
+    "n_inputs": 2,
+    "n_outputs": 1,
+    "n_state": 0,
+    "n_cells": 3
+  },
+  "netlist_hex": "0x000000020000030000000400000400000005000005",
+  "decoded_describe": {
+    "n_inputs": 2,
+    "n_outputs": 1,
+    "n_cells": 3,
+    "nand": 3,
+    "latch": 0,
+    "ref": 0,
+    "n_signals": 7,
+    "bytes": 21
+  }
+}
