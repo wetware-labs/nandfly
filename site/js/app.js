@@ -48,7 +48,12 @@ function addFeedItem(feedEl, text, opts = {}) {
 
   item.appendChild(document.createTextNode(text));
 
-  feedEl.prepend(item);
+  // Newest item goes right below the "observation feed" <h4>, which must
+  // stay pinned as the container's first child (eviction below trims from
+  // the bottom, so the header is never removed).
+  const header = feedEl.querySelector("h4");
+  if (header) header.after(item);
+  else feedEl.prepend(item);
   while (feedEl.children.length > 60) feedEl.removeChild(feedEl.lastChild);
 }
 
