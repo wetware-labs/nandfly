@@ -1,0 +1,9 @@
+node_modules/
+docs/
+.superpowers/
+.secrets
+.dev.vars
+__pycache__/
+*.pyc
+venv/
+.venv/
