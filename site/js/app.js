@@ -15,12 +15,50 @@ function formatTime() {
   return d.toLocaleTimeString("en-US", { hour12: false });
 }
 
-function addFeedItem(feedEl, text, cls) {
+// All dynamic text below is set via textContent / DOM node construction,
+// never innerHTML -- some of it (RPC error messages) originates from a
+// third-party endpoint (site/config.js's rpcUrls) and must never be treated
+// as markup, even from a compromised or malicious RPC response.
+
+/**
+ * @param {HTMLElement} feedEl
+ * @param {string} text
+ * @param {object} [opts]
+ * @param {string} [opts.cls] - extra class on the feed item (e.g. "jump")
+ * @param {boolean} [opts.synthetic] - true for test-hook-injected events;
+ *   gets a distinct dashed-border + "SYNTHETIC" badge treatment so a
+ *   cropped screenshot can never be mistaken for a real chain event, even
+ *   with the test hook enabled.
+ */
+function addFeedItem(feedEl, text, opts = {}) {
   const item = document.createElement("div");
-  item.className = "feed-item" + (cls ? ` ${cls}` : "");
-  item.innerHTML = `<span class="feed-time">${formatTime()}</span>${text}`;
+  item.className = "feed-item" + (opts.cls ? ` ${opts.cls}` : "") + (opts.synthetic ? " synthetic" : "");
+
+  const timeSpan = document.createElement("span");
+  timeSpan.className = "feed-time";
+  timeSpan.textContent = formatTime();
+  item.appendChild(timeSpan);
+
+  if (opts.synthetic) {
+    const badge = document.createElement("span");
+    badge.className = "synthetic-badge";
+    badge.textContent = "SYNTHETIC";
+    item.appendChild(badge);
+  }
+
+  item.appendChild(document.createTextNode(text));
+
   feedEl.prepend(item);
   while (feedEl.children.length > 60) feedEl.removeChild(feedEl.lastChild);
+}
+
+function setStatus(statusEl, dotClass, text) {
+  if (!statusEl) return;
+  statusEl.textContent = "";
+  const dot = document.createElement("span");
+  dot.className = "status-dot" + (dotClass ? ` ${dotClass}` : "");
+  statusEl.appendChild(dot);
+  statusEl.appendChild(document.createTextNode(text));
 }
 
 async function main() {
@@ -57,33 +95,40 @@ async function main() {
     fly,
     circuitViewer,
     onBlock: (info) => {
-      if (statusEl) {
-        const dotClass = info.synthetic ? "" : "live";
-        statusEl.innerHTML = `<span class="status-dot ${dotClass}"></span>block #${info.blockNumber}${
-          info.synthetic ? " (test-injected)" : ""
-        } &middot; ${info.txCount} tx &middot; largest tx ${info.maxBnb.toFixed(2)} BNB`;
-      }
+      setStatus(
+        statusEl,
+        info.synthetic ? "" : "live",
+        `block #${info.blockNumber}${info.synthetic ? " (test-injected)" : ""} · ${info.txCount} tx · largest tx ${info.maxBnb.toFixed(2)} BNB`
+      );
       if (feedEl) {
         addFeedItem(
           feedEl,
-          `block #${info.blockNumber}${info.synthetic ? " (synthetic)" : ""} -- ${info.txCount} tx, largest ${info.maxBnb.toFixed(2)} BNB`
+          `block #${info.blockNumber} -- ${info.txCount} tx, largest ${info.maxBnb.toFixed(2)} BNB`,
+          { synthetic: info.synthetic }
         );
       }
     },
     onEvent: (evt) => {
       if (evt.type === "rpc-error") {
-        if (statusEl) statusEl.innerHTML = `<span class="status-dot err"></span>RPC unreachable: ${evt.message}`;
+        // evt.message originates from a third-party RPC endpoint's response
+        // -- never trusted as markup. setStatus() uses textContent only.
+        setStatus(statusEl, "err", `RPC unreachable: ${evt.message}`);
         return;
       }
       if (!feedEl) return;
+      const synthetic = evt.source === "synthetic";
       if (evt.type === "jump") {
         const detail =
           evt.source === "chain" || evt.source === "synthetic"
             ? `reflex fired at block #${evt.blockNumber} -- ${evt.bnb.toFixed(2)} BNB whale`
             : "reflex fired -- ambient stimulus";
-        addFeedItem(feedEl, detail, "jump");
+        addFeedItem(feedEl, detail, { cls: "jump", synthetic });
       } else if (evt.type === "loom-survived") {
-        addFeedItem(feedEl, `looming stimulus at block #${evt.blockNumber} (${evt.bnb.toFixed(2)} BNB) -- it ignored it`);
+        addFeedItem(
+          feedEl,
+          `looming stimulus at block #${evt.blockNumber} (${evt.bnb.toFixed(2)} BNB) -- it ignored it`,
+          { synthetic }
+        );
       }
     },
   });

@@ -69,6 +69,13 @@ export async function renderScoreboard(container) {
       </div>
     `;
   } catch (e) {
-    container.innerHTML = `<p class="hint">Could not reach the contract right now (${String((e && e.message) || e)}).</p>`;
+    // e.message may originate from a third-party RPC endpoint's response --
+    // build via textContent, never innerHTML, so it can never be treated as
+    // markup.
+    container.textContent = "";
+    const p = document.createElement("p");
+    p.className = "hint";
+    p.textContent = `Could not reach the contract right now (${String((e && e.message) || e)}).`;
+    container.appendChild(p);
   }
 }

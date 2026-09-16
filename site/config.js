@@ -43,6 +43,22 @@ export const CONFIG = {
     // used to scale the looming stimulus's bit count between
     // whaleThresholdBnb (weakest whale) and this value (strongest).
     maxLoomBnb: 5000,
+
+    // Gates window.__nandflyTestHook (site/js/live-layer.js's synthetic
+    // block/whale injection API). Default FALSE -- this must never ship
+    // live/reachable by a random site visitor. Two ways to enable it, both
+    // read once at boot by live-layer.js (see that file for the exact
+    // check):
+    //   1. Flip this to `true` for a local/dev build.
+    //   2. Load the page with `?testhook=1` in the URL (what
+    //      site/scripts/e2e.mjs's Playwright run does) -- no source edit
+    //      needed for one-off verification.
+    // Either path still renders injected events with the distinct
+    // "SYNTHETIC" badge/dashed-border treatment (site/css/style.css's
+    // `.feed-item.synthetic` / `.synthetic-badge`) -- that styling is NOT
+    // gated by this flag, so an injected event can never be mistaken for a
+    // real chain event even when the hook is enabled.
+    enableTestHook: false,
   },
 
   // --- Birth milestone (spec section 10) ---

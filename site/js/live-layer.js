@@ -22,6 +22,23 @@
 import { evaluateStimulus, spikePinOrder } from "./netlist.js";
 import { CONFIG } from "../config.js";
 
+/** Read once at boot: is the synthetic-injection test hook allowed to exist
+ * on this page load? Gated behind config.js's `live.enableTestHook` (default
+ * false) OR a `?testhook=1` query-string param -- see config.js's comment
+ * for why (this must never be a random-visitor-reachable API, even though it
+ * only ever feeds the SAME real evaluator any genuine block would). Checked
+ * once per LiveLayer construction, not re-checked live, so toggling the URL
+ * after boot has no effect (matches "read once at boot" in the finding). */
+function testHookAllowed() {
+  if (CONFIG.live && CONFIG.live.enableTestHook) return true;
+  if (typeof location === "undefined") return false;
+  try {
+    return new URLSearchParams(location.search).get("testhook") === "1";
+  } catch {
+    return false;
+  }
+}
+
 export class LiveLayer {
   /**
    * @param {object} opts
@@ -44,19 +61,24 @@ export class LiveLayer {
     this._running = false;
 
     // Playwright / manual test hook: inject a synthetic block without
-    // needing a real whale transaction to show up during a test run. Never
-    // used by normal site code paths -- see task brief's E2E requirement
-    // ("if no whale appears during test, inject a synthetic block via a
-    // test hook").
-    window.__nandflyTestHook = window.__nandflyTestHook || {};
-    window.__nandflyTestHook.injectBlock = (info) => this._handleBlock(info);
-    window.__nandflyTestHook.injectWhale = (bnb) =>
-      this._handleBlock({
-        blockNumber: (this.lastBlockNumber || 0) + 1,
-        txCount: 1,
-        maxBnb: bnb,
-        synthetic: true,
-      });
+    // needing a real whale transaction to show up during a test run. Gated
+    // behind testHookAllowed() (config.js's `live.enableTestHook` flag, or
+    // `?testhook=1`) -- NOT attached to `window` at all on a normal page
+    // load, so it is never a random-visitor-reachable API. Every event it
+    // produces still carries `synthetic: true` through to onBlock/onEvent,
+    // which the UI renders with a distinct dashed-border "SYNTHETIC" badge
+    // regardless of whether the hook is enabled (site/js/app.js).
+    if (testHookAllowed()) {
+      window.__nandflyTestHook = window.__nandflyTestHook || {};
+      window.__nandflyTestHook.injectBlock = (info) => this._handleBlock(info);
+      window.__nandflyTestHook.injectWhale = (bnb) =>
+        this._handleBlock({
+          blockNumber: (this.lastBlockNumber || 0) + 1,
+          txCount: 1,
+          maxBnb: bnb,
+          synthetic: true,
+        });
+    }
   }
 
   start() {

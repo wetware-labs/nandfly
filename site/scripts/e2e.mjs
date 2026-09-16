@@ -50,7 +50,11 @@ async function main() {
   });
   page.on("pageerror", (err) => consoleErrors.push(String(err)));
 
-  await page.goto(`${BASE_URL}/index.html`, { waitUntil: "networkidle" });
+  // ?testhook=1 enables window.__nandflyTestHook for THIS page load only
+  // (site/config.js's `live.enableTestHook` is the source-level default,
+  // false; the query param is the documented no-source-edit opt-in this
+  // script uses -- see live-layer.js's testHookAllowed()).
+  await page.goto(`${BASE_URL}/index.html?testhook=1`, { waitUntil: "networkidle" });
 
   // Netlist loaded + fly canvas present.
   const canvas = await page.$("#fly-canvas");
@@ -88,6 +92,14 @@ async function main() {
   const feedTextEarly = await page.$eval("#live-feed", (el) => el.textContent);
   ok(feedTextEarly.includes("4200.00 BNB") || feedTextEarly.includes("whale"), "synthetic whale event appears in the feed");
   console.log(`  feed snippet: ${feedTextEarly.slice(0, 160)}`);
+
+  // The injected events must be visually distinguishable from real ones,
+  // even with the hook enabled (finding 2's "keep this styling even when
+  // the hook is enabled").
+  const syntheticCount = await page.$$eval(".feed-item.synthetic", (els) => els.length);
+  ok(syntheticCount >= 1, `synthetic feed items get the .synthetic dashed-border treatment (found ${syntheticCount})`);
+  const badgeText = await page.$eval(".feed-item.synthetic .synthetic-badge", (el) => el.textContent);
+  ok(badgeText === "SYNTHETIC", `synthetic feed items show a SYNTHETIC badge (found "${badgeText}")`);
 
   const liveGrid = await page.$(".live-layer-grid");
   if (liveGrid) {
@@ -161,6 +173,15 @@ async function main() {
   ok(sweepRows > 5, "METHODS page renders the threshold sweep table");
 
   ok(consoleErrors.length === 0, `zero console errors on index.html (found ${consoleErrors.length}: ${consoleErrors.slice(0, 3).join(" | ")})`);
+
+  // --- Test-hook gating: must be ABSENT on a normal page load (no query
+  // param, config.js default false) ---
+  const gatingPage = await context.newPage();
+  await gatingPage.goto(`${BASE_URL}/index.html`, { waitUntil: "networkidle" });
+  await gatingPage.waitForTimeout(500);
+  const hookPresent = await gatingPage.evaluate(() => typeof window.__nandflyTestHook !== "undefined");
+  ok(!hookPresent, "window.__nandflyTestHook is NOT present on a normal page load (gated by default)");
+  await gatingPage.close();
 
   await browser.close();
 

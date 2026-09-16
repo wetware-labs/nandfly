@@ -181,7 +181,14 @@ export class SwatUI {
         result = evaluateStimulus(this.netlist, stimulus);
       }
     } catch (e) {
-      this.verdictEl.innerHTML = `<p class="swat-error">Evaluation failed: ${String((e && e.message) || e)}</p>`;
+      // e.message may originate from a third-party RPC endpoint's eth_call
+      // error response -- build via textContent, never innerHTML, so it can
+      // never be treated as markup.
+      this.verdictEl.textContent = "";
+      const p = document.createElement("p");
+      p.className = "swat-error";
+      p.textContent = `Evaluation failed: ${String((e && e.message) || e)}`;
+      this.verdictEl.appendChild(p);
       return;
     }
 
