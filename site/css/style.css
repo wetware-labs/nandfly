@@ -351,6 +351,7 @@ h2 .kicker {
 }
 .verdict-meta { color: var(--text-faint); font-family: var(--mono); font-size: 0.8rem; margin: 0; }
 .swat-error { color: var(--danger); }
+.swat-hint { color: var(--text-dim); font-size: 0.9rem; }
 
 .swat-tx-panel { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; }
 .swat-tx-panel summary { cursor: pointer; color: var(--text-dim); font-weight: 600; }

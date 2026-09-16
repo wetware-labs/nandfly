@@ -121,6 +121,16 @@ async function main() {
   ok(cardCount === 16, `circuit viewer shows all 16 neurons (found ${cardCount})`);
 
   // --- Swat demo mode E2E ---
+  // Clicking SWAT with nothing selected (stimulus 0x000) must show the
+  // guidance hint, not an evaluation verdict (first-visit UX guard).
+  const emptySwatBtn = await page.$(".swat-btn");
+  if (emptySwatBtn) {
+    await emptySwatBtn.click();
+    await page.waitForTimeout(200);
+    const hintText = await page.$eval(".swat-verdict", (el) => el.textContent);
+    ok(hintText.includes("swung at nothing"), "empty stimulus shows guidance hint instead of a verdict");
+  }
+
   const presetBtn = await page.$('button:has-text("full loom")');
   ok(!!presetBtn, "swat preset buttons rendered");
   if (presetBtn) await presetBtn.click();

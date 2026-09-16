@@ -170,6 +170,19 @@ export class SwatUI {
 
   async _runSwat() {
     const stimulus = packStimulusBits(this.netlist, this.bits);
+    // Empty stimulus is a valid input (the contract would honestly return
+    // "no jump"), but a first-time visitor clicking SWAT before selecting
+    // anything reads that as broken. Guide instead of evaluating -- and
+    // never render it as a verdict, since no evaluation happened.
+    if (stimulus === 0) {
+      this.verdictEl.innerHTML = "";
+      const p = document.createElement("p");
+      p.className = "swat-hint";
+      p.textContent =
+        "You swung at nothing (stimulus 0x000) -- the fly can't see a swat that isn't there. Check some inputs above or hit a preset like \"full loom\", then SWAT.";
+      this.verdictEl.appendChild(p);
+      return;
+    }
     let result;
     let mode;
     try {
@@ -233,10 +246,13 @@ export class SwatUI {
   }
 
   _renderVerdict(result, mode, stimulus) {
-    const verdict = result.jumped ? "IT JUMPED." : "it ignored you.";
-    const survived = result.jumped ? "no" : "yes";
+    // Wording mirrors the contract's counters: a non-jump increments
+    // `survivedSwats` ("it survived the swat" -- didn't even need to move).
+    const verdict = result.jumped
+      ? "IT JUMPED. It saw you coming and escaped."
+      : "it ignored you. Survived without moving.";
     this.verdictEl.innerHTML = `
-      <p class="verdict-line">${verdict} survived: ${survived}</p>
+      <p class="verdict-line">${verdict}</p>
       <p class="verdict-meta">stimulus 0x${stimulus.toString(16).padStart(3, "0")} &middot; jump_left=${result.jumpLeft} &middot; jump_right=${result.jumpRight} &middot; ${mode}</p>
     `;
   }
