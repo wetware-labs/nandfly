@@ -1,0 +1,26 @@
+{
+  "name": "nandfly-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NANDFLY Layer-1 BSC contract: 661-gate NAND/LATCH escape-reflex netlist, swat()/swatTx() evaluation, Hardhat local tests. Isolated Node project (its own package.json/node_modules), independent of the Python circuit/ tooling in the repo root.",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "cross-env REPORT_GAS=true hardhat test",
+    "gen:netlist": "python gen_netlist_sol.py",
+    "gen:fixture": "python gen_parity_fixture.py",
+    "size": "hardhat compile && node -e \"const a=require('./artifacts/contracts/NandFly.sol/NandFly.json'); console.log('runtime bytes:', (a.deployedBytecode.length-2)/2)\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "cross-env": "^7.0.3",
+    "hardhat": "^2.29.1"
+  }
+}
