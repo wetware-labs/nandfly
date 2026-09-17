@@ -98,7 +98,7 @@ export async function renderBirthGauge(container) {
     renderBar(
       `$${raisedUsd.toFixed(2)}`,
       pct,
-      "Live from BSC: the feeding wallet's balance minus the disclosed pre-launch gas float (~0.0179 BNB, our own deploy gas, not donations), converted at Chainlink's on-chain BNB/USD feed. No manual number anywhere."
+      "Live from BSC: the feeding wallet's balance minus the disclosed gas float (~0.003 BNB, our own deploy gas, not donations), converted at Chainlink's on-chain BNB/USD feed. No manual number anywhere."
     );
   } catch (e) {
     // Never fabricate a number: on any RPC/feed failure the gauge says so.
