@@ -68,14 +68,16 @@ export const CONFIG = {
     goalUsd: 30,
     // The wallet's disclosed own-money gas float, in wei. History: launch
     // balance (2026-09-16) was 0.01788 BNB of our own deploy gas; on
-    // 2026-09-17, before any inflow ever arrived, we withdrew the surplus
-    // (~0.015 BNB, tx nonce 1 on-chain) leaving this exact float. No
-    // donation was touched -- the wallet had never received one.
+    // 2026-09-17/18, before any inflow ever arrived, we withdrew our own
+    // surplus in two transactions (tx nonces 1 and 2 on-chain), leaving
+    // this exact float. No donation was touched -- the wallet has never
+    // received one. Once the first inflow arrives, this constant is frozen
+    // and every wallet movement follows the published 80/20 policy.
     // The birth gauge shows max(0, live balance - this float) so the
     // project's own leftover gas can never be displayed as donations.
     // There is deliberately NO manual "raised" number in this config --
     // the gauge reads the chain (see scoreboard.js's renderBirthGauge).
-    gasFloatWei: "2870013594832504",
+    gasFloatWei: "1368961294832504",
     neuronsOnChain: 16,
     neuronsTotal: 166700,
     // Birth certificate attribution. `claimedBy` stays null until a real
